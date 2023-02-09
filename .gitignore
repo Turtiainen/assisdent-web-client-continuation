@@ -103,6 +103,13 @@ dist
 # TernJS port file
 .tern-port
 
-# IDE Specific Folders
-.idea/
-.vscode/
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
