@@ -76,7 +76,8 @@ button:focus-visible {
   bottom: 0;
   background-color: #162f72;
   color: #fff;
-  overflow: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
   max-width: 20%;
   display: flex;
   flex-direction: column;
