@@ -5,7 +5,9 @@ export const OrganizationName = () => {
         queryKey: ['organizationName'],
         queryFn: async () => {
             return await fetch(
-                'https://appointment-beta.assiscare.com:28090/api/feature_sweproject/organization',
+                `${import.meta.env.VITE_ASSISCARE_BASE}${
+                    import.meta.env.VITE_ASSISCARE_ROUTE
+                }organization`,
             )
                 .then((res) => res.json())
                 .then((dt) => dt);
@@ -14,7 +16,13 @@ export const OrganizationName = () => {
 
     return (
         <div className="card">
+            <p>Hello, {import.meta.env.VITE_ASSISCARE_USER}!</p>
             <p>{isLoading ? 'Loading...' : data?.OrganizationName}</p>
+            <p>
+                {error
+                    ? 'Failed to fetch the resource. Is VITE_ASSISCARE_BASE set up correctly?'
+                    : ''}
+            </p>
         </div>
     );
 };

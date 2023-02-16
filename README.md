@@ -28,4 +28,11 @@ npm run lint
 ```
 
 ## Configuration
-W.I.P
+Environment variables are stored in `.env`. Change the values to match
+the development environment there.
+```
+VITE_ASSISCARE_USER         username for AssisCare authentication
+VITE_ASSISCARE_PASS         password for AssisCare authentication
+VITE_ASSISCARE_BASE         base URL of the AssisCare REST API
+VITE_ASSISCARE_ROUTE        URI path to project course endpoint
+```
