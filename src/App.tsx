@@ -1,11 +1,11 @@
-import './App.css'
-import {OrganizationName} from "./OrganizationName";
-import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
+import './App.css';
+import { OrganizationName } from './OrganizationName';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import { Sidebar } from './components/Sidebar';
 
 function App() {
-  const queryClient = new QueryClient()
+    const queryClient = new QueryClient();
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -18,4 +18,4 @@ function App() {
   )
 }
 
-export default App
+export default App;
