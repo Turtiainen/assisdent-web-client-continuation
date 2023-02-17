@@ -1,3 +1,5 @@
+import React from 'react';
+
 export type DropdownProps = {
     label: string;
     options: string[];
