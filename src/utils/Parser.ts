@@ -1,10 +1,13 @@
-import json from '../data/scratch_1.json'
+import {getData} from "../services/backend";
 
-export const getRegisterViews = (): Document[] => {
-  const xmlMetaViewList = json.MetaViews
-  const xmlParser = new DOMParser()
-  const listOfXMLs: Document[] = []
+export const getRegisterViews = async () => {
 
-  xmlMetaViewList.map((item: Document) => listOfXMLs.push(xmlParser.parseFromString(item.XML, "text/xml")))
-  return listOfXMLs.filter(doc => doc.children[0].attributes[4].nodeValue!.endsWith("RegisterView"))
+  return await getData().then(result => {
+    const xmlMetaViewList = result.MetaViews
+    const xmlParser = new DOMParser()
+    const listOfViews: Document[] = []
+
+    xmlMetaViewList.map((view: Document) => listOfViews.push(xmlParser.parseFromString(view.XML, "text/xml")))
+    return listOfViews.filter(doc => doc.children[0].attributes[4].nodeValue!.endsWith("RegisterView"))
+  })
 }
