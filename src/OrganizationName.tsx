@@ -1,16 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
+import { getOrganizationName } from './services/backend';
 
 export const OrganizationName = () => {
     const { isLoading, error, data, isFetching } = useQuery({
         queryKey: ['organizationName'],
         queryFn: async () => {
-            return await fetch(
-                `${import.meta.env.VITE_ASSISCARE_BASE}${
-                    import.meta.env.VITE_ASSISCARE_ROUTE
-                }organization`,
-            )
-                .then((res) => res.json())
-                .then((dt) => dt);
+            return await getOrganizationName();
         },
     });
 
