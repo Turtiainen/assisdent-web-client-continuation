@@ -1,9 +1,9 @@
 import './App.css';
 import { OrganizationName } from './OrganizationName';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import Dropdown from './components/Dropdown';
 
 import { Sidebar } from './components/Sidebar';
+import Button from './components/Button';
 
 function App() {
     const queryClient = new QueryClient();
@@ -14,13 +14,6 @@ function App() {
                 <h1>Proto2</h1>
                 <OrganizationName />
                 <Sidebar />
-
-                <Dropdown
-                    // TODO: testipalikka, poistoon
-                    label="Dropdown"
-                    options={['Option 1', 'Option 2', 'Option 3']}
-                    onChange={(value) => console.log(value)}
-                ></Dropdown>
             </div>
         </QueryClientProvider>
     );
