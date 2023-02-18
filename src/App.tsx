@@ -16,6 +16,7 @@ function App() {
                 <OrganizationName />
             </div>
 
+            <Input label="Name" onChange={() => console.log('Hi')} />
         </QueryClientProvider>
     );
 }

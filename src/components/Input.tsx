@@ -18,12 +18,8 @@ function Input(props: InputProps) {
             <input
                 className="mt-1 block w-1/2  pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
                 onChange={onChange && ((e) => onChange(e.target.value))}
-            ></input>
-            {error && (
-                <p className="mt-2 text-sm text-red-600" id="email-error">
-                    {error}
-                </p>
-            )}
+            />
+            {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
         </div>
     );
 }
