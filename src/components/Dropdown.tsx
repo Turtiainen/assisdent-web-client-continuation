@@ -1,5 +1,3 @@
-import React from 'react';
-
 export type DropdownProps = {
     label: string;
     options: string[];
@@ -14,7 +12,7 @@ export type DropdownProps = {
 };
 
 function Dropdown(props: DropdownProps) {
-    let {
+    const {
         label,
         options,
         // Optional props
@@ -27,21 +25,16 @@ function Dropdown(props: DropdownProps) {
     } = props;
 
     return (
-        <div className={className}>
-            <label className="block text-sm font-medium text-gray-700">
+        <div className={'flex w-full' + className}>
+            <label className="text-left m-auto block w-1/2 text-sm font-medium text-gray-700">
                 {label}
             </label>
             <select
-                className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                className="mt-1 block w-1/2  pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
                 onChange={(e) => onChange(e.target.value)}
                 disabled={disabled}
                 value={value}
             >
-                {placeholder && (
-                    <option value="" disabled>
-                        {placeholder}
-                    </option>
-                )}
                 {options.map((option) => (
                     <option key={option} value={option}>
                         {option}
