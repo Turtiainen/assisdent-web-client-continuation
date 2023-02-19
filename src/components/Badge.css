@@ -1,0 +1,13 @@
+h2.header {
+    background: #23408f;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    color: white;
+    text-align:center;
+    padding: 7px;
+}
+
+h2.header:hover {
+    background: #3e579a;
+}
