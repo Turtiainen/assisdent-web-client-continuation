@@ -1,3 +1,5 @@
+import React from "react";
+
 export type DataProps = {
   view: Element | undefined | null
 }
@@ -11,6 +13,8 @@ const parseViewXml = (view: Element | undefined | null) => {
   const entityType = view.getAttribute("EntityType")
   let orderBy = null
   const columns = []
+
+  const content: React.ReactNode[] = [];
 
   const orderOptions = view.attributes["OrderOptions"]?.children
 
@@ -27,8 +31,6 @@ const parseViewXml = (view: Element | undefined | null) => {
   const getColumnsRecursively = (element: Element) => {
     if (!element) return
 
-    console.log(element.tagName)
-
     let captionAdded = false
     if (element.tagName === "Group") {
       captionOverrides.push(getColumnHeader(element))
@@ -38,10 +40,10 @@ const parseViewXml = (view: Element | undefined | null) => {
     const captionOverride = captionOverrides.length > 0 ? captionOverrides[captionOverrides.length - 1] : null
 
     if (element.tagName === "Button") {
-      // columns.push()
-      console.log("element.name === Button")
+      const buttonText = element.getAttribute("Text")
+      content.push(<button className={"bg-blue-700"} onClick={() => console.log(`Clicked button ${buttonText}`)}>{buttonText}</button>)
     } else if (element.tagName === "Element") {
-      console.log("element.name === Element")
+      content.push(<p>{element.getAttribute("Value")}</p>)
     }
 
     for (const child of element.children) {
@@ -52,20 +54,22 @@ const parseViewXml = (view: Element | undefined | null) => {
   if (view.getElementsByTagName("RegisterItem")) {
     getColumnsRecursively(view?.getElementsByTagName("RegisterItem")[0]?.getElementsByTagName("Content")[0])
   }
-  // getColumnsRecursively(currentDocument["RegisterItem"]["Content"])
 
-  // return <p>{view?.getAttribute("Name")}</p>
-  console.log(view)
-  return "Finished"
+  return content
 }
 
 export const ShowViewContent = ({view}: DataProps) => {
 
-  // console.log(parseViewXml(view))
+  const viewContent = parseViewXml(view)
 
   return (
     <div className="view-content">
-      {view ? <h2>{view.getAttribute("Header")}</h2> : ""}
+      {view ? <h2 className={"text-2xl mb-8"}>{view.getAttribute("Header")}</h2> : ""}
+      {viewContent?.map((component, idx) => (
+        <React.Fragment key={idx}>
+          { component }
+        </React.Fragment>
+      ))}
     </div>
   )
 }
