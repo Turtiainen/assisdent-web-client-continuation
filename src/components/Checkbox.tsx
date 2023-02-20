@@ -1,9 +1,8 @@
 import { useState } from 'react';
 
 export type CheckboxProps = {
-    labelSide: string;
-
     // optional props
+    labelSide?: string;
     label?: string;
     checked?: boolean;
     onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -12,9 +11,8 @@ export type CheckboxProps = {
 
 export const Checkbox = (props: CheckboxProps) => {
     const {
-        labelSide,
-
         // optional props
+        labelSide,
         checked,
         label,
         onChange,
@@ -34,7 +32,7 @@ export const Checkbox = (props: CheckboxProps) => {
 
     return (
         <div className="space-x-8 align-center">
-            {labelSide === 'left' ? labelComponent : null}
+            {label && labelSide === 'left' ? labelComponent : null}
             <input
                 type="checkbox"
                 className={`checkbox w-4 h-4`}
@@ -42,7 +40,7 @@ export const Checkbox = (props: CheckboxProps) => {
                 onChange={onChange ? onChange : () => setChecked(!isChecked)}
                 disabled={disabled ? disabled : false}
             />
-            {labelSide === 'right' ? labelComponent : null}
+            {label && labelSide === 'right' ? labelComponent : null}
         </div>
     );
 };
