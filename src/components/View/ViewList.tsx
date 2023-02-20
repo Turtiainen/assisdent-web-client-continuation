@@ -16,7 +16,7 @@ export const ViewList: React.FC<{ onClick: (doc: HTMLElement) => void }> = ({onC
         key={idx}
         onClick={() => onClick(doc.documentElement)}
       >
-        {doc?.documentElement.attributes["Name"].value}
+        {doc?.documentElement.getAttribute("Name")}
       </li>
     )
   })
