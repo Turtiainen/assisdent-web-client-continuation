@@ -4,6 +4,11 @@ export type DataProps = {
   view: Element | undefined | null
 }
 
+type ViewAttributes = {
+  attributes: string[]
+}
+
+
 // Parse child elements of a MetaView
 
 const parseViewXml = (view: Element | undefined | null) => {
@@ -16,10 +21,10 @@ const parseViewXml = (view: Element | undefined | null) => {
 
   const content: React.ReactNode[] = [];
 
-  const orderOptions = view.attributes["OrderOptions"]?.children
+  const orderOptions = view.getElementsByTagName("OrderOptions")[0]?.children
 
-  if (orderOptions && orderOptions.childNodes.length > 0) {
-    orderBy = orderOptions!.firstChild!.getAttribute("OrderingName")
+  if (orderOptions && orderOptions.length > 0) {
+    orderBy = orderOptions!.item(0)!.getAttribute("OrderingName")
   }
 
   const getColumnHeader = (element: Element): string => {
@@ -61,6 +66,7 @@ const parseViewXml = (view: Element | undefined | null) => {
 export const ShowViewContent = ({view}: DataProps) => {
 
   const viewContent = parseViewXml(view)
+  console.log(view)
 
   return (
     <div className="view-content">
