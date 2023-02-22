@@ -1,0 +1,12 @@
+.view-data {
+    display: flex;
+}
+
+.view-data ul {
+    list-style: none;
+    text-align: left;
+}
+
+.view-data .view-content {
+
+}

@@ -1,22 +1,20 @@
 import './App.css';
-import { OrganizationName } from './OrganizationName';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-
-import { Sidebar } from './components/Sidebar';
-import Button from './components/Button';
+import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
+import {Sidebar} from './components/Sidebar';
+import {ShowView} from "./components/View/ShowView";
 
 function App() {
-    const queryClient = new QueryClient();
+  const queryClient = new QueryClient();
 
-    return (
-        <QueryClientProvider client={queryClient}>
-            <div className="App">
-                <h1>Proto2</h1>
-                <OrganizationName />
-                <Sidebar />
-            </div>
-        </QueryClientProvider>
-    );
+  return (
+    <QueryClientProvider client={queryClient}>
+      <div className="App">
+        <Sidebar/>
+        <h1>Proto2</h1>
+        <ShowView/>
+      </div>
+    </QueryClientProvider>
+  )
 }
 
 export default App;
