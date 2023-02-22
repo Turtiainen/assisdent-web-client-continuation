@@ -5,15 +5,23 @@ export interface SidebarItemType {
     isExpanded: boolean;
 }
 
-export const SidebarItem = ({ 
-    text, icon, onClick, isExpanded 
-}: SidebarItemType ) => {
+export const SidebarItem = ({
+    text,
+    icon,
+    onClick,
+    isExpanded,
+}: SidebarItemType) => {
     return (
-        <div className="sidebar-item" onClick={onClick}>
-            <a>
-                <div className="sidebar-item-block">{icon}</div>
-                {isExpanded ? <div className="sidebar-item-block">{text}</div> : ""}
-            </a>
-        </div>
-    )
-}
+        <a
+            className="grid grid-flow-col col-span-2 auto-cols-max hover:bg-white/25 h-10 items-center text-white hover:text-white"
+            onClick={onClick}
+        >
+            <div className="mx-4 -mt-4 h-2 w-6">{icon}</div>
+            {isExpanded ? (
+                <div className="my-0 text-sm text-white w-full">{text}</div>
+            ) : (
+                ''
+            )}
+        </a>
+    );
+};
