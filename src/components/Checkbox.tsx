@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 export type CheckboxProps = {
     // optional props
-    labelSide?: string;
+    labelSide?: 'left' | 'right';
     label?: string;
     checked?: boolean;
     onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
