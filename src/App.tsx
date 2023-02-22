@@ -1,6 +1,5 @@
 import './App.css';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
-
 import {Sidebar} from './components/Sidebar';
 import {ShowView} from "./components/View/ShowView";
 
