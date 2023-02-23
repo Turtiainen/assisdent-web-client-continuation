@@ -62,7 +62,7 @@ export const Sidebar = () => {
 
     return (
         <div
-            className={`bg-blue-900 absolute inset-y-0 left-0 overflow-x-hidden overflow-y-auto ${
+            className={`bg-ad-blue-800 inset-y-0 left-0 overflow-x-hidden overflow-y-auto transition-[width] ${
                 isExpanded ? 'w-64' : 'w-14'
             }`}
         >

@@ -1,19 +1,21 @@
 import './App.css';
-import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import {Sidebar} from './components/Sidebar';
 import {ShowView} from "./components/View/ShowView";
+import {MainView} from "./components/MainView";
+import {ApplicationBar} from "./components/ApplicationBar";
 
 function App() {
-  const queryClient = new QueryClient();
-
   return (
-    <QueryClientProvider client={queryClient}>
-      <div className="App">
-        <Sidebar/>
-        <h1>Proto2</h1>
+    <div className="App w-full flex">
+      <Sidebar/>
+      <MainView>
+        <ApplicationBar />
+        <header className={`w-full bg-white p-4`}>
+          <h1 className={`text-3xl text-ad-blue-600 font-medium`}>Toimipisteet</h1>
+        </header>
         <ShowView/>
-      </div>
-    </QueryClientProvider>
+      </MainView>
+    </div>
   )
 }
 

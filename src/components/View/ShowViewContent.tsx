@@ -46,7 +46,7 @@ const parseViewXml = (view: Element | undefined | null) => {
 
     if (element.tagName === "Button") {
       const buttonText = element.getAttribute("Text")
-      content.push(<button className={"bg-blue-700"} onClick={() => console.log(`Clicked button ${buttonText}`)}>{buttonText}</button>)
+      content.push(<button className={"bg-ad-blue-400 p-2 rounded hover:bg-ad-blue-200 text-white"} onClick={() => console.log(`Clicked button ${buttonText}`)}>{buttonText}</button>)
     } else if (element.tagName === "Element") {
       content.push(<p>{element.getAttribute("Value")}</p>)
     }
