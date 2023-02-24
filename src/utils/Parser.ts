@@ -4,33 +4,55 @@ type MetaView = {
     XML: string;
 };
 
-const parseCardGroups = (document: Document): any => {
+export const parseCardGroups = (document: Document | Element): any => {
     const groups: any[] = [];
-    const groupElements = document.getElementsByTagName('Group');
-    for (let i = 0; i < groupElements.length; i++) {
-        const groupElement = groupElements[i];
-        const group: any = {
-            identifier: groupElement.getAttribute('Identifier'),
-            hideIfEmpty: groupElement.getAttribute('HideIfEmpty') === 'true',
-            elements: [],
-        };
-        const elementElements = groupElement.getElementsByTagName('Element');
-        for (let j = 0; j < elementElements.length; j++) {
-            const elementElement = elementElements[j];
-            const element: any = {
-                identifier: elementElement.getAttribute('Identifier'),
-                value: elementElement.getAttribute('Value'),
-                caption: elementElement.getAttribute('Caption'),
-                isEditable:
-                    elementElement.getAttribute('IsEditable') === 'true',
-                isMultiline:
-                    elementElement.getAttribute('IsMultiline') === 'true',
-            };
-            group.elements.push(element);
+
+    const parseElements = (document: Document | Element): any => {
+        const elements: any[] = [];
+        for (let i = 0; i < document.children.length; i++) {
+            if (document.children[i].tagName === 'Group') {
+                const group = parseElements(document.children[i]);
+                group.map((element: any) => elements.push(element));
+            } else if (document.children[i].tagName === 'Element') {
+                const element = {
+                    Identifier: document.children[i].getAttribute('Identifier'),
+                    Value: document.children[i].getAttribute('Value'),
+                    Caption: document.children[i].getAttribute('Caption'),
+                    IsEditable: document.children[i].getAttribute('IsEditable'),
+                    IsMultiline:
+                        document.children[i].getAttribute('IsMultiline'),
+                };
+                elements.push(element);
+            }
         }
-        groups.push(group);
+        return elements;
+    };
+
+    const constructGroup = (document: Document | Element): any => {
+        const elements = parseElements(document);
+        const groupElement = {
+            Identifier: document.getAttribute('Identifier'),
+            IsExpandable: document.getAttribute('IsExpandable'),
+            IsCollapsed: document.getAttribute('IsCollapsed'),
+            HideIfEmpty: document.getAttribute('HideIfEmpty'),
+            Scale: document.getAttribute('Scale'),
+            Spacing: document.getAttribute('Spacing'),
+            MaxColumns: document.getAttribute('MaxColumns'),
+            Elements: elements,
+        };
+        return groupElement;
+    };
+
+    for (let i = 0; i < document.children.length; i++) {
+        const groupElement = constructGroup(document.children[i]);
+        groups.push(groupElement);
     }
     return { groups };
+};
+
+const parseCardContent = (document: Document | Element): any => {
+    const contentElements = document.getElementsByTagName('Content');
+    return parseCardGroups(contentElements[0]).groups;
 };
 
 export const getRegisterViews = async () => {
@@ -65,6 +87,8 @@ export const getCardView = async (entity: string) => {
                 `${entity}CardView`,
             ),
         );
-        return parseCardGroups(filteredViews[0]);
+        const parsedCardView = [];
+        parsedCardView.push(parseCardContent(filteredViews[0]));
+        return parsedCardView;
     });
 };

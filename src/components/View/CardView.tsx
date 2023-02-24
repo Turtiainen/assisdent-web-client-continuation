@@ -17,15 +17,45 @@ export const CardView = (props: DataProps) => {
         },
     });
 
+    const loadingSpinner = <p>Loading...</p>;
     console.log('data :>> ', data);
 
-    const loadingSpinner = <p>Loading...</p>;
+    const constructGroupView = (group: any) => {
+        return (
+            <>
+                <div className="flex flex-col border border-blue-500">
+                    <div className="border border-blue-500 rounded text-lg">
+                        {group.Identifier}
+                    </div>
+                    {group.Elements.map((element: any) => {
+                        return (
+                            <div
+                                key={element.Identifier}
+                                className="inline-flex"
+                            >
+                                <p>{element.Caption}</p>
+                                <p>{element.Value}</p>
+                            </div>
+                        );
+                    })}
+                </div>
+            </>
+        );
+    };
 
     return (
         <>
-            {error && <p>There was an error while loading register views</p>}
+            {error && <p>There was an error while loading card view</p>}
             {isLoading && loadingSpinner}
-            {data && data.length > 0 && <p>data</p>}
+            {data && data.length > 0 && (
+                <div>
+                    {data.map((element: any) => {
+                        return element.map((e: any) => {
+                            return constructGroupView(e);
+                        });
+                    })}
+                </div>
+            )}
         </>
     );
 };
