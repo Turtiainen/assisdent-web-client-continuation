@@ -1,17 +1,22 @@
-import {getData} from "../services/backend";
-
-type MetaView = {
-  XML: string
-}
+import {getSchema} from "../services/backend";
+import {DtoView} from "../types/DtoView";
 
 export const getRegisterViews = async () => {
 
-  return await getData().then(result => {
-    const xmlMetaViewList = result.MetaViews
+  return await getSchema().then(result => {
+    const xmlMetaViewList = result?.MetaViews
     const xmlParser = new DOMParser()
     const listOfMetaViews: Document[] = []
 
-    xmlMetaViewList.map((metaView: MetaView) => listOfMetaViews.push(xmlParser.parseFromString(metaView.XML, "text/xml")))
-    return listOfMetaViews.filter(doc => doc.children[0].attributes[4].nodeValue!.endsWith("RegisterView"))
+    xmlMetaViewList?.map((metaView: DtoView) => {
+      listOfMetaViews.push(xmlParser.parseFromString(metaView.XML, "text/xml"))
+    })
+
+    return listOfMetaViews.filter(doc => {
+      return doc
+              ?.getElementsByTagName("ViewDefinitionCoreBase")[0]
+              ?.getAttribute("Name")
+              ?.endsWith("RegisterView")
+    })
   })
 }

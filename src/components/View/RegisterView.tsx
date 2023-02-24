@@ -1,12 +1,13 @@
 /**
  * TODO
- * Cleanup; figure out why mutation.mutate() causes infinite loop
+ * Cleanup; figure out why mutation.mutate() causes infinite loop if done on component load
  */
-
 
 import React, {useState} from "react";
 import {useMutation} from "@tanstack/react-query";
 import {getEntitiesForRegisterView} from "../../services/backend";
+import {RegisterTable} from "./RegisterTable";
+import {PrintEntities} from "../../temp/PrintEntities";
 
 export type DataProps = {
   view: Element | undefined | null
@@ -72,20 +73,15 @@ const parseOrderOptions = (view: Element) => {
   return null
 }
 
-const getObjectPropertyByString = (obj: any, path: string) => {
-  return path.split('.').reduce((prev, cur) => prev[cur], obj)
-}
-
 export const RegisterView = ({view}: DataProps) => {
   const [fetchedEntities, setFetchedEntities] = useState<any | null>(null)
-
-  console.log(view)
 
   const header = view!.getAttribute("Header")
   const entityType = view!.getAttribute("EntityType")
   const viewName = view!.getAttribute("Name")
-
   const orderBy = parseOrderOptions(view!)
+
+  const {columns, bindings} = parseRegisterMetaView(view)!
 
   const searchOptions = {
     entityType,
@@ -96,45 +92,27 @@ export const RegisterView = ({view}: DataProps) => {
 
   const mutation = useMutation({
     mutationFn: getEntitiesForRegisterView,
-    onSuccess: data => setFetchedEntities(data.Results)
-  })
-
-  const {columns, bindings} = parseRegisterMetaView(view)!
-
-  let trimmedBindings = bindings.map(b => {
-    if (b.startsWith("{Binding")) {
-      return b.substring(8).trim().slice(0, length - 1)
+    onSuccess: data => {
+      setFetchedEntities(data.Results)
     }
-    return b
   })
 
   return (
-    <div>
-      <button onClick={() => mutation.mutate(searchOptions)}>Fetch table data</button>
+    <div className={`py-2`}>
+      <button
+        className={`bg-blue-500 hover:bg-blue-400 p-1 text-white rounded my-2 mx-4 px-2`}
+        onClick={() => mutation.mutate(searchOptions)}>
+          Fetch table data
+      </button>
       {mutation.isLoading && <h2 className="text-2xl">Loading...</h2>}
-      <>
+      <div className={`px-4`}>
         <h2 className="text-2xl">{header}</h2>
         <p>This entity is of type {entityType}</p>
         <p>The viewName of this entity is {viewName}</p>
-        {orderBy && <p>These element are sorted based on {orderBy} by default.</p>}
-        <table className="border-collapse border border-slate-500">
-          <thead>
-          <tr>
-            {columns?.map((c, idx) => <th key={idx}>{c}</th>)}
-          </tr>
-          </thead>
-          {(fetchedEntities && fetchedEntities?.length > 0) && <tbody>
-          {fetchedEntities.map((entity: any, idx: React.Key) => {
-            return (
-              <tr key={idx}>
-                {trimmedBindings.map((binding: string, idx) => {
-                  return (<td className="text-left" key={idx}>{binding.startsWith('{') ? binding : getObjectPropertyByString(entity, binding)}</td>)
-                })}
-              </tr>)
-          })}
-          </tbody>}
-        </table>
-      </>
+        {orderBy && <p>These elements are sorted based on {orderBy} by default.</p>}
+      </div>
+      {(fetchedEntities && fetchedEntities.length > 0) && <RegisterTable columns={columns} entities={fetchedEntities} bindings={bindings}/>}
+      {entityType && <PrintEntities entityType={entityType}/>}
     </div>
   )
 }

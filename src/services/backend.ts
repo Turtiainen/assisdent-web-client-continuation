@@ -1,4 +1,5 @@
 import axios, {AxiosRequestConfig, isAxiosError} from 'axios';
+import {DtoSchema} from "../types/DtoSchema";
 
 type LoginData = {
   Username: string,
@@ -28,7 +29,7 @@ type EntitySearchTypes = {
 
   Also, return type is any for
 */
-export async function getData() {
+export async function getSchema() {
   const loginData: LoginData = {
     Username: import.meta.env.VITE_ASSISCARE_USER,
     Password: import.meta.env.VITE_ASSISCARE_PASS,
@@ -48,7 +49,7 @@ export async function getData() {
         const {data} = await axios.get(`${import.meta.env.VITE_ASSISCARE_BASE}${import.meta.env.VITE_ASSISCARE_ROUTE}dack/schema`, {
           headers,
         });
-        return data;
+        return data as DtoSchema;
       } catch (error) {
         if (axios.isAxiosError(error)) {
           console.log(`error at getSchema: ${error.message}`);
