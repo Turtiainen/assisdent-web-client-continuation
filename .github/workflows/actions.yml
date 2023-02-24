@@ -2,7 +2,7 @@ name: assisdent-github-actions
 run-name: CI/CD pipeline for Assisdent Web Client development
 on:
   push:
-    branches: [ development, main ]
+    branches: [ development, main, ci-cd ]
   pull_request:
     branches: [ development, main ]
 jobs:
