@@ -62,14 +62,14 @@ export const Sidebar = () => {
 
     return (
         <div
-            className={`bg-ad-blue-800 inset-y-0 left-0 overflow-x-hidden overflow-y-auto transition-[width] ${
+            className={`bg-ad-sidebar overflow-x-hidden overflow-y-auto transition-[width] ${
                 isExpanded ? 'w-64' : 'w-14'
             }`}
         >
             <div className="flex">
                 {isExpanded ? (
                     <a
-                        className="text-left mx-5 my-auto text-white hover:text-blue-500 w-2/3"
+                        className="text-left mx-5 my-auto text-white hover:text-ad-subtitle w-2/3"
                         href="/"
                     >
                         AssisDent
@@ -78,7 +78,7 @@ export const Sidebar = () => {
                     ''
                 )}
                 <button
-                    className="font-medium bg-transparent text-white hover:text-blue-400 hover:border-transparent focus:border-transparent focus:outline-none w-1/3"
+                    className="font-medium bg-transparent text-white hover:text-ad-subtitle hover:border-transparent focus:border-transparent focus:outline-none w-1/3"
                     onClick={() => setIsExpanded(!isExpanded)}
                 >
                     {isExpanded ? '<=' : '=>'}

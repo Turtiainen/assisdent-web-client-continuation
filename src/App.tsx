@@ -11,7 +11,7 @@ function App() {
       <MainView>
         <ApplicationBar />
         <header className={`w-full bg-white p-4`}>
-          <h1 className={`text-3xl text-ad-blue-600 font-medium`}>Toimipisteet</h1>
+          <h1 className={`text-3xl text-ad-hero-title font-medium`}>Toimipisteet</h1>
         </header>
         <ShowView/>
       </MainView>
