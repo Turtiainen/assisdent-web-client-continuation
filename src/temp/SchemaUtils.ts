@@ -5,7 +5,7 @@ import {DtoEntity} from "../types/DtoEntity";
 const schema = json as DtoSchema
 
 export const getFormattedText = (identifier: string) => {
-  if (identifier.startsWith("{")) return identifier
+  if (identifier.includes("{{")) return identifier
   if (identifier.includes(";;")) return identifier
   return schema.FormattedTexts.find((ft) => ft.Identifier === identifier)?.Text
 }

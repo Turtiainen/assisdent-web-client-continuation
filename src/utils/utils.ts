@@ -19,7 +19,7 @@ export const resolveEntityBindings = (entity: DynamicObject, bindings: string[],
     }
     else if (value?.startsWith("{FormattedText")) {
       value = getFormattedText(rawBinding.substring(14).trim().slice(0, length - 1))
-      if (value.startsWith("{{")) {
+      if (value?.includes("{{")) {
         value = parseHandlebars(value, entity)
       }
     }
