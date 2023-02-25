@@ -1,5 +1,4 @@
 import React, {useState} from "react";
-import './ShowView.css'
 import {ViewList} from "./ViewList";
 import {RegisterView} from "./RegisterView";
 

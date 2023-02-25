@@ -8,14 +8,14 @@ import {useMutation} from "@tanstack/react-query";
 import {getEntitiesForRegisterView} from "../../services/backend";
 import {RegisterTable} from "./RegisterTable";
 import {PrintEntities} from "../../temp/PrintEntities";
+import {DynamicObject} from "../../types/DynamicObject";
+import {getEntityPropertiesSchema} from "../../temp/SchemaUtils";
 
 export type DataProps = {
-  view: Element | undefined | null
+  view: Element
 }
 
-const parseRegisterMetaView = (view: Element | undefined | null) => {
-  if (!view) return null
-
+const parseRegisterMetaView = (view: Element) => {
   const columns: string[] = []
   const bindings: string[] = []
 
@@ -74,14 +74,14 @@ const parseOrderOptions = (view: Element) => {
 }
 
 export const RegisterView = ({view}: DataProps) => {
-  const [fetchedEntities, setFetchedEntities] = useState<any | null>(null)
+  const [fetchedEntities, setFetchedEntities] = useState<DynamicObject[] | null>(null)
 
-  const header = view!.getAttribute("Header")
-  const entityType = view!.getAttribute("EntityType")
-  const viewName = view!.getAttribute("Name")
-  const orderBy = parseOrderOptions(view!)
+  const header = view.getAttribute("Header")
+  const entityType = view.getAttribute("EntityType")
+  const viewName = view.getAttribute("Name")
+  const orderBy = parseOrderOptions(view)
 
-  const {columns, bindings} = parseRegisterMetaView(view)!
+  const {columns, bindings} = parseRegisterMetaView(view)
 
   const searchOptions = {
     entityType,
@@ -97,6 +97,8 @@ export const RegisterView = ({view}: DataProps) => {
     }
   })
 
+  const entityPropertiesSchema = getEntityPropertiesSchema(entityType)
+
   return (
     <div className={`py-2`}>
       <button
@@ -111,7 +113,14 @@ export const RegisterView = ({view}: DataProps) => {
         <p>The viewName of this entity is {viewName}</p>
         {orderBy && <p>These elements are sorted based on {orderBy} by default.</p>}
       </div>
-      {(fetchedEntities && fetchedEntities.length > 0) && <RegisterTable columns={columns} entities={fetchedEntities} bindings={bindings}/>}
+      {
+        (fetchedEntities && fetchedEntities.length > 0)
+          && <RegisterTable
+                columns={columns}
+                entities={fetchedEntities}
+                bindings={bindings}
+                entityPropertiesSchema={entityPropertiesSchema}/>
+      }
       {entityType && <PrintEntities entityType={entityType}/>}
     </div>
   )

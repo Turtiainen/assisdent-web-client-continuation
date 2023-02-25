@@ -1,4 +1,4 @@
-import {printEntities} from "../utils/Entity";
+import {findEntitySchema} from "./SchemaUtils";
 import {DtoEntity} from "../types/DtoEntity";
 
 type PrintEntitiesProps = {
@@ -6,7 +6,7 @@ type PrintEntitiesProps = {
 }
 
 export const PrintEntities = ({entityType}: PrintEntitiesProps) => {
-  const entities = printEntities(entityType)
+  const entities = findEntitySchema(entityType)
   return (
     <div className={`flex px-4 py-2`}>
       {entities?.map((entity: DtoEntity) => {
