@@ -25,6 +25,7 @@ jobs:
       - run: npm test
 
   Deploy-Preview:
+    needs: Build-and-test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
