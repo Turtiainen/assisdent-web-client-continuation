@@ -1,19 +1,28 @@
 import React, {useState} from "react";
 import {ShowViewContent} from "./ShowViewContent";
-import './ShowView.css'
 import {ViewList} from "./ViewList";
+import { Routes, Route } from 'react-router-dom';
 
 export const ShowView = () => {
   const [selectedDocument, setSelectedDocument] = useState<HTMLElement | null>(null)
 
-  const onClickSetSelectedDocument = (val: HTMLElement) => {
+  const selectDocument = (val: HTMLElement) => {
     setSelectedDocument(val)
   }
 
   return (
-    <section className="view-data">
-      <ViewList onClick={onClickSetSelectedDocument} />
-      <ShowViewContent view={selectedDocument} />
-    </section>
-  )
+      <section className="flex p-4">
+          <Routes>
+              <Route
+                  path="/view/:viewid"
+                  element={
+                      <>
+                          <ViewList selectDocument={selectDocument} />
+                          <ShowViewContent view={selectedDocument} />
+                      </>
+                  }
+              />
+          </Routes>
+      </section>
+  );
 }
