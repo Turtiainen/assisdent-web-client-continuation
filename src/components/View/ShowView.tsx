@@ -1,6 +1,5 @@
 import React, {useState} from "react";
 import {ShowViewContent} from "./ShowViewContent";
-import './ShowView.css'
 import {ViewList} from "./ViewList";
 
 export const ShowView = () => {
@@ -11,7 +10,7 @@ export const ShowView = () => {
   }
 
   return (
-    <section className="view-data">
+    <section className="flex p-4">
       <ViewList onClick={onClickSetSelectedDocument} />
       <ShowViewContent view={selectedDocument} />
     </section>
