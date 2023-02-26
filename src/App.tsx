@@ -7,7 +7,7 @@ import {ApplicationBar} from "./components/ApplicationBar";
 function App() {
   return (
     <div className="App w-full flex">
-      <Sidebar/>
+      <Sidebar/
       <MainView>
         <ApplicationBar />
         <header className={`w-full bg-white p-4`}>

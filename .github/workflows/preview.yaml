@@ -9,7 +9,7 @@ on:
       - development
 
 jobs:
-  build:
+  Build-and-test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -22,18 +22,6 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - run: npm install
       - run: npm run build
-
-  test:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [18.x]
-    steps:
-      - uses: actions/checkout@v3
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
       - run: npm test
 
   Deploy-Preview:
