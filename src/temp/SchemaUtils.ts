@@ -6,7 +6,6 @@ const schema = json as DtoSchema
 
 export const getFormattedText = (identifier: string) => {
   if (identifier.includes("{{")) return identifier
-  if (identifier.includes(";;")) return identifier
   return schema.FormattedTexts.find((ft) => ft.Identifier === identifier)?.Text
 }
 
@@ -29,17 +28,17 @@ export const findEntitySchema = (...names: string[]) => {
   }
 }
 
-export const getEntitySchema = (name: string | null) => {
+export const getEntitySchema = (name: string | undefined | null) => {
   if (!name || name === '') return
   return schema.MetaData.Entities.find((e) => e.Name === name)
 }
 
-export const getEntityPropertiesSchema = (name: string | null) => {
+export const getEntityPropertiesSchema = (name: string | undefined | null) => {
   const entity = getEntitySchema(name)
   return entity?.Properties
 }
 
-export const getEntityToString = (name: string | null): string | undefined => {
+export const getEntityToString = (name: string | undefined | null): string | undefined => {
   const entity = getEntitySchema(name)
   return entity?.Metadata?.Metadata?.["$Entity"]?.ToString
 }

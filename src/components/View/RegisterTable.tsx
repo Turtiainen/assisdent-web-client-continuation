@@ -1,17 +1,15 @@
-import React, {ChangeEventHandler, MouseEventHandler, ReactNode, useState} from "react";
-import {parseHandlebars, resolveEntityBindings} from "../../utils/utils";
-import {findEntitySchema, getEntityPropertiesSchema, getEntitySchema, getEntityToString} from "../../temp/SchemaUtils";
-import {DtoProperty} from "../../types/DtoProperty";
-import * as events from "events";
+import React, {ChangeEventHandler, MouseEventHandler, useState} from "react";
+import {resolveEntityBindings} from "../../utils/utils";
+import {DynamicObject} from "../../types/DynamicObject";
 
 export type RegisterTableProps = {
   columns: string[]
-  entities: any[]
+  entities: DynamicObject[]
   bindings: string[]
-  entityPropertiesSchema?: { [index: string]: DtoProperty }
+  entityType: string | null
 }
 
-export const RegisterTable = ({columns, entities, bindings, entityPropertiesSchema}: RegisterTableProps) => {
+export const RegisterTable = ({columns, entities, bindings, entityType}: RegisterTableProps) => {
   const [selectedList, setSelectedList] = useState<Set<string>>(new Set())
   const [favoriteList, setFavoriteList] = useState<Set<string>>(new Set())
 
@@ -86,27 +84,7 @@ export const RegisterTable = ({columns, entities, bindings, entityPropertiesSche
 
   const TableRows = (
     entities.map((entity, idx) => {
-      console.log(entity)
-
-      const entityKeys = Object.keys(entity)
-      let extraInfo
-
-      // TODO extract function, improve the extraInfo logic
-      entityKeys.forEach((key) => {
-        const property = entityPropertiesSchema?.[key]
-        const propertyType = property?.["Type"]
-        if (propertyType && propertyType === "List" && entity[key].length > 0) {
-          const subType = property["SubType"]?.["Type"]
-          const entityToString = getEntityToString(subType)
-          extraInfo = {
-            property: key,
-            subtype: subType,
-            "toString": entityToString
-          }
-        }
-      })
-
-      const entityBindings = resolveEntityBindings(entity, bindings, extraInfo)
+      const entityBindings = resolveEntityBindings(entity, bindings, entityType)
 
       return (
         <tr key={entity.Id} className={`border-b border-gray-300 hover:bg-blue-100/30`}>

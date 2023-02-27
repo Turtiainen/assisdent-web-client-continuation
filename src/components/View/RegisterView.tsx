@@ -97,8 +97,6 @@ export const RegisterView = ({view}: DataProps) => {
     }
   })
 
-  const entityPropertiesSchema = getEntityPropertiesSchema(entityType)
-
   return (
     <div className={`py-2`}>
       <button
@@ -119,7 +117,7 @@ export const RegisterView = ({view}: DataProps) => {
                 columns={columns}
                 entities={fetchedEntities}
                 bindings={bindings}
-                entityPropertiesSchema={entityPropertiesSchema}/>
+                entityType={entityType}/>
       }
       {entityType && <PrintEntities entityType={entityType}/>}
     </div>
