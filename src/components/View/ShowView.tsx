@@ -1,27 +1,13 @@
 import React, {useState} from "react";
-
-<
-<
-<
-<
-<
-<< HEAD
-  import {ViewList} from "./ViewList";
-import {RegisterView} from "./RegisterView";
-
-======
-=
-import {ShowViewContent} from "./ShowViewContent";
 import {ViewList} from "./ViewList";
+import {RegisterView} from "./RegisterView";
 import {Routes, Route} from 'react-router-dom';
 
->>>>>>>
-development
 
 export const ShowView = () => {
   const [selectedDocument, setSelectedDocument] = useState<Element | null>(null)
 
-  const selectDocument = (val: HTMLElement) => {
+  const selectDocument = (val: Element) => {
     setSelectedDocument(val)
   }
 
@@ -32,7 +18,7 @@ export const ShowView = () => {
           path={`view/:viewid`}
           element={
             <>
-              <ViewList selectDocument={selectedDocument}/>
+              <ViewList selectDocument={selectDocument}/>
               {selectedDocument && <RegisterView key={selectedDocument.getAttribute("Name")} view={selectedDocument}/>}
             </>
           }/>
