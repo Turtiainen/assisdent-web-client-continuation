@@ -108,7 +108,7 @@ export const resolveEntityBindings = (
       : rawBinding.substring(14).trim().slice(0, -1)
 
     if (bindingType === BindingKind.BINDING) {
-      value = tryToGetProp(entity, rawBinding.substring(8).trim().slice(0, -1))
+      value = tryToGetProp(entity, sanitizedBinding)
     } else if (bindingType === BindingKind.FORMATTED_TEXT) {
       value = resolveFormattedText(entity, value, entityType)
     }

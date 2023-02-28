@@ -1,6 +1,7 @@
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import {Sidebar} from './components/Sidebar';
 import {ShowView} from "./components/View/ShowView";
+import {PrintSchemaInfo} from "./temp/PrintSchemaInfo";
 
 function App() {
   const queryClient = new QueryClient();
@@ -10,7 +11,8 @@ function App() {
       <div className="App ml-64 text-sm">
         <Sidebar/>
         <h1 className={`py-2 px-4 text-3xl`}>Proto2</h1>
-        <ShowView/>
+        {/*<ShowView/>*/}
+        <PrintSchemaInfo />
       </div>
     </QueryClientProvider>
   )
