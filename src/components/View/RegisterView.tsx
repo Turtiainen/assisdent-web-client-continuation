@@ -76,16 +76,30 @@ const parseOrderOptions = (view: Element) => {
 export const RegisterView = ({view}: DataProps) => {
   const [fetchedEntities, setFetchedEntities] = useState<DynamicObject[] | null>(null)
 
-  const header = view.getAttribute("Header")
-  const entityType = view.getAttribute("EntityType")
-  const viewName = view.getAttribute("Name")
+  const Header = view.getAttribute("Header")
+  const EntityType = view.getAttribute("EntityType")
+  const ViewName = view.getAttribute("Name")
+  const DisableCreateNewEntity = view.getAttribute("DisableCreateNewEntity")
+  const DisableItemSelection = view.getAttribute("DisableItemSelection")
+  const CreateNewCardName = view.getAttribute("CreateNewCardName")
+
+  const ViewMetaData: { [index: string]: any} = {}
+  for (const attr of view.attributes) {
+    if (attr.name.includes("xmlns") || attr.name.includes("xsi")) continue
+
+    if (attr.value === "true" || attr.value === "false")
+      ViewMetaData[attr.name] = attr.value === "true"
+    else
+      ViewMetaData[attr.name] = attr.value
+  }
+
   const orderBy = parseOrderOptions(view)
 
   const {columns, bindings} = parseRegisterMetaView(view)
 
   const searchOptions = {
-    entityType,
-    viewName,
+    entityType: EntityType,
+    viewName: ViewName,
     currentPage: 0,
     orderBy
   }
@@ -98,28 +112,25 @@ export const RegisterView = ({view}: DataProps) => {
   })
 
   return (
-    <div className={`py-2`}>
+    <div className={``}>
       <button
-        className={`bg-blue-500 hover:bg-blue-400 p-1 text-white rounded my-2 mx-4 px-2`}
+        className={`bg-blue-500 hover:bg-blue-400 p-1 text-white rounded my-2 mx-8 px-2`}
         onClick={() => mutation.mutate(searchOptions)}>
-          Fetch table data
+        Fetch table data
       </button>
       {mutation.isLoading && <h2 className="text-2xl">Loading...</h2>}
-      <div className={`px-4`}>
-        <h2 className="text-2xl">{header}</h2>
-        <p>This entity is of type {entityType}</p>
-        <p>The viewName of this entity is {viewName}</p>
-        {orderBy && <p>These elements are sorted based on {orderBy} by default.</p>}
+      <div className={`px-8 pt-4`}>
+        {orderBy && <p>These elements should be sorted based on {orderBy} by default.</p>}
       </div>
       {
         (fetchedEntities && fetchedEntities.length > 0)
-          && <RegisterTable
-                columns={columns}
-                entities={fetchedEntities}
-                bindings={bindings}
-                entityType={entityType}/>
+        && <RegisterTable
+          columns={columns}
+          entities={fetchedEntities}
+          bindings={bindings}
+          entityType={EntityType}/>
       }
-      {entityType && <PrintEntities entityType={entityType}/>}
+      {EntityType && <PrintEntities entityType={EntityType}/>}
     </div>
   )
 }

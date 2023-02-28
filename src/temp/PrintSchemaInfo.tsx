@@ -16,7 +16,7 @@ export const PrintSchemaInfo = () => {
   const data = json as DtoSchema
   const xmlParser = new DOMParser()
   const MetaViews = data.MetaViews
-  const viewList: { ViewName: string, ViewChildren: HTMLCollection }[] = []
+  const viewList: { ViewName: string, ViewChildren: HTMLCollection, ViewDefinitionCoreBase: Element }[] = []
   let MetaViewXmlList = MetaViews.map((MetaView) => xmlParser.parseFromString(MetaView.XML, "text/xml"))
 
   if (filter !== null) {
@@ -40,7 +40,7 @@ export const PrintSchemaInfo = () => {
     const ViewDefinitionCoreBase = doc.firstElementChild!
     const ViewName = ViewDefinitionCoreBase.getAttribute("Name")!
     const ViewChildren = ViewDefinitionCoreBase.children
-    viewList.push({ViewName, ViewChildren})
+    viewList.push({ViewName, ViewChildren, ViewDefinitionCoreBase})
   })
 
   const listStyles = ["circle", "square", "disc"]
@@ -49,11 +49,15 @@ export const PrintSchemaInfo = () => {
     if (elements.length === 0) return null
 
     return Array.from(elements).map((element, idx) => {
-      const Identifier = element.getAttribute("Identifier") ? ( ' Identifier="' + element.getAttribute("Identifier") + '"') : ""
-      const Caption = element.getAttribute("Caption") ? ( ' Caption="' + element.getAttribute("Caption") + '"') : ""
+      const Identifier = element.getAttribute("Identifier") ? (' Identifier="' + element.getAttribute("Identifier") + '"') : ""
+      const Caption = element.getAttribute("Caption") ? (' Caption="' + element.getAttribute("Caption") + '"') : ""
       const Value = element.getAttribute("Value") ? (' Value="' + element.getAttribute("Value") + '"') : ""
       return (
-        <li key={`${element.nodeName}-${idx}`}>
+        <li key={`${element.nodeName}-${Caption || Identifier}-${idx}`} onClick={(e) => {
+          e.preventDefault()
+          e.stopPropagation()
+          console.log(element)
+        }}>
           <pre>{`<${element.nodeName}${(Caption || Identifier)}${Value}>`}</pre>
           {element.hasChildNodes()
             ? <ul className={`pl-4`}>{printRecursive(element.children, elementList, ++level % listStyles.length)}</ul>
@@ -63,25 +67,32 @@ export const PrintSchemaInfo = () => {
     })
   }
 
-  const Print = viewList.map((obj) => {
-    return (
-      <div className={`flex py-4 border-b`}>
-        <div className={`w-96`}>
-          <h2 className={`text-xs font-bold`}>{obj.ViewName}</h2>
-        </div>
-        <div className={`flex-1`}>
-          <ul className={`text-xs`}>
-            {printRecursive(obj.ViewChildren)}
-          </ul>
-        </div>
-      </div>
-    )
-  })
+  const Print = (
+    <div className={``}>
+      {viewList.map((obj) => {
+        return (
+          <div className={`flex py-4 border-b`} key={obj.ViewName}>
+            <div className={`w-96`}>
+              <h2 className={`text-xs font-bold`} onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                console.log(obj.ViewDefinitionCoreBase)
+              }
+              }>{obj.ViewName}</h2>
+            </div>
+            <div className={`max-w-[52rem] overflow-x-auto`}>
+              <ul className={`text-xs`}>
+                {printRecursive(obj.ViewChildren)}
+              </ul>
+            </div>
+          </div>
+        )
+      })}
+    </div>
+  )
 
   return (
-    <section className={`pl-4`}>
-      <h1>Schema Info</h1>
-
+    <div className={`pl-4 py-4`}>
       <div>
         <label htmlFor={`filter`}>Filter</label>
         <input
@@ -91,10 +102,7 @@ export const PrintSchemaInfo = () => {
           className={`border rounded ml-2`}
         />
       </div>
-
-      <>
-        {Print}
-      </>
-    </section>
+      {Print}
+    </div>
   )
 }

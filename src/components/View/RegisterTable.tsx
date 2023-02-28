@@ -83,7 +83,7 @@ export const RegisterTable = ({columns, entities, bindings, entityType}: Registe
   )
 
   const TableRows = (
-    entities.map((entity, idx) => {
+    entities.map((entity) => {
       const entityBindings = resolveEntityBindings(entity, bindings, entityType)
 
       return (

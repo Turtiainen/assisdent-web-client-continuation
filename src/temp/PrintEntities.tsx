@@ -8,7 +8,7 @@ type PrintEntitiesProps = {
 export const PrintEntities = ({entityType}: PrintEntitiesProps) => {
   const entities = findEntitySchema(entityType)
   return (
-    <div className={`flex px-4 py-2`}>
+    <div className={`flex px-8 py-4`}>
       {entities?.map((entity: DtoEntity) => {
         return (
           <div key={entity.Name}>

@@ -62,7 +62,7 @@ export const Sidebar = () => {
 
     return (
         <div
-            className={`bg-ad-sidebar overflow-x-hidden overflow-y-auto transition-[width] ${
+            className={`min-h-[100vh] flex-initial bg-ad-sidebar overflow-x-hidden overflow-y-auto transition-[width] ${
                 isExpanded ? 'w-64' : 'w-14'
             }`}
         >

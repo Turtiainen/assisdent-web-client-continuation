@@ -21,13 +21,14 @@ export const ViewList = ({selectDocument}: ViewListProps) => {
     if (viewDocument) selectDocument(viewDocument?.documentElement)
   }
 
-  const registerViewNames = data?.map((doc: Document, idx: React.Key) => {
+  const registerViewNames = data?.map((doc: Document) => {
+    const docName = doc!.documentElement!.getAttribute("Name")!
     return (
       <option
-        key={idx}
-        value={doc!.documentElement!.getAttribute("Name")!}
+        key={docName}
+        value={docName}
       >
-        {doc?.documentElement.getAttribute("Name")}
+        {docName}
       </option>
     )
   })
@@ -40,7 +41,7 @@ export const ViewList = ({selectDocument}: ViewListProps) => {
   const loadingSpinner = <p>Loading...</p>
 
   return (
-    <div className={`px-4 py-2`}>
+    <div className={`px-8`}>
       <>
         {error && <p>There was an error while loading register views</p>}
         {isLoading && loadingSpinner}

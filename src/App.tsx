@@ -2,8 +2,6 @@ import {Sidebar} from './components/Sidebar';
 import {ShowView} from "./components/View/ShowView";
 import {MainView} from "./components/MainView";
 import {ApplicationBar} from "./components/ApplicationBar";
-import {PrintSchemaInfo} from "./temp/PrintSchemaInfo";
-
 
 function App() {
   return (
@@ -11,11 +9,7 @@ function App() {
       <Sidebar/>
       <MainView>
         <ApplicationBar/>
-        <header className={`w-full bg-white p-4`}>
-          <h1 className={`text-3xl text-ad-hero-title font-medium`}>Toimipisteet</h1>
-        </header>
-        {/*<ShowView/>*/}
-        <PrintSchemaInfo/>
+        <ShowView/>
       </MainView>
     </div>
   )
