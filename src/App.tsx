@@ -1,20 +1,23 @@
-import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import {Sidebar} from './components/Sidebar';
 import {ShowView} from "./components/View/ShowView";
+import {MainView} from "./components/MainView";
+import {ApplicationBar} from "./components/ApplicationBar";
 import {PrintSchemaInfo} from "./temp/PrintSchemaInfo";
 
-function App() {
-  const queryClient = new QueryClient();
 
+function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <div className="App ml-64 text-sm">
-        <Sidebar/>
-        <h1 className={`py-2 px-4 text-3xl`}>Proto2</h1>
+    <div className="App w-full flex">
+      <Sidebar/>
+      <MainView>
+        <ApplicationBar/>
+        <header className={`w-full bg-white p-4`}>
+          <h1 className={`text-3xl text-ad-hero-title font-medium`}>Toimipisteet</h1>
+        </header>
         {/*<ShowView/>*/}
-        <PrintSchemaInfo />
-      </div>
-    </QueryClientProvider>
+        <PrintSchemaInfo/>
+      </MainView>
+    </div>
   )
 }
 

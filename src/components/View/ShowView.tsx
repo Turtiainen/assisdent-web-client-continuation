@@ -1,19 +1,43 @@
 import React, {useState} from "react";
-import {ViewList} from "./ViewList";
+
+<
+<
+<
+<
+<
+<< HEAD
+  import {ViewList} from "./ViewList";
 import {RegisterView} from "./RegisterView";
+
+======
+=
+import {ShowViewContent} from "./ShowViewContent";
+import {ViewList} from "./ViewList";
+import {Routes, Route} from 'react-router-dom';
+
+>>>>>>>
+development
 
 export const ShowView = () => {
   const [selectedDocument, setSelectedDocument] = useState<Element | null>(null)
 
-  const handleChange = (val: Element | undefined) => {
-    if (!val) return
+  const selectDocument = (val: HTMLElement) => {
     setSelectedDocument(val)
   }
 
   return (
-    <section className={`w-full`}>
-      <ViewList onChange={handleChange} selectedDoc={selectedDocument} />
-      {selectedDocument && <RegisterView key={selectedDocument.getAttribute("Name")} view={selectedDocument}/>}
+    <section className={`flex p-4`}>
+      <Routes>
+        <Route
+          path={`view/:viewid`}
+          element={
+            <>
+              <ViewList selectDocument={selectedDocument}/>
+              {selectedDocument && <RegisterView key={selectedDocument.getAttribute("Name")} view={selectedDocument}/>}
+            </>
+          }/>
+
+      </Routes>
     </section>
   )
 }

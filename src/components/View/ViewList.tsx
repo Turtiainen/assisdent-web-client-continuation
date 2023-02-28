@@ -1,23 +1,25 @@
 import React from "react";
 import {useQuery} from "@tanstack/react-query";
 import {getRegisterViews} from "../../utils/Parser";
+import {useParams} from "react-router-dom";
 
 export type ViewListProps = {
-  selectedDoc: Element | null
-  onChange: (doc: Element | undefined) => void
+  selectDocument: (doc: Element) => void
 }
 
-export const ViewList = ({onChange, selectedDoc}: ViewListProps) => {
+export const ViewList = ({selectDocument}: ViewListProps) => {
   const {isLoading, error, data, isFetching} = useQuery({
     queryKey: ['getRegisterViews'],
     queryFn: async () => {
       return await getRegisterViews();
-    },
-    onSuccess: (data) => {
-      if (!selectedDoc)
-        onChange(data[0].documentElement)
     }
   });
+
+  const { viewid } = useParams()
+  if (viewid) {
+    const viewDocument = data?.find((element) => element.documentElement.getAttribute("Name") === viewid)
+    if (viewDocument) selectDocument(viewDocument?.documentElement)
+  }
 
   const registerViewNames = data?.map((doc: Document, idx: React.Key) => {
     return (
@@ -31,13 +33,7 @@ export const ViewList = ({onChange, selectedDoc}: ViewListProps) => {
   })
 
   const contentList = (
-    <select
-      className={`border-2 border-slate-200 hover:border-blue-400 cursor-pointer rounded p-2`}
-      value={selectedDoc?.getAttribute("Name") || undefined}
-      onChange={(evt) => {
-        const entity = data?.find((doc) => doc.documentElement.getAttribute("Name") === evt.target.value)
-        onChange(entity?.documentElement)
-      }}>
+    <select className={`border-2 border-slate-200 hover:border-blue-400 cursor-pointer rounded p-2`}>
       {registerViewNames}
     </select>
   )
