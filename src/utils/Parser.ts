@@ -28,7 +28,7 @@ export const parseCardGroups = (document: Document | Element): any => {
         return elements;
     };
 
-    const constructGroup = (document: Document | Element): any => {
+    const constructGroup = (document: Element): any => {
         const elements = parseElements(document);
         const groupElement = {
             Identifier: document.getAttribute('Identifier'),
@@ -71,6 +71,24 @@ export const getRegisterViews = async () => {
         );
     });
 };
+
+export const getCardViews = async () => {
+    return await getData().then((result) => {
+        const xmlMetaViewList = result.MetaViews;
+        const xmlParser = new DOMParser();
+        const listOfMetaViews: Document[] = [];
+
+        xmlMetaViewList.map((metaView: MetaView) =>
+            listOfMetaViews.push(
+                xmlParser.parseFromString(metaView.XML, 'text/xml'),
+            ),
+        );
+        return listOfMetaViews.filter((doc) =>
+            doc.children[0].attributes[4].nodeValue!.endsWith('CardView'),
+        );
+    });
+};
+
 
 export const getCardView = async (entity: string) => {
     return await getData().then((result) => {

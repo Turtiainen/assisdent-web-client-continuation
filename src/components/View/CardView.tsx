@@ -1,14 +1,15 @@
 import { getCardView } from '../../utils/Parser';
 import { useQuery } from '@tanstack/react-query';
 
-export type DataProps = {
+export type CardViewDataProps = {
     entity: string;
-    id: string;
+    id?: string;
     view?: Element | undefined | null;
 };
 
-export const CardView = (props: DataProps) => {
+export const CardView = (props: CardViewDataProps) => {
     const { entity, id, view } = props;
+
 
     const { isLoading, error, data, isFetching } = useQuery({
         queryKey: ['getCardView'],
@@ -45,6 +46,8 @@ export const CardView = (props: DataProps) => {
 
     return (
         <>
+            {console.log('render card view')}
+            
             {error && <p>There was an error while loading card view</p>}
             {isLoading && loadingSpinner}
             {data && data.length > 0 && (

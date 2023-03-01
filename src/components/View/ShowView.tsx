@@ -2,12 +2,19 @@ import React, {useState} from "react";
 import {ShowViewContent} from "./ShowViewContent";
 import {ViewList} from "./ViewList";
 import { Routes, Route } from 'react-router-dom';
+import { CardViewSelect } from "./CardViewSelect";
+import { CardView } from "./CardView";
 
 export const ShowView = () => {
-  const [selectedDocument, setSelectedDocument] = useState<HTMLElement | null>(null)
+  const [selectedDocument, setSelectedDocument] = useState<HTMLElement | null>(null);
+  const [selectedCard, setSelectedCard] = useState<string>('');
 
   const selectDocument = (val: HTMLElement) => {
     setSelectedDocument(val)
+  }
+
+  const selectCardEntity = (name: string) => {
+    setSelectedCard(name.split("CardView")[0]);
   }
 
   return (
@@ -16,10 +23,26 @@ export const ShowView = () => {
               <Route
                   path="/view/:viewid"
                   element={
-                      <>
+                        <>
                           <ViewList selectDocument={selectDocument} />
                           <ShowViewContent view={selectedDocument} />
-                      </>
+                        </>
+                  }
+              />
+              <Route
+                  path="/card"
+                  element={
+                        <>
+                            <CardViewSelect selectCardEntity={selectCardEntity} />
+                        </>
+                  }
+              />
+              <Route
+                  path="/card/:cardid"
+                  element={
+                        <>
+                            <CardView entity={selectedCard} />
+                        </>
                   }
               />
           </Routes>
