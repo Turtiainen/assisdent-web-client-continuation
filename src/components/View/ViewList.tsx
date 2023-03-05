@@ -1,52 +1,45 @@
-import React from "react";
-import {useQuery} from "@tanstack/react-query";
-import {getRegisterViews} from "../../utils/Parser";
-import {useParams} from "react-router-dom";
+import React, {ChangeEventHandler} from "react";
+import {useNavigate} from "react-router-dom";
+import {sortByDocumentHeader} from "../../utils/sortingUtils";
+import {useIsFetching, useQuery} from "@tanstack/react-query";
+import {schemaQuery} from "../../temp/SchemaUtils";
+import {getRegisterViewsFromSchema} from "../../utils/Parser";
 
-export type ViewListProps = {
-  selectDocument: (doc: Element) => void
-}
+export const ViewList = ({className}: { className?: string }) => {
+  const navigate = useNavigate()
+  const {data: schema} = useQuery(schemaQuery())
+  const {data: registerViews} = useQuery({
+    queryKey: ["schema", "metaview", "register", "all"],
+    queryFn: () => getRegisterViewsFromSchema(schema!),
+    enabled: !!schema
+  })
+  const isLoading = useIsFetching(["schema", "metaview", "register", "all"]) > 0
 
-export const ViewList = ({selectDocument}: ViewListProps) => {
-  const {isLoading, error, data, isFetching} = useQuery({
-    queryKey: ['getRegisterViews'],
-    queryFn: async () => {
-      return await getRegisterViews();
-    }
-  });
-
-  const { viewid } = useParams()
-  if (viewid) {
-    const viewDocument = data?.find((element) => element.documentElement.getAttribute("Name") === viewid)
-    if (viewDocument) selectDocument(viewDocument?.documentElement)
+  const handleOnChange: ChangeEventHandler<HTMLSelectElement> = (evt) => {
+    evt.preventDefault()
+    navigate(`view/${evt.target.value}`)
   }
 
-  const registerViewNames = data?.map((doc: Document) => {
+  const registerViewNames = registerViews?.sort(sortByDocumentHeader).map((doc: Document) => {
     const docName = doc!.documentElement!.getAttribute("Name")!
+    const header = doc!.documentElement!.getAttribute("Header") || docName
+
     return (
-      <option
-        key={docName}
-        value={docName}
-      >
-        {docName}
+      <option key={docName} value={docName}>
+        {header}
       </option>
     )
   })
 
-  const contentList = (
-    <select className={`border-2 border-slate-200 hover:border-blue-400 cursor-pointer rounded p-2`}>
-      {registerViewNames}
-    </select>
-  )
-  const loadingSpinner = <p>Loading...</p>
-
   return (
-    <div className={`px-8`}>
-      <>
-        {error && <p>There was an error while loading register views</p>}
-        {isLoading && loadingSpinner}
-        {(data && data.length > 0) && contentList}
-      </>
+    <div className={`px-8 py-4`}>
+      {isLoading && <p>Loading view names...</p>}
+      {registerViewNames?.length && <select
+        className={`border-2 border-slate-200 hover:border-blue-400 cursor-pointer rounded p-2 ${className}`}
+        onChange={handleOnChange}
+      >
+        {registerViewNames}
+      </select>}
     </div>
   )
 }

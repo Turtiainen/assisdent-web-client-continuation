@@ -118,7 +118,7 @@ export const RegisterTable = ({columns, entities, bindings, entityType}: Registe
   )
 
   return (
-      <table className="border-collapse border-spacing-1 w-full mt-2 bg-white">
+      <table className="border-collapse border-spacing-1 w-full bg-white">
         {TableHeaders}
         {(entities && entities?.length > 0) && <tbody>
         {TableRows}

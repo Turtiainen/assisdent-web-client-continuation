@@ -1,3 +1,7 @@
+/**
+ * This component is only for development purposes
+ */
+
 import {findEntitySchema} from "./SchemaUtils";
 import {DtoEntity} from "../types/DtoEntity";
 
