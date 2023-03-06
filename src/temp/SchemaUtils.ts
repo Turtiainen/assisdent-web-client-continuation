@@ -4,7 +4,8 @@ import {DtoEntity} from "../types/DtoEntity";
 import {getSchema} from "../services/backend";
 
 // TODO: schema data should be read from store eventually
-const schema = json as DtoSchema
+// Force type conversion to DtoSchema
+const schema = json as unknown as DtoSchema
 
 export const getFormattedText = (identifier: string) => {
   if (identifier.includes("{{")) return identifier

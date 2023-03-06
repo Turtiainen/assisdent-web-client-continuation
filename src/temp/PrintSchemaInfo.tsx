@@ -13,7 +13,8 @@ export const PrintSchemaInfo = () => {
       setFilter(e.target.value)
   }
 
-  const data = json as DtoSchema
+  // Force type conversion to DtoSchema
+  const data = json as unknown as DtoSchema
   const xmlParser = new DOMParser()
   const MetaViews = data.MetaViews
   const viewList: { ViewName: string, ViewChildren: HTMLCollection, ViewDefinitionCoreBase: Element }[] = []
