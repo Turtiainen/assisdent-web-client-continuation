@@ -4,6 +4,7 @@ import {ViewList} from "./ViewList";
 import { Routes, Route } from 'react-router-dom';
 import { CardViewSelect } from "./CardViewSelect";
 import { CardView } from "./CardView";
+import {PrintSchemaInfo} from "../../temp/PrintSchemaInfo";
 
 export const ShowView = () => {
   const [selectedDocument, setSelectedDocument] = useState<HTMLElement | null>(null);
@@ -45,6 +46,8 @@ export const ShowView = () => {
                         </>
                   }
               />
+              {/*TODO: For debug purposes, remove later*/}
+              <Route path={`view/print-schema-xml`} element={PrintSchemaInfo()} />
           </Routes>
       </section>
   );
