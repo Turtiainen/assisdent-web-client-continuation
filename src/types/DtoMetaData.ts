@@ -3,7 +3,7 @@ import {DtoEntity} from "./DtoEntity";
 import {DtoCatalog} from "./DtoCatalog";
 
 export type DtoMetaData = {
-  EnablesFeatures: DtoFeaturesCollection
+  EnabledFeatures: DtoFeaturesCollection
   Entities: DtoEntity[]
   Catalogs: DtoCatalog[]
 }

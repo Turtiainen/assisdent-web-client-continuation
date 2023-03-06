@@ -11,12 +11,12 @@ import {DeleteBehaviorType} from "./DeleteBehaviorType";
 
 export type DtoEntity = {
   BasedOnEntity: string
-  Properties: Map<string, DtoProperty>
+  Properties: { [index: string]: DtoProperty }
   PropertyDependencies: DtoPropertyDependency[]
   ValidatorDependencies: DtoValidatorDependency[]
-  Filters: Map<string, DtoEntityFilter>
-  OrderOptions: Map<string, DtoOrderOption>
-  ValidatorGroups: Map<string, DtoEntityValidatorGroup>
+  Filters: { [index: string]: DtoEntityFilter }
+  OrderOptions: { [index: string]: DtoOrderOption }
+  ValidatorGroups: { [index: string]: DtoEntityValidatorGroup }
   DeleteBehavior?: DeleteBehaviorType
   ValidityFilterDefaultValue?: number
   Exports: DtoExports
