@@ -130,3 +130,54 @@ export const parseOrderOptions = (view: Element) => {
 
     return null;
 };
+
+export const parseCardGroups = (document: Element) => {
+    const groups: any = [];
+
+    const parseElements = (document: Element) => {
+        const elements: any[] = [];
+        for (let i = 0; i < document.children.length; i++) {
+            if (document.children[i].tagName === 'Group') {
+                const group = parseElements(document.children[i]);
+                group.map((element: Element) => elements.push(element));
+            } else if (document.children[i].tagName === 'Element') {
+                const element = {
+                    Identifier: document.children[i].getAttribute('Identifier'),
+                    Value: document.children[i].getAttribute('Value'),
+                    Caption: document.children[i].getAttribute('Caption'),
+                    IsEditable: document.children[i].getAttribute('IsEditable'),
+                    IsMultiline:
+                        document.children[i].getAttribute('IsMultiline'),
+                };
+                elements.push(element);
+            }
+        }
+        return elements;
+    };
+
+    const constructGroup = (document: Element) => {
+        const elements = parseElements(document);
+        const groupElement = {
+            Identifier: document.getAttribute('Identifier'),
+            IsExpandable: document.getAttribute('IsExpandable'),
+            IsCollapsed: document.getAttribute('IsCollapsed'),
+            HideIfEmpty: document.getAttribute('HideIfEmpty'),
+            Scale: document.getAttribute('Scale'),
+            Spacing: document.getAttribute('Spacing'),
+            MaxColumns: document.getAttribute('MaxColumns'),
+            Elements: elements,
+        };
+        return groupElement;
+    };
+
+    for (let i = 0; i < document.children.length; i++) {
+        const groupElement = constructGroup(document.children[i]);
+        groups.push(groupElement);
+    }
+    return { groups };
+};
+
+export const parseCardMetaView = (document: Element): any => {
+    const contentElements = document.getElementsByTagName('Content');
+    return parseCardGroups(contentElements[0]).groups;
+};
