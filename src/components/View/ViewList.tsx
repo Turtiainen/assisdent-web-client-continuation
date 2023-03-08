@@ -1,44 +1,51 @@
-import React from "react";
-import {useQuery} from "@tanstack/react-query";
-import {getRegisterViews} from "../../utils/Parser";
-import { useParams } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import React, { ChangeEventHandler } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { sortByDocumentHeader } from '../../utils/sortingUtils';
+import { useIsFetching, useQuery } from '@tanstack/react-query';
+import { schemaQuery } from '../../temp/SchemaUtils';
+import { getRegisterViewsFromSchema } from '../../utils/Parser';
 
-export const ViewList: React.FC<{ selectDocument: (doc: HTMLElement) => void }> = ({
-    selectDocument,
-}) => {
-    const { isLoading, error, data, isFetching } = useQuery({
-        queryKey: ['getRegisterViews'],
-        queryFn: async () => {
-            return await getRegisterViews();
-        },
+export const ViewList = ({ className }: { className?: string }) => {
+    const navigate = useNavigate();
+    const { data: schema } = useQuery(schemaQuery());
+    const { data: registerViews } = useQuery({
+        queryKey: ['schema', 'metaview', 'register', 'all'],
+        queryFn: () => getRegisterViewsFromSchema(schema!),
+        enabled: !!schema,
     });
+    const isLoading =
+        useIsFetching(['schema', 'metaview', 'register', 'all']) > 0;
 
-    let { viewid } = useParams();
-    if (viewid) {
-        const viewDocument = data?.find(
-            (element) => element.documentElement.getAttribute('Name') == viewid,
-        );
-        if (viewDocument) selectDocument(viewDocument?.documentElement);
-    }
+    const handleOnChange: ChangeEventHandler<HTMLSelectElement> = (evt) => {
+        evt.preventDefault();
+        navigate(`view/${evt.target.value}`);
+    };
 
-    const registerViewNames = data?.map((doc: Document, idx: React.Key) => {
-        const viewName = doc?.documentElement.getAttribute('Name');
-        return (
-            <li key={idx}>
-                <Link to={`/view/${viewName}`}>{viewName}</Link>
-            </li>
-        );
-    });
+    const registerViewNames = registerViews
+        ?.sort(sortByDocumentHeader)
+        .map((doc: Document) => {
+            const docName = doc!.documentElement!.getAttribute('Name')!;
+            const header =
+                doc!.documentElement!.getAttribute('Header') || docName;
 
-    const contentList = <ul>{registerViewNames}</ul>;
-    const loadingSpinner = <p>Loading...</p>;
+            return (
+                <option key={docName} value={docName}>
+                    {header}
+                </option>
+            );
+        });
 
     return (
-        <>
-            {error && <p>There was an error while loading register views</p>}
-            {isLoading && loadingSpinner}
-            {data && data.length > 0 && contentList}
-        </>
+        <div className={`px-8 py-4`}>
+            {isLoading && <p>Loading view names...</p>}
+            {registerViewNames?.length && (
+                <select
+                    className={`border-2 border-slate-200 hover:border-blue-400 cursor-pointer rounded p-2 ${className}`}
+                    onChange={handleOnChange}
+                >
+                    {registerViewNames}
+                </select>
+            )}
+        </div>
     );
 };
