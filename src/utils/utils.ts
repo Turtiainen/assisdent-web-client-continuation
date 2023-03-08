@@ -121,7 +121,7 @@ const resolveObjectBindings = (entity: DynamicObject, sanitizedBinding: string, 
 
   // Reduce the keys of associated entity metadata, that are also keys of the value object. This way we get the intended use of the value object
   const valuePropertiesWithIntendedUse = Object.keys(associatedEntityMetadata as DynamicObject).reduce((acc, key) => {
-    console.log('key', key);
+    // console.log('key', key);
     if (Object.keys(value).includes(key)) {
       if (associatedEntityMetadata) {
         acc[key] = associatedEntityMetadata[key].IntendedUse;
@@ -135,7 +135,7 @@ const resolveObjectBindings = (entity: DynamicObject, sanitizedBinding: string, 
   // Iterate through the keys of the value and replace the value with the intended use
   for (const [key, val] of Object.entries(valueObjectToParse)) {
     if (Object.keys(valuePropertiesWithIntendedUse).includes(key)) {
-      console.log('val', val);
+      // console.log('val', val);
       valueObjectToParse[key] = mapObjectValueByIntendedUse(val, valuePropertiesWithIntendedUse[key]);
     }
   }
