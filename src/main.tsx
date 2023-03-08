@@ -24,7 +24,7 @@ const router = createBrowserRouter([
         loader: schemaLoader(queryClient)
       },
       {
-        path: "view/:viewId",
+        path: "view/:viewId/:Id?",
         element: <ShowView />,
         loader: schemaLoader(queryClient)
       }
