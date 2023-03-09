@@ -143,8 +143,15 @@ export const parseCardGroups = (document: Element) => {
             } else if (document.children[i].tagName === 'Element') {
                 const element = {
                     Identifier: document.children[i].getAttribute('Identifier'),
+                    ColumnSpan: document.children[i].getAttribute('ColumnSpan'),
+                    FillRow: document.children[i].getAttribute('FillRow'),
+                    HorizontalAlignment: document.children[i].getAttribute(
+                        'HorizontalAlignment',
+                    ),
                     Value: document.children[i].getAttribute('Value'),
                     Caption: document.children[i].getAttribute('Caption'),
+                    TextWrapping:
+                        document.children[i].getAttribute('TextWrapping'),
                     IsEditable: document.children[i].getAttribute('IsEditable'),
                     IsMultiline:
                         document.children[i].getAttribute('IsMultiline'),
@@ -159,6 +166,7 @@ export const parseCardGroups = (document: Element) => {
         const elements = parseElements(document);
         const groupElement = {
             Identifier: document.getAttribute('Identifier'),
+            Caption: document.getAttribute('Caption'),
             IsExpandable: document.getAttribute('IsExpandable'),
             IsCollapsed: document.getAttribute('IsCollapsed'),
             HideIfEmpty: document.getAttribute('HideIfEmpty'),

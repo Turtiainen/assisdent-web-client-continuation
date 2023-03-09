@@ -16,9 +16,6 @@ export const ShowView = () => {
         enabled: !!schema,
     });
     const isLoadingSchema = useIsFetching(['schema', 'metaview', viewId]) > 0;
-    console.log('viewId @ShowView.tsx :>> ', viewId);
-    console.log('Id @ShowView.tsx :>> ', Id);
-    console.log('entity @ShowView.tsx :>> ', entity);
 
     return (
         <>
