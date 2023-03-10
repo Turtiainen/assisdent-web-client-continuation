@@ -2,6 +2,7 @@ import {DynamicObject} from "../types/DynamicObject";
 import {getEntityPropertiesSchema, getEntitySchema, getEntityToString, getFormattedText} from "../temp/SchemaUtils";
 import Handlebars from "handlebars"
 import {DtoEntity} from "../types/DtoEntity";
+import {mapObjectValueByIntendedUse} from "./mapUtils";
 
 enum BindingKind {
   BINDING,
@@ -87,29 +88,7 @@ const resolveUnhandledArray = (entity: DynamicObject, sanitizedBinding: string, 
   return arr.map((item: DynamicObject) => parseHandlebars(toStringMethod, item)).join(", ")
 }
 
-// TODO debugger function, can be removed when no longer needed
-const recursivelyLogEntityKeysAndValues = (entity: DynamicObject) => {
-  for (const [key, value] of Object.entries(entity)) {
-    console.log(`key: ${key}, value: ${value}`);
-    if (typeof value === 'object' && value !== null) {
-      recursivelyLogEntityKeysAndValues(value);
-    }
-  }
-}
-
-// TODO is there some other types of intended use?
-const mapObjectValueByIntendedUse = (value: any, intendedUse: string) => {
-  if (intendedUse === 'Percentage') {
-    return `${(parseFloat(value) * 100)}%`
-  }
-  return value;
-}
-
-const resolveObjectBindings = (entity: DynamicObject, sanitizedBinding: string, entityType: string | null, value: any) => {
-  // console.log(`entity[sanitizedBinding]: ${entity[sanitizedBinding]}`);
-  // recursivelyLogEntityKeysAndValues(entity[sanitizedBinding]);
-  // console.log(`sanitizedBinding: ${sanitizedBinding}`);
-  // console.log(`entityType: ${entityType}`);
+const resolveObjectBindings = (entity: DynamicObject, sanitizedBinding: string, entityType: string | null, value: any): undefined | string => {
 
   // We get the property schema of the entity, then find the logical association to another entity given in the schema
   const propertySchema = getEntityPropertiesSchema(entityType);
@@ -119,13 +98,11 @@ const resolveObjectBindings = (entity: DynamicObject, sanitizedBinding: string, 
   // Getting the metadata of the associated entity
   const associatedEntityMetadata = associatedEntitySchema?.Metadata.Metadata;
 
-  // Reduce the keys of associated entity metadata, that are also keys of the value object. This way we get the intended use of the value object
+  // Reducing the value properties with intended use
+  // This is done by finding the keys of associated entity metadata, that are also keys of the value object.
   const valuePropertiesWithIntendedUse = Object.keys(associatedEntityMetadata as DynamicObject).reduce((acc, key) => {
-    // console.log('key', key);
-    if (Object.keys(value).includes(key)) {
-      if (associatedEntityMetadata) {
-        acc[key] = associatedEntityMetadata[key].IntendedUse;
-      }
+    if (associatedEntityMetadata && Object.keys(value).includes(key)) {
+      acc[key] = associatedEntityMetadata[key].IntendedUse;
     }
     return acc;
   }, {} as DynamicObject);
@@ -135,7 +112,6 @@ const resolveObjectBindings = (entity: DynamicObject, sanitizedBinding: string, 
   // Iterate through the keys of the value and replace the value with the intended use
   for (const [key, val] of Object.entries(valueObjectToParse)) {
     if (Object.keys(valuePropertiesWithIntendedUse).includes(key)) {
-      // console.log('val', val);
       valueObjectToParse[key] = mapObjectValueByIntendedUse(val, valuePropertiesWithIntendedUse[key]);
     }
   }
@@ -174,7 +150,7 @@ export const resolveEntityBindings = (
       return resolveUnhandledArray(entity, sanitizedBinding, entityType)
 
     if (typeof value === 'object' && value !== null) {
-      value = resolveObjectBindings(entity, sanitizedBinding, entityType, value) ?? "-";
+      value = resolveObjectBindings(entity, sanitizedBinding, entityType, value);
     }
 
     return value ?? "-"
