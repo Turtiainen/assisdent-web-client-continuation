@@ -51,13 +51,22 @@ export const getViewFromSchemaByName = (schema: DtoSchema, name: string) => {
   })
 }
 
+const getColumnHeader = (element: Element): string => {
+  return element.getAttribute("ColumnHeader")! || element.getAttribute("Caption")!
+}
+
+const pushBindingsAndColumns = (element: Element, bindings: Array<Array<string>>, columns: string[], captionOverride: string | null, getAttributeBy: string) => {
+  if (columns.length === 0 || (captionOverride ?? getColumnHeader(element)) !== columns[columns.length - 1]) {
+    bindings.push([element.getAttribute(getAttributeBy)!])
+    columns.push(captionOverride ?? getColumnHeader(element))
+  } else {
+    bindings[bindings.length - 1].push(element.getAttribute(getAttributeBy)!)
+  }
+}
+
 export const parseRegisterMetaView = (view: Element) => {
   const columns: string[] = []
-  const bindings: string[] = []
-
-  const getColumnHeader = (element: Element): string => {
-    return element.getAttribute("ColumnHeader")! || element.getAttribute("Caption")!
-  }
+  const bindings: string[][] = []
 
   const captionOverrides: string[] = []
 
@@ -73,12 +82,9 @@ export const parseRegisterMetaView = (view: Element) => {
     const captionOverride = captionOverrides.length > 0 ? captionOverrides[captionOverrides.length - 1] : null
 
     if (element.tagName === "Button") {
-      bindings.push(element.getAttribute("Text")!)
-      columns.push(captionOverride ?? getColumnHeader(element))
-
+      pushBindingsAndColumns(element, bindings, columns, captionOverride, "Text");
     } else if (element.tagName === "Element") {
-      bindings.push(element.getAttribute("Value")!)
-      columns.push(captionOverride ?? getColumnHeader(element))
+      pushBindingsAndColumns(element, bindings, columns, captionOverride, "Value");
     }
 
     for (const child of element.children) {

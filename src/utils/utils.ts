@@ -90,38 +90,40 @@ const resolveUnhandledArray = (entity: DynamicObject, sanitizedBinding: string, 
 // TODO refactor into smaller functions
 export const resolveEntityBindings = (
   entity: DynamicObject,
-  bindings: string[],
+  bindings: string[][],
   entityType: string | null
-) => {
-  return bindings.map((rawBinding: string) => {
-    let value: any = rawBinding
+): string[][] => {
+  return bindings.map((rawBindings: Array<string>) => {
+    return rawBindings.map((rawBinding: string) => {
+      let value: any = rawBinding
 
-    const bindingType = getBindingType(rawBinding)
+      const bindingType = getBindingType(rawBinding)
 
-    if (bindingType === null) {
-      console.log(`Unknown Binding Type:`, rawBinding)
-      return
-    }
+      if (bindingType === null) {
+        console.log(`Unknown Binding Type:`, rawBinding)
+        return
+      }
 
-    const sanitizedBinding = bindingType === BindingKind.BINDING
-      ? rawBinding.substring(8).trim().slice(0, -1)
-      : rawBinding.substring(14).trim().slice(0, -1)
+      const sanitizedBinding = bindingType === BindingKind.BINDING
+        ? rawBinding.substring(8).trim().slice(0, -1)
+        : rawBinding.substring(14).trim().slice(0, -1)
 
-    if (bindingType === BindingKind.BINDING) {
-      value = tryToGetProp(entity, sanitizedBinding)
-    } else if (bindingType === BindingKind.FORMATTED_TEXT) {
-      value = resolveFormattedText(entity, value, entityType)
-    }
+      if (bindingType === BindingKind.BINDING) {
+        value = tryToGetProp(entity, sanitizedBinding)
+      } else if (bindingType === BindingKind.FORMATTED_TEXT) {
+        value = resolveFormattedText(entity, value, entityType)
+      }
 
-    if (Array.isArray(value))
-      return resolveUnhandledArray(entity, sanitizedBinding, entityType)
+      if (Array.isArray(value))
+        return resolveUnhandledArray(entity, sanitizedBinding, entityType)
 
-    if (typeof value === 'object' && value !== null) {
-      console.log(value)
-      value = "OBJECT"
-    }
+      if (typeof value === 'object' && value !== null) {
+        console.log(value)
+        value = "OBJECT"
+      }
 
-    return value ?? "-"
+      return value ?? "-"
+    })
   })
 }
 

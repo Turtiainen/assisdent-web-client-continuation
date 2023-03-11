@@ -5,7 +5,7 @@ import {DynamicObject} from "../../types/DynamicObject";
 export type RegisterTableProps = {
   columns: string[]
   entities: DynamicObject[]
-  bindings: string[]
+  bindings: string[][]
   entityType: string | null
 }
 
@@ -93,18 +93,22 @@ export const RegisterTable = ({columns, entities, bindings, entityType}: Registe
             <input type="checkbox" name={entity.Id} onChange={handleCheckToggleOne}
                    checked={selectedList.has(entity.Id)}/>
           </td>
-          {entityBindings.map((bindingValue, idx) => {
+          {entityBindings.map((bindingValues, idx) => {
             const isLink = idx === 0
             return (
               <td className="text-left text-xs px-2" key={idx}>
                 {isLink
                   ? (
                     <>
-                      <a className={`underline font-semibold cursor-pointer`}>{bindingValue}</a>
+                      <a className={`underline font-semibold cursor-pointer`}>{bindingValues.map((bindingValue) => {
+                        return (<p>{bindingValue}</p>)
+                      })}</a>
                       <span className={`font-bold`}>{`>`}</span>
                     </>
                   )
-                  : bindingValue}
+                  : bindingValues.map((bindingValue) => {
+                      return (<p>{bindingValue}</p>)
+                    })}
               </td>
             )
           })}
