@@ -97,7 +97,6 @@ export const Sidebar = () => {
                     content={exampleSidebarItems}
                     isExpanded={isExpanded}
                 />
-                <ViewList className={`text-xs p-1 m-0`} />
                 <SidebarItems
                     title="OMAT TIEDOT"
                     content={exampleSidebarSubContent}
