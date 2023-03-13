@@ -1,5 +1,5 @@
 import { ChangeEventHandler, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import json from '../temp/schema.json';
 import { DtoSchema } from '../types/DtoSchema';
 
@@ -31,17 +31,12 @@ export const SubSidebarSearch = ({ onClick }: SubSidebarSearchType) => {
     );
 
     if (filter && filter.length > 1) {
-        MetaViewXmlList = MetaViewXmlList.filter((doc) => {
-            if (
-                doc
-                    .firstElementChild!.getAttribute('Name')
-                    .includes('RegisterView')
-            ) {
-                return doc.firstElementChild
-                    .getAttribute('Header')!
-                    .toLowerCase()
-                    .includes(filter.toLowerCase());
-            }
+        MetaViewXmlList = MetaViewXmlList.filter((doc: Document) => {
+            return doc
+                ?.getElementsByTagName('ViewDefinitionCoreBase')[0]
+                ?.getAttribute('Header')
+                ?.toLowerCase()
+                ?.includes(filter.toLowerCase());
         });
     }
 
@@ -55,7 +50,9 @@ export const SubSidebarSearch = ({ onClick }: SubSidebarSearchType) => {
     MetaViewXmlList.forEach((doc) => {
         const ViewDefinitionCoreBase = doc.firstElementChild!;
         if (
-            ViewDefinitionCoreBase.getAttribute('Name').includes('RegisterView')
+            ViewDefinitionCoreBase.getAttribute('Name')!.includes(
+                'RegisterView',
+            )
         ) {
             const ViewName = ViewDefinitionCoreBase.getAttribute('Name')!;
             const ViewHeader = ViewDefinitionCoreBase.getAttribute('Header')!;
