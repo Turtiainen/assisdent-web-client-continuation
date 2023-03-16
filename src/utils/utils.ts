@@ -158,3 +158,9 @@ export const parseHandlebars = (hbrTemplate: string | undefined, data: any) => {
     const template = Handlebars.compile(hbrTemplate);
     return template(data);
 };
+
+export const getUserLanguage = () => {
+    if (navigator.languages !== undefined)
+        return navigator.languages[0].split('-')[0];
+    return navigator.language.split('-')[0];
+};
