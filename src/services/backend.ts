@@ -150,3 +150,31 @@ export const getEntityData = async (searchOptions: DynamicObject) => {
         return null;
     }
 };
+
+export const getViewModelData = async (searchOptions: DynamicObject) => {
+    const token = sessionStorage.getItem('bt');
+    if (!token) {
+        console.log('should login');
+        return;
+    }
+    try {
+        const body = {
+            ...searchOptions,
+        };
+        const { data } = await axios.post(
+            `${import.meta.env.VITE_ASSISCARE_BASE}${
+                import.meta.env.VITE_ASSISCARE_ROUTE
+            }dack/viewmodel/get`,
+            body,
+            { headers: { Authorization: `Bearer ${token}` } },
+        );
+        return data;
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            console.log(`error at getViewModelData: ${error.message}`);
+        } else {
+            console.log(`unknown error at getViewModelData: ${error}`);
+        }
+        return null;
+    }
+};
