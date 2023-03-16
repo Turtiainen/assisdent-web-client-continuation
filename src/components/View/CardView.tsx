@@ -1,13 +1,13 @@
 import { DynamicObject } from '../../types/DynamicObject';
 import { ErrorPage } from '../ErrorPage';
-import { getEntityData } from '../../services/backend';
+import { getViewModelData } from '../../services/backend';
 import { LoadingSpinner } from '../LoadingSpinner';
 import { parseCardMetaView } from '../../utils/Parser';
 import { useMutation } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
-import { MouseEventHandler, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ViewHeader } from './ViewHeader';
-import { resolveEntityBindings } from '../../utils/utils';
+import { getUserLanguage, resolveEntityBindings } from '../../utils/utils';
 import { getEntityPropertiesSchema } from '../../temp/SchemaUtils';
 
 export type DataProps = {
@@ -15,15 +15,18 @@ export type DataProps = {
 };
 
 export const CardView = ({ view }: DataProps) => {
-    const [cardData, setCardData] = useState<DynamicObject | null | undefined>(
-        null,
-    );
-    const data = parseCardMetaView(view);
-    // console.log('Data from parser: ', data);
+    const [cardData, setCardData] = useState<DynamicObject | null>(null);
 
-    const { viewId } = useParams();
+    // const { viewId } = useParams();
     const { Id } = useParams();
 
+    const parsedCardMetaView = parseCardMetaView(view);
+    const argumentType = view.getAttribute('ArgumentType');
+    const userLanguage = getUserLanguage();
+    const argument = {
+        Id: Id,
+    };
+    const viewName = view.getAttribute('Name');
     const EntityType = view.getAttribute('EntityType');
     const EntityPropertySchema = getEntityPropertiesSchema(EntityType);
     const Context = view.getAttribute('Context');
@@ -55,52 +58,31 @@ export const CardView = ({ view }: DataProps) => {
 
     const getPath = (bindingExpression: string) => {
         const path = bindingExpression
-            .replace('{Binding Entity.', '')
+            .replace('{Binding ', '')
             .replace('}', '');
         return path.split('.');
     };
 
-    const constructArrayView = (dataArray: Array<DynamicObject>) => {
-        return (
-            <div className="border-2 border-ad-primary">
-                Array View: {dataArray.length} objektia
-            </div>
-        );
-    };
-
-    const searchOptions = {
-        entityType: viewId?.replace('CardView', ''),
-        filters: {
-            Id: {
-                Values: [Id],
-            },
-        },
-        propertiesToSelect: ['**'],
+    const viewModelSearchOptions = {
+        ViewName: viewName,
+        ArgumentType: argumentType,
+        Argument: argument,
+        SearchLanguage: userLanguage,
+        AdditionalPropertiesToSelect: [],
     };
 
     const mutation = useMutation({
-        mutationFn: getEntityData,
+        mutationFn: getViewModelData,
         onError: (error) => {
             console.log('error :>> ', error);
         },
         onSuccess: (apiData) => {
-            setCardData(() => {
-                if (Context) {
-                    const tempObject = {} as DynamicObject;
-                    tempObject[Context] = apiData.Results[0];
-                    return tempObject;
-                } else {
-                    console.log(
-                        'Something went possibly wrong while getting card data',
-                    );
-                    return apiData.Results[0];
-                }
-            });
+            setCardData(apiData.ViewModelData);
         },
     });
 
     useEffect(() => {
-        mutation.mutate(searchOptions);
+        mutation.mutate(viewModelSearchOptions);
     }, []);
 
     const PrintElement = ({ element }: { element: DynamicObject }) => {
@@ -173,22 +155,22 @@ export const CardView = ({ view }: DataProps) => {
                             <>
                                 {group.children.map(
                                     (element: DynamicObject) => {
-                                        if (element.name === 'Group')
+                                        if (element!.name === 'Group')
                                             return (
                                                 <PrintGroup
                                                     group={element}
                                                     key={
-                                                        element.attributes
+                                                        element!.attributes
                                                             .Identifier
                                                     }
                                                 />
                                             );
 
-                                        if (element.name === 'Element')
+                                        if (element!.name === 'Element')
                                             return (
                                                 <PrintElement
                                                     key={
-                                                        element.attributes
+                                                        element!.attributes
                                                             .Identifier
                                                     }
                                                     element={element}
@@ -208,24 +190,26 @@ export const CardView = ({ view }: DataProps) => {
     };
 
     const constructCardView = (
-        data: DynamicObject,
+        parsedCardMetaView: DynamicObject,
         cardData: DynamicObject,
     ) => {
         return (
             <>
-                <ViewHeader heading={Context ? cardData[Context].Name : '-'} />
-                {data && (
+                <ViewHeader heading={Context ? cardData.Entity.Name : '-'} />
+                {parsedCardMetaView && (
                     <div className="px-8 grid grid-cols-2 gap-y-2 gap-x-16 pb-16">
-                        {data.children.map((XmlNode: DynamicObject) => {
-                            if (XmlNode.name === 'Group') {
-                                return (
-                                    <PrintGroup
-                                        group={XmlNode}
-                                        key={XmlNode.attributes.Identifier}
-                                    />
-                                );
-                            }
-                        })}
+                        {parsedCardMetaView.children.map(
+                            (XmlNode: DynamicObject) => {
+                                if (XmlNode.name === 'Group') {
+                                    return (
+                                        <PrintGroup
+                                            group={XmlNode}
+                                            key={XmlNode.attributes.Identifier}
+                                        />
+                                    );
+                                }
+                            },
+                        )}
                     </div>
                 )}
             </>
@@ -238,7 +222,7 @@ export const CardView = ({ view }: DataProps) => {
             {mutation.isLoading && <LoadingSpinner />}
             {mutation.isSuccess &&
                 cardData &&
-                constructCardView(data, cardData)}
+                constructCardView(parsedCardMetaView, cardData)}
         </>
     );
 };
