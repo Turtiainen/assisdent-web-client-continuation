@@ -1,9 +1,12 @@
 import { getSchema } from '../services/backend';
 import { DtoView } from '../types/DtoView';
 import { DtoSchema } from '../types/DtoSchema';
+import { DynamicObject } from '../types/DynamicObject';
 
 export const getRegisterViews = async () => {
     return await getSchema().then((result) => {
+        if (!result) return [];
+
         const xmlMetaViewList = result.MetaViews;
         const xmlParser = new DOMParser();
         const listOfMetaViews: Document[] = [];
@@ -21,6 +24,8 @@ export const getRegisterViews = async () => {
 
 export const getCardViews = async () => {
     return await getSchema().then((result) => {
+        if (!result) return [];
+
         const xmlMetaViewList = result.MetaViews;
         const xmlParser = new DOMParser();
         const listOfMetaViews: Document[] = [];
@@ -47,8 +52,7 @@ export const getRegisterViewsFromSchema = (schema: DtoSchema) => {
     });
 
     return listOfMetaViews.filter((doc) => {
-        return doc
-            ?.getElementsByTagName('ViewDefinitionCoreBase')[0]
+        return doc?.firstElementChild
             ?.getAttribute('Name')
             ?.endsWith('RegisterView');
     });
@@ -131,61 +135,37 @@ export const parseOrderOptions = (view: Element) => {
     return null;
 };
 
-export const parseCardGroups = (document: Element) => {
-    const groups: any = [];
-
-    const parseElements = (document: Element) => {
-        const elements: any[] = [];
-        for (let i = 0; i < document.children.length; i++) {
-            if (document.children[i].tagName === 'Group') {
-                const group = parseElements(document.children[i]);
-                group.map((element: Element) => elements.push(element));
-            } else if (document.children[i].tagName === 'Element') {
-                const element = {
-                    Identifier: document.children[i].getAttribute('Identifier'),
-                    ColumnSpan: document.children[i].getAttribute('ColumnSpan'),
-                    FillRow: document.children[i].getAttribute('FillRow'),
-                    HorizontalAlignment: document.children[i].getAttribute(
-                        'HorizontalAlignment',
-                    ),
-                    Value: document.children[i].getAttribute('Value'),
-                    Caption: document.children[i].getAttribute('Caption'),
-                    TextWrapping:
-                        document.children[i].getAttribute('TextWrapping'),
-                    IsEditable: document.children[i].getAttribute('IsEditable'),
-                    IsMultiline:
-                        document.children[i].getAttribute('IsMultiline'),
-                };
-                elements.push(element);
-            }
-        }
-        return elements;
-    };
-
-    const constructGroup = (document: Element) => {
-        const elements = parseElements(document);
-        const groupElement = {
-            Identifier: document.getAttribute('Identifier'),
-            Caption: document.getAttribute('Caption'),
-            IsExpandable: document.getAttribute('IsExpandable'),
-            IsCollapsed: document.getAttribute('IsCollapsed'),
-            HideIfEmpty: document.getAttribute('HideIfEmpty'),
-            Scale: document.getAttribute('Scale'),
-            Spacing: document.getAttribute('Spacing'),
-            MaxColumns: document.getAttribute('MaxColumns'),
-            Elements: elements,
-        };
-        return groupElement;
-    };
-
-    for (let i = 0; i < document.children.length; i++) {
-        const groupElement = constructGroup(document.children[i]);
-        groups.push(groupElement);
-    }
-    return { groups };
+type TreeNode = {
+    name: string;
+    children?: TreeNode[];
+    attributes?: { [index: string]: any };
 };
 
-export const parseCardMetaView = (document: Element): any => {
+const parseXmlToJsonRecursively = (cardviewXML: Element): TreeNode => {
+    const node: TreeNode = { name: cardviewXML.nodeName };
+    const attributes = cardviewXML.attributes;
+    if (attributes && attributes.length > 0) {
+        node.attributes = {};
+
+        Array.from(attributes).forEach((att) => {
+            node.attributes![att.nodeName] = att.nodeValue!;
+        });
+    }
+    if (cardviewXML.hasChildNodes()) {
+        node.children = [];
+        for (let i = 0; i < cardviewXML.childNodes.length; i++) {
+            const childNode = cardviewXML.childNodes[i];
+            if (childNode.nodeType === Node.ELEMENT_NODE) {
+                node.children.push(
+                    parseXmlToJsonRecursively(childNode as Element),
+                );
+            }
+        }
+    }
+    return node;
+};
+
+export const parseCardMetaView = (document: Element): DynamicObject => {
     const contentElements = document.getElementsByTagName('Content');
-    return parseCardGroups(contentElements[0]).groups;
+    return parseXmlToJsonRecursively(contentElements[0]);
 };

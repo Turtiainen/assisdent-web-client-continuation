@@ -47,13 +47,7 @@ export const PrintSchemaInfo = () => {
         viewList.push({ ViewName, ViewChildren, ViewDefinitionCoreBase });
     });
 
-    const listStyles = ['circle', 'square', 'disc'];
-
-    const printRecursive = (
-        elements: HTMLCollection,
-        elementList = [],
-        level = 0,
-    ) => {
+    const printRecursive = (elements: HTMLCollection, elementList = []) => {
         if (elements.length === 0) return null;
 
         return Array.from(elements).map((element, idx) => {
@@ -78,15 +72,11 @@ export const PrintSchemaInfo = () => {
                     <pre>{`<${element.nodeName}${
                         Caption || Identifier
                     }${Value}>`}</pre>
-                    {element.hasChildNodes() ? (
+                    {element.hasChildNodes() && (
                         <ul className={`pl-4`}>
-                            {printRecursive(
-                                element.children,
-                                elementList,
-                                ++level % listStyles.length,
-                            )}
+                            {printRecursive(element.children, elementList)}
                         </ul>
-                    ) : null}
+                    )}
                 </li>
             );
         });
@@ -99,7 +89,7 @@ export const PrintSchemaInfo = () => {
                     <div className={`flex py-4 border-b`} key={obj.ViewName}>
                         <div className={`w-96`}>
                             <h2
-                                className={`text-xs font-bold`}
+                                className={`font-bold`}
                                 onClick={(e) => {
                                     e.preventDefault();
                                     e.stopPropagation();
