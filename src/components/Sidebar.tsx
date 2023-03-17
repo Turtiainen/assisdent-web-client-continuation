@@ -2,8 +2,8 @@ import { useState } from 'react';
 
 import { SidebarItems } from './SidebarItems';
 import { SidebarFooter } from './SidebarFooter';
-import {Link} from "react-router-dom";
-import {ViewList} from "./View/ViewList";
+import { Link } from 'react-router-dom';
+import { ViewList } from './View/ViewList';
 
 export const Sidebar = () => {
     const [isExpanded, setIsExpanded] = useState(true);
@@ -91,7 +91,7 @@ export const Sidebar = () => {
                 content={exampleSidebarItems}
                 isExpanded={isExpanded}
             />
-            <ViewList className={`text-xs p-1 m-0`}/>
+            <ViewList className={`text-xs p-1 m-0`} />
             <SidebarItems
                 title="OMAT TIEDOT"
                 content={exampleSidebarSubContent}
