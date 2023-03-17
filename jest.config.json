@@ -1,7 +1,3 @@
 {
-    "testEnvironment": "jsdom",
-    "reporters": [
-        "default",
-        ["jest-junit", { "outputDirectory": "artifacts" }]
-    ]
+    "testEnvironment": "jsdom"
 }
