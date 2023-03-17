@@ -85,17 +85,24 @@ jobs:
           path: node_modules
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
       - run: npm run test:ci
-      - uses: actions/upload-artifact@v2  # upload test results
-        if: success() || failure()        # run this step even if previous step failed
-        with:
-          name: test-results
-          path: 'reports/jest-junit.xml'
+#      - uses: actions/upload-artifact@v2  # upload test results
+#        if: success() || failure()        # run this step even if previous step failed
+#        with:
+#          name: test-results
+#          path: 'reports/jest-junit.xml'
+#      - name: Test Report
+#        uses: dorny/test-reporter@v1
+#        with:
+#          artifact: test-results
+#          name: Jest Test Report
+#          path: 'jest-junit.xml'
+#          reporter: jest-junit
       - name: Test Report
         uses: dorny/test-reporter@v1
+        if: success() || failure()    # run this step even if previous step failed
         with:
-          artifact: test-results
-          name: Jest Test Report
-          path: 'jest-junit.xml'
+          name: JEST Tests            # Name of the check run which will be created
+          path: reports/jest-*.xml    # Path to test results
           reporter: jest-junit
 
   Deploy-Preview:
