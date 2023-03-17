@@ -89,7 +89,7 @@ jobs:
         if: success() || failure()        # run this step even if previous step failed
         with:
           name: test-results
-          path: 'reports/jest-junit.xml'
+          path: jest-junit.xml
       - name: Test Report
         uses: dorny/test-reporter@v1
         with:
