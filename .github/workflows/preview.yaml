@@ -71,7 +71,7 @@ jobs:
       - run: npm test
 
   Deploy-Preview:
-    needs: Build-and-test
+    needs: Test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
