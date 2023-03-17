@@ -115,5 +115,5 @@ dist
 *.sw?
 .vercel
 
-# artifacts folder
-artifacts
+# reports folder
+reports
