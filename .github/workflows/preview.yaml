@@ -84,17 +84,18 @@ jobs:
         with:
           path: node_modules
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-      - name: Set up artifacts directory
-        run: |
-          mkdir -p ./artifacts
-          chmod 777 ./artifacts
       - run: npm run test:ci
+      - uses: actions/upload-artifact@v2  # upload test results
+        if: success() || failure()        # run this step even if previous step failed
+        with:
+          name: test-results
+          path: junit.xml
       - name: Test Report
         uses: dorny/test-reporter@v1
-        if: success() || failure()
         with:
+          artifact: test-results
           name: Jest Test Report
-          path: artifacts/junit.xml
+          path: junit.xml
           reporter: jest-junit
 
   Deploy-Preview:
