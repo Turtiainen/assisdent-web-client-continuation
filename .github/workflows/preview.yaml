@@ -95,7 +95,7 @@ jobs:
         with:
           artifact: test-results
           name: Jest Test Report
-          path: junit.xml
+          path: 'junit.xml'
           reporter: jest-junit
 
   Deploy-Preview:
