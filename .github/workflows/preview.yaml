@@ -48,7 +48,6 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
       - run: npm run lint
 
-#  Build-and-test:
   Build:
     runs-on: ubuntu-latest
     needs: Lint
