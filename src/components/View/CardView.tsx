@@ -5,9 +5,13 @@ import { LoadingSpinner } from '../LoadingSpinner';
 import { parseCardMetaView } from '../../utils/Parser';
 import { useMutation } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ViewHeader } from './ViewHeader';
-import { getUserLanguage, resolveEntityBindings } from '../../utils/utils';
+import {
+    getUserLanguage,
+    resolveCardBindings,
+    resolveEntityBindings,
+} from '../../utils/utils';
 import { getEntityPropertiesSchema } from '../../temp/SchemaUtils';
 
 export type DataProps = {
@@ -85,29 +89,106 @@ export const CardView = ({ view }: DataProps) => {
         mutation.mutate(viewModelSearchOptions);
     }, []);
 
-    const PrintElement = ({ element }: { element: DynamicObject }) => {
-        const cardDetails = resolveEntityBindings(
+    const PrintList = ({ element }: { element: DynamicObject }) => {
+        const cardDetails = resolveCardBindings(
             cardData!,
-            [element.attributes.Value],
-            view.getAttribute('EntityType'),
-        )[0];
+            element.attributes.Value!,
+        );
+
+        if (
+            !cardDetails ||
+            !Array.isArray(cardDetails) ||
+            cardDetails.length === 0
+        ) {
+            return null;
+        }
+
+        return (
+            <div className={`basis-full my-8 col-span-2`}>
+                <h2 className={`text-2xl`}>{element.attributes.Caption}</h2>
+                <div>
+                    {cardDetails.map((listItem: DynamicObject) => {
+                        return (
+                            <div
+                                key={listItem.Id}
+                                className={`mb-4 p-2 bg-ad-grey-200 rounded`}
+                            >
+                                <>
+                                    {element.children.length &&
+                                        element.children
+                                            .find(
+                                                (child: DynamicObject) =>
+                                                    child.name === 'Columns',
+                                            )
+                                            .children.map(
+                                                (node: DynamicObject) => {
+                                                    const caption: string =
+                                                        node.attributes.Caption;
+                                                    const binding: string =
+                                                        node.attributes.Value;
+
+                                                    if (!binding) return null;
+
+                                                    const value =
+                                                        resolveCardBindings(
+                                                            listItem,
+                                                            binding,
+                                                        );
+
+                                                    return (
+                                                        <p>
+                                                            {caption}:{' '}
+                                                            {value as string}
+                                                        </p>
+                                                    );
+                                                },
+                                            )}
+                                </>
+                            </div>
+                        );
+                    })}
+                </div>
+            </div>
+        );
+    };
+
+    const PrintElement = ({ element }: { element: DynamicObject }) => {
+        const cardDetails = resolveCardBindings(
+            cardData!,
+            element.attributes.Value,
+        );
 
         const isCardDetailsNull =
             cardDetails === null || cardDetails === undefined;
 
-        const isElementException = exceptionElements.has(
-            getPath(element.attributes.Value)[0],
+        const isElementException = getPath(element.attributes.Value).find(
+            (subPath) => exceptionElements.has(subPath),
         );
 
         if (isElementException) {
+            if (!Array.isArray(cardDetails) || cardDetails.length === 0)
+                return null;
+
             return (
                 <div className={`basis-full my-8 col-span-2`}>
                     <h3 className={`text-xl`}>{element.attributes.Caption}</h3>
-                    <p>
-                        This element is an exception and should be displayed
-                        exceptionally
-                    </p>
-                    <p>{cardDetails}</p>
+                    <ul>
+                        {cardDetails.map(
+                            (listItem: DynamicObject, idx: React.Key) => {
+                                return (
+                                    <div key={idx}>
+                                        {Object.entries(listItem).map(
+                                            (entry) => (
+                                                <li key={entry[0]}>
+                                                    {entry[0]}: {entry[1]}
+                                                </li>
+                                            ),
+                                        )}
+                                    </div>
+                                );
+                            },
+                        )}
+                    </ul>
                 </div>
             );
         }
@@ -165,8 +246,17 @@ export const CardView = ({ view }: DataProps) => {
                                                     }
                                                 />
                                             );
-
-                                        if (element!.name === 'Element')
+                                        else if (element!.name === 'List') {
+                                            return (
+                                                <PrintList
+                                                    key={
+                                                        element!.attributes
+                                                            .Identifier
+                                                    }
+                                                    element={element}
+                                                />
+                                            );
+                                        } else if (element!.name === 'Element')
                                             return (
                                                 <PrintElement
                                                     key={

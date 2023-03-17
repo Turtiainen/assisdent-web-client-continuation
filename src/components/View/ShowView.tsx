@@ -10,6 +10,7 @@ export const ShowView = () => {
     const { data: schema } = useQuery(schemaQuery());
     const { viewId } = useParams();
     const { Id } = useParams();
+
     const { data: entity } = useQuery({
         queryKey: ['schema', 'metaview', viewId],
         queryFn: () => getViewFromSchemaByName(schema!, viewId!),
@@ -20,6 +21,7 @@ export const ShowView = () => {
     return (
         <>
             {isLoadingSchema && <p>Loading view</p>}
+
             {entity && viewId && viewId.includes('Register') ? (
                 <>
                     <ViewHeader

@@ -6,8 +6,13 @@ import { findEntitySchema } from './SchemaUtils';
 import { DtoEntity } from '../types/DtoEntity';
 
 type PrintEntitiesProps = {
+<<<<<<< HEAD
     entityType: string
 }
+=======
+    entityType: string;
+};
+>>>>>>> development
 
 export const PrintEntities = ({ entityType }: PrintEntitiesProps) => {
     const entities = findEntitySchema(entityType);
@@ -17,7 +22,13 @@ export const PrintEntities = ({ entityType }: PrintEntitiesProps) => {
                 return (
                     <div key={entity.Name}>
                         <h3 className={`text-2xl`}>Entity: {entity.Name}</h3>
+<<<<<<< HEAD
                         <pre className={`text-xs`}>{JSON.stringify(entity, null, 4)}</pre>
+=======
+                        <pre className={`text-xs`}>
+                            {JSON.stringify(entity, null, 4)}
+                        </pre>
+>>>>>>> development
                     </div>
                 );
             })}

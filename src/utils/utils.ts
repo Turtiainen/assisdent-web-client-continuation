@@ -7,6 +7,7 @@ import {
 } from '../temp/SchemaUtils';
 import Handlebars from 'handlebars';
 import { DtoEntity } from '../types/DtoEntity';
+import { mapObjectValueByIntendedUse } from './mapUtils';
 
 enum BindingKind {
     BINDING,
@@ -112,6 +113,52 @@ const resolveUnhandledArray = (
         .join(', ');
 };
 
+const resolveObjectBindings = (
+    entity: DynamicObject,
+    sanitizedBinding: string,
+    entityType: string | null,
+    value: any,
+): undefined | string => {
+    // We get the property schema of the entity, then find the logical association to another entity given in the schema
+    const propertySchema = getEntityPropertiesSchema(entityType);
+    const associationEntityName =
+        propertySchema?.[sanitizedBinding]?.AssociationInfo
+            ?.LogicalAssociationEndEntityName;
+    // Getting the associated entity schema
+    const associatedEntitySchema = getEntitySchema(associationEntityName);
+    // Getting the metadata of the associated entity
+    const associatedEntityMetadata = associatedEntitySchema?.Metadata.Metadata;
+
+    // Reducing the value properties with intended use
+    // This is done by finding the keys of associated entity metadata, that are also keys of the value object.
+    const valuePropertiesWithIntendedUse = Object.keys(
+        associatedEntityMetadata as DynamicObject,
+    ).reduce((acc, key) => {
+        if (associatedEntityMetadata && Object.keys(value).includes(key)) {
+            acc[key] = associatedEntityMetadata[key].IntendedUse;
+        }
+        return acc;
+    }, {} as DynamicObject);
+
+    // Create a copy of the value object, we don't want to mutate the original value
+    const valueObjectToParse = { ...value };
+    // Iterate through the keys of the value and replace the value with the intended use
+    for (const [key, val] of Object.entries(valueObjectToParse)) {
+        if (Object.keys(valuePropertiesWithIntendedUse).includes(key)) {
+            valueObjectToParse[key] = mapObjectValueByIntendedUse(
+                val,
+                valuePropertiesWithIntendedUse[key],
+            );
+        }
+    }
+
+    // To String method of the associated entity defines how the object is displayed
+    return parseHandlebars(
+        associatedEntityMetadata?.$Entity.ToString,
+        valueObjectToParse,
+    );
+};
+
 // TODO refactor into smaller functions
 export const resolveEntityBindings = (
     entity: DynamicObject,
@@ -145,12 +192,73 @@ export const resolveEntityBindings = (
         }
 
         if (typeof value === 'object' && value !== null) {
-            console.log(value);
-            value = 'OBJECT';
+            console.log(entity);
+            value = resolveObjectBindings(
+                entity,
+                sanitizedBinding,
+                entityType,
+                value,
+            );
         }
 
         return value ?? '-';
     });
+};
+
+const sanitizeBinding = (binding: string) => {
+    const bindingType = getBindingType(binding);
+
+    if (bindingType === null) {
+        console.log(`Unknown Binding Type:`, binding);
+        return;
+    }
+
+    return bindingType === BindingKind.BINDING
+        ? binding.substring(8).trim().slice(0, -1) // BindingKind.BINDING
+        : binding.substring(14).trim().slice(0, -1); // BindingKind.FORMATTED_TEXT
+};
+
+const resolveCardFormattedText = (
+    entity: DynamicObject,
+    identifier: string,
+) => {
+    let path: string[] | undefined;
+    let finalEntity: DynamicObject | undefined;
+    let formattedText: string | undefined;
+
+    // Should use subEntity's property
+    if (identifier.toLowerCase().includes('path=')) {
+        const arr = identifier.split(';;');
+        identifier = arr.shift()!;
+        path = arr.map((p) => p.trim().substring(5));
+    }
+
+    if (path) finalEntity = tryToGetProp(entity, path);
+
+    // Failed to find entityProperty with the given path
+    if (path && !finalEntity) return;
+
+    formattedText = getFormattedText(identifier);
+    if (!formattedText) return;
+
+    if (finalEntity) return parseHandlebars(formattedText, finalEntity);
+
+    return parseHandlebars(formattedText, entity);
+};
+
+export const resolveCardBindings = (entity: DynamicObject, binding: string) => {
+    const bindingType = getBindingType(binding);
+    const sanitizedBinding = sanitizeBinding(binding);
+
+    if (!sanitizedBinding) return null;
+
+    if (bindingType === BindingKind.BINDING)
+        return tryToGetProp(entity, sanitizedBinding);
+
+    if (bindingType === BindingKind.FORMATTED_TEXT)
+        return resolveCardFormattedText(entity, sanitizedBinding);
+
+    return null;
 };
 
 export const parseHandlebars = (hbrTemplate: string | undefined, data: any) => {

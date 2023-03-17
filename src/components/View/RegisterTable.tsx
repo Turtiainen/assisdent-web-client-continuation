@@ -164,6 +164,7 @@ export const RegisterTable = ({
             </tr>
         );
     });
+
     return (
         <table className="border-collapse border-spacing-1 w-full bg-white">
             {TableHeaders}

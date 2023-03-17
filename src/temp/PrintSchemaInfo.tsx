@@ -83,7 +83,7 @@ export const PrintSchemaInfo = () => {
     };
 
     const Print = (
-        <div className={``}>
+        <div>
             {viewList.map((obj) => {
                 return (
                     <div className={`flex py-4 border-b`} key={obj.ViewName}>
