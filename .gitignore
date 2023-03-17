@@ -114,3 +114,6 @@ dist
 *.sln
 *.sw?
 .vercel
+
+# artifacts folder
+artifacts
