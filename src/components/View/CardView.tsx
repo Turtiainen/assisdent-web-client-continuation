@@ -10,9 +10,12 @@ import { ViewHeader } from './ViewHeader';
 import {
     getUserLanguage,
     resolveCardBindings,
-    resolveEntityBindings,
+    sanitizeBinding,
 } from '../../utils/utils';
 import { getEntityPropertiesSchema } from '../../temp/SchemaUtils';
+import { List } from './List';
+import { TranslationList } from './TranslationList';
+import { SectionHeading } from './SectionHeading';
 
 export type DataProps = {
     view: Element;
@@ -34,6 +37,29 @@ export const CardView = ({ view }: DataProps) => {
     const EntityType = view.getAttribute('EntityType');
     const EntityPropertySchema = getEntityPropertiesSchema(EntityType);
     const Context = view.getAttribute('Context');
+    const Header = view.getAttribute('Header');
+    let resolvedHeader: string | null;
+
+    if (Header?.includes('{')) {
+        resolvedHeader =
+            cardData &&
+            Header &&
+            (resolveCardBindings(cardData, Header) as string);
+    } else {
+        resolvedHeader = Header;
+    }
+
+    const SubHeader = view.getAttribute('SubHeader');
+    let resolvedSubHeader: string | null;
+
+    if (SubHeader?.includes('{')) {
+        resolvedSubHeader =
+            cardData &&
+            SubHeader &&
+            (resolveCardBindings(cardData, SubHeader) as string);
+    } else {
+        resolvedSubHeader = SubHeader;
+    }
 
     // Data structure for possible exceptions like Translations table
     const exceptionElements = new Set<string>();
@@ -41,6 +67,8 @@ export const CardView = ({ view }: DataProps) => {
         'Translation',
         'TranslationCollection',
     ]);
+
+    const entityPropertiesAndTypes = new Map<string, string>();
 
     // Find possible known exceptions from Schema
     if (EntityPropertySchema) {
@@ -56,6 +84,8 @@ export const CardView = ({ view }: DataProps) => {
                 ) {
                     exceptionElements.add(key);
                 }
+
+                entityPropertiesAndTypes.set(key, val.Type);
             },
         );
     }
@@ -81,7 +111,7 @@ export const CardView = ({ view }: DataProps) => {
             console.log('error :>> ', error);
         },
         onSuccess: (apiData) => {
-            setCardData(apiData.ViewModelData);
+            if (apiData) setCardData(apiData.ViewModelData);
         },
     });
 
@@ -89,67 +119,11 @@ export const CardView = ({ view }: DataProps) => {
         mutation.mutate(viewModelSearchOptions);
     }, []);
 
+    // console.log(cardData);
+
     const PrintList = ({ element }: { element: DynamicObject }) => {
-        const cardDetails = resolveCardBindings(
-            cardData!,
-            element.attributes.Value!,
-        );
-
-        if (
-            !cardDetails ||
-            !Array.isArray(cardDetails) ||
-            cardDetails.length === 0
-        ) {
-            return null;
-        }
-
-        return (
-            <div className={`basis-full my-8 col-span-2`}>
-                <h2 className={`text-2xl`}>{element.attributes.Caption}</h2>
-                <div>
-                    {cardDetails.map((listItem: DynamicObject) => {
-                        return (
-                            <div
-                                key={listItem.Id}
-                                className={`mb-4 p-2 bg-ad-grey-200 rounded`}
-                            >
-                                <>
-                                    {element.children.length &&
-                                        element.children
-                                            .find(
-                                                (child: DynamicObject) =>
-                                                    child.name === 'Columns',
-                                            )
-                                            .children.map(
-                                                (node: DynamicObject) => {
-                                                    const caption: string =
-                                                        node.attributes.Caption;
-                                                    const binding: string =
-                                                        node.attributes.Value;
-
-                                                    if (!binding) return null;
-
-                                                    const value =
-                                                        resolveCardBindings(
-                                                            listItem,
-                                                            binding,
-                                                        );
-
-                                                    return (
-                                                        <p>
-                                                            {caption}:{' '}
-                                                            {value as string}
-                                                        </p>
-                                                    );
-                                                },
-                                            )}
-                                </>
-                            </div>
-                        );
-                    })}
-                </div>
-            </div>
-        );
+        if (cardData === null) return null;
+        return <List xmlElementTree={element} listData={cardData} />;
     };
 
     const PrintElement = ({ element }: { element: DynamicObject }) => {
@@ -157,6 +131,53 @@ export const CardView = ({ view }: DataProps) => {
             cardData!,
             element.attributes.Value,
         );
+
+        // console.log(sanitizeBinding(element.attributes.Value));
+        const sanitizedBinding = sanitizeBinding(element.attributes.Value);
+        const woEntity = sanitizedBinding.replace('Entity.', '');
+        if (entityPropertiesAndTypes.get(woEntity) === 'Boolean') {
+            return (
+                <div className={`flex flex-col lg:flex-row lg:gap-32`}>
+                    <label
+                        htmlFor={element.attributes.Identifier}
+                        className={`text-sm font-semibold text-ad-grey-800 flex items-center lg:w-1/4`}
+                    >
+                        {element.attributes.Caption}
+                    </label>
+                    <input
+                        id={element.attributes.Identifier}
+                        type={`checkbox`}
+                        checked={cardDetails?.toString() === 'true'}
+                        onChange={() => {}}
+                    />
+                </div>
+            );
+        }
+
+        if (cardDetails && entityPropertiesAndTypes.get(woEntity) === 'Date') {
+            return (
+                <div className={`flex flex-col lg:flex-row lg:gap-32`}>
+                    <label
+                        htmlFor={element.attributes.Identifier}
+                        className={`text-sm font-semibold text-ad-grey-800 flex items-center lg:w-1/4`}
+                    >
+                        {element.attributes.Caption}
+                    </label>
+                    <input
+                        id={element.attributes.Identifier}
+                        type={`text`}
+                        defaultValue={new Date(
+                            cardDetails.toString(),
+                        ).toLocaleString('fi-FI', {
+                            year: 'numeric',
+                            month: 'numeric',
+                            day: 'numeric',
+                        })}
+                        className={`flex-1 max-h-12 border border-ad-grey-300 rounded-sm px-2 py-1 hover:border-ad-primary focus:border-ad-primary active:border-ad-primary focus:outline-none`}
+                    />
+                </div>
+            );
+        }
 
         const isCardDetailsNull =
             cardDetails === null || cardDetails === undefined;
@@ -171,24 +192,10 @@ export const CardView = ({ view }: DataProps) => {
 
             return (
                 <div className={`basis-full my-8 col-span-2`}>
-                    <h3 className={`text-xl`}>{element.attributes.Caption}</h3>
-                    <ul>
-                        {cardDetails.map(
-                            (listItem: DynamicObject, idx: React.Key) => {
-                                return (
-                                    <div key={idx}>
-                                        {Object.entries(listItem).map(
-                                            (entry) => (
-                                                <li key={entry[0]}>
-                                                    {entry[0]}: {entry[1]}
-                                                </li>
-                                            ),
-                                        )}
-                                    </div>
-                                );
-                            },
-                        )}
-                    </ul>
+                    <h2 className={`text-lg mb-2 uppercase text-ad-grey-700`}>
+                        {element.attributes.Caption}
+                    </h2>
+                    <TranslationList translations={cardDetails} />
                 </div>
             );
         }
@@ -196,7 +203,7 @@ export const CardView = ({ view }: DataProps) => {
         return (
             <>
                 {!isCardDetailsNull && !Array.isArray(cardDetails) && (
-                    <div className={`flex flex-col lg:flex-row lg:gap-4`}>
+                    <div className={`flex flex-col lg:flex-row lg:gap-32`}>
                         <label
                             htmlFor={element.attributes.Identifier}
                             className={`text-sm font-semibold text-ad-grey-800 flex items-center lg:w-1/4`}
@@ -221,59 +228,49 @@ export const CardView = ({ view }: DataProps) => {
         return (
             group.children?.length && (
                 <>
-                    <>
-                        {group.attributes.Caption && (
-                            <h2
-                                className="col-span-2 text-2xl mb-4 mt-8 cursor-pointer hover:underline hover:bg-ad-primary-hover/10"
-                                onClick={() =>
-                                    setIsContentHidden(!isContentHidden)
+                    {group.attributes.Caption && (
+                        <SectionHeading
+                            onClick={() => setIsContentHidden(!isContentHidden)}
+                        >
+                            {group.attributes.Caption}
+                        </SectionHeading>
+                    )}
+
+                    {!isContentHidden && (
+                        <>
+                            {group.children.map((element: DynamicObject) => {
+                                if (element!.name === 'Group')
+                                    return (
+                                        <PrintGroup
+                                            group={element}
+                                            key={element!.attributes.__id}
+                                        />
+                                    );
+                                else if (element!.name === 'List') {
+                                    return (
+                                        <PrintList
+                                            key={element!.attributes.__id}
+                                            element={element}
+                                        />
+                                    );
+                                } else if (element!.name === 'Element')
+                                    return (
+                                        <PrintElement
+                                            key={element!.attributes.__id}
+                                            element={element}
+                                        />
+                                    );
+                                else {
+                                    return (
+                                        <p key={element.attributes.__id}>
+                                            Element type '{element.name}' not
+                                            yet implemented
+                                        </p>
+                                    );
                                 }
-                            >
-                                {group.attributes.Caption}
-                            </h2>
-                        )}
-                        {!isContentHidden && (
-                            <>
-                                {group.children.map(
-                                    (element: DynamicObject) => {
-                                        if (element!.name === 'Group')
-                                            return (
-                                                <PrintGroup
-                                                    group={element}
-                                                    key={
-                                                        element!.attributes
-                                                            .Identifier
-                                                    }
-                                                />
-                                            );
-                                        else if (element!.name === 'List') {
-                                            return (
-                                                <PrintList
-                                                    key={
-                                                        element!.attributes
-                                                            .Identifier
-                                                    }
-                                                    element={element}
-                                                />
-                                            );
-                                        } else if (element!.name === 'Element')
-                                            return (
-                                                <PrintElement
-                                                    key={
-                                                        element!.attributes
-                                                            .Identifier
-                                                    }
-                                                    element={element}
-                                                />
-                                            );
-                                        else {
-                                            return null;
-                                        }
-                                    },
-                                )}
-                            </>
-                        )}
-                    </>
+                            })}
+                        </>
+                    )}
                 </>
             )
         );
@@ -285,16 +282,21 @@ export const CardView = ({ view }: DataProps) => {
     ) => {
         return (
             <>
-                <ViewHeader heading={Context ? cardData.Entity.Name : '-'} />
+                {resolvedHeader && (
+                    <ViewHeader
+                        header={resolvedHeader.toString()}
+                        subHeader={resolvedSubHeader?.toString()}
+                    />
+                )}
                 {parsedCardMetaView && (
-                    <div className="px-8 grid grid-cols-2 gap-y-2 gap-x-16 pb-16">
+                    <div className="px-8 grid lg:grid-cols-2 gap-y-2 gap-x-64 pb-16 lg:max-w-[90%]">
                         {parsedCardMetaView.children.map(
                             (XmlNode: DynamicObject) => {
                                 if (XmlNode.name === 'Group') {
                                     return (
                                         <PrintGroup
                                             group={XmlNode}
-                                            key={XmlNode.attributes.Identifier}
+                                            key={XmlNode.attributes.__id}
                                         />
                                     );
                                 }

@@ -113,14 +113,24 @@ export const getEntitiesForRegisterView = async ({
         SearchLanguage: 'fi',
     };
 
-    const { data } = await axios.post(
-        `${import.meta.env.VITE_ASSISCARE_BASE}${
-            import.meta.env.VITE_ASSISCARE_ROUTE
-        }dack/entity/search`,
-        body,
-        { headers: { Authorization: `Bearer ${token}` } },
-    );
-    return data;
+    try {
+        const { data } = await axios.post(
+            `${import.meta.env.VITE_ASSISCARE_BASE}${
+                import.meta.env.VITE_ASSISCARE_ROUTE
+            }dack/entity/search`,
+            body,
+            { headers: { Authorization: `Bearer ${token}` } },
+        );
+        return data;
+    } catch (e) {
+        if (isAxiosError(e)) {
+            console.log(`error at getEntitiesForRegisterView: ${e.message}`);
+        } else {
+            console.log(`unknown error at getEntitiesForRegisterView: ${e}`);
+        }
+    }
+
+    return null;
 };
 
 export const getEntityData = async (searchOptions: DynamicObject) => {
@@ -155,8 +165,9 @@ export const getViewModelData = async (searchOptions: DynamicObject) => {
     const token = sessionStorage.getItem('bt');
     if (!token) {
         console.log('should login');
-        return;
+        return null;
     }
+
     try {
         const body = {
             ...searchOptions,
@@ -168,13 +179,18 @@ export const getViewModelData = async (searchOptions: DynamicObject) => {
             body,
             { headers: { Authorization: `Bearer ${token}` } },
         );
-        return data;
+
+        if (data)
+            return data as {
+                ViewModelType: string;
+                ViewModelData: DynamicObject;
+            };
     } catch (error) {
         if (axios.isAxiosError(error)) {
             console.log(`error at getViewModelData: ${error.message}`);
         } else {
             console.log(`unknown error at getViewModelData: ${error}`);
         }
-        return null;
     }
+    return null;
 };

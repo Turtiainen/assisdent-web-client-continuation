@@ -192,7 +192,6 @@ export const resolveEntityBindings = (
         }
 
         if (typeof value === 'object' && value !== null) {
-            console.log(entity);
             value = resolveObjectBindings(
                 entity,
                 sanitizedBinding,
@@ -205,12 +204,12 @@ export const resolveEntityBindings = (
     });
 };
 
-const sanitizeBinding = (binding: string) => {
+export const sanitizeBinding = (binding: string) => {
     const bindingType = getBindingType(binding);
 
     if (bindingType === null) {
         console.log(`Unknown Binding Type:`, binding);
-        return;
+        return binding;
     }
 
     return bindingType === BindingKind.BINDING
@@ -258,7 +257,7 @@ export const resolveCardBindings = (entity: DynamicObject, binding: string) => {
     if (bindingType === BindingKind.FORMATTED_TEXT)
         return resolveCardFormattedText(entity, sanitizedBinding);
 
-    return null;
+    return binding;
 };
 
 export const parseHandlebars = (hbrTemplate: string | undefined, data: any) => {
