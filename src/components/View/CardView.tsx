@@ -5,7 +5,7 @@ import { LoadingSpinner } from '../LoadingSpinner';
 import { parseCardMetaView } from '../../utils/Parser';
 import { useMutation } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
-import React, { useEffect, useState } from 'react';
+import React, { Key, useEffect, useState } from 'react';
 import { ViewHeader } from './ViewHeader';
 import {
     getUserLanguage,
@@ -19,6 +19,17 @@ import { SectionHeading } from './SectionHeading';
 
 export type DataProps = {
     view: Element;
+};
+
+type ElementAttributesType = {
+    __id: string;
+    [index: string]: string;
+};
+
+type CardElementType = {
+    name: 'Group' | 'List' | 'Element';
+    attributes: ElementAttributesType;
+    [index: string]: unknown;
 };
 
 export const CardView = ({ view }: DataProps) => {
@@ -36,7 +47,6 @@ export const CardView = ({ view }: DataProps) => {
     const viewName = view.getAttribute('Name');
     const EntityType = view.getAttribute('EntityType');
     const EntityPropertySchema = getEntityPropertiesSchema(EntityType);
-    const Context = view.getAttribute('Context');
     const Header = view.getAttribute('Header');
     let resolvedHeader: string | null;
 
@@ -127,12 +137,12 @@ export const CardView = ({ view }: DataProps) => {
     };
 
     const PrintElement = ({ element }: { element: DynamicObject }) => {
+        console.log(element);
         const cardDetails = resolveCardBindings(
-            cardData!,
+            cardData,
             element.attributes.Value,
         );
 
-        // console.log(sanitizeBinding(element.attributes.Value));
         const sanitizedBinding = sanitizeBinding(element.attributes.Value);
         const woEntity = sanitizedBinding.replace('Entity.', '');
         if (entityPropertiesAndTypes.get(woEntity) === 'Boolean') {
@@ -148,7 +158,11 @@ export const CardView = ({ view }: DataProps) => {
                         id={element.attributes.Identifier}
                         type={`checkbox`}
                         checked={cardDetails?.toString() === 'true'}
-                        onChange={() => {}}
+                        onChange={() => {
+                            console.log(
+                                `checkbox clicked: ${element.attributes.Caption}`,
+                            );
+                        }}
                     />
                 </div>
             );
@@ -222,6 +236,48 @@ export const CardView = ({ view }: DataProps) => {
         );
     };
 
+    const MapElements = ({
+        elements,
+    }: {
+        elements: Array<CardElementType>;
+    }) => {
+        return (
+            <>
+                {elements.map((element: CardElementType) => {
+                    if (element.name === 'Group')
+                        return (
+                            <PrintGroup
+                                group={element}
+                                key={element.attributes['__id'] as Key}
+                            />
+                        );
+                    else if (element.name === 'List') {
+                        return (
+                            <PrintList
+                                key={element.attributes['__id'] as Key}
+                                element={element}
+                            />
+                        );
+                    } else if (element.name === 'Element')
+                        return (
+                            <PrintElement
+                                key={element.attributes['__id'] as Key}
+                                element={element}
+                            />
+                        );
+                    else {
+                        return (
+                            <p key={element.attributes['__id'] as Key}>
+                                {`Element type ${element.name} not
+                                                yet implemented`}
+                            </p>
+                        );
+                    }
+                })}
+            </>
+        );
+    };
+
     const PrintGroup = ({ group }: { group: DynamicObject }) => {
         const [isContentHidden, setIsContentHidden] = useState(false);
 
@@ -237,49 +293,14 @@ export const CardView = ({ view }: DataProps) => {
                     )}
 
                     {!isContentHidden && (
-                        <>
-                            {group.children.map((element: DynamicObject) => {
-                                if (element!.name === 'Group')
-                                    return (
-                                        <PrintGroup
-                                            group={element}
-                                            key={element!.attributes.__id}
-                                        />
-                                    );
-                                else if (element!.name === 'List') {
-                                    return (
-                                        <PrintList
-                                            key={element!.attributes.__id}
-                                            element={element}
-                                        />
-                                    );
-                                } else if (element!.name === 'Element')
-                                    return (
-                                        <PrintElement
-                                            key={element!.attributes.__id}
-                                            element={element}
-                                        />
-                                    );
-                                else {
-                                    return (
-                                        <p key={element.attributes.__id}>
-                                            Element type '{element.name}' not
-                                            yet implemented
-                                        </p>
-                                    );
-                                }
-                            })}
-                        </>
+                        <MapElements elements={group.children} />
                     )}
                 </>
             )
         );
     };
 
-    const constructCardView = (
-        parsedCardMetaView: DynamicObject,
-        cardData: DynamicObject,
-    ) => {
+    const constructCardView = (parsedCardMetaView: DynamicObject) => {
         return (
             <>
                 {resolvedHeader && (
@@ -314,7 +335,7 @@ export const CardView = ({ view }: DataProps) => {
             {mutation.isLoading && <LoadingSpinner />}
             {mutation.isSuccess &&
                 cardData &&
-                constructCardView(parsedCardMetaView, cardData)}
+                constructCardView(parsedCardMetaView)}
         </>
     );
 };

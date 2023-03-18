@@ -41,7 +41,9 @@ export const getCardViews = async () => {
     });
 };
 
-export const getRegisterViewsFromSchema = (schema: DtoSchema) => {
+export const getRegisterViewsFromSchema = (schema?: DtoSchema) => {
+    if (!schema) return [];
+
     const xmlParser = new DOMParser();
     const listOfMetaViews: Document[] = [];
 

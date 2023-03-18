@@ -31,22 +31,22 @@ export const ShowView = () => {
         }
     }, [isError, error]);
 
+    const Header = entity?.documentElement.getAttribute('Header');
+
     return (
         <>
             {isLoadingSchema && <p>Loading view</p>}
 
             {entity && viewId && viewId.includes('Register') ? (
                 <>
-                    <ViewHeader
-                        header={entity.documentElement.getAttribute('Header')!}
-                    />
+                    {Header && <ViewHeader header={Header} />}
                     <section className={`flex flex-col pb-4`}>
                         {entity && viewId && (
                             <RegisterView
                                 key={entity.documentElement.getAttribute(
                                     'Name',
                                 )}
-                                view={entity.documentElement!}
+                                view={entity.documentElement}
                             />
                         )}
                     </section>
@@ -54,7 +54,7 @@ export const ShowView = () => {
             ) : (
                 <>
                     {entity && viewId && Id && (
-                        <CardView view={entity.documentElement!} />
+                        <CardView view={entity.documentElement} />
                     )}
                 </>
             )}

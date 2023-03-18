@@ -43,7 +43,10 @@ export const ViewHeader = ({
                     'ml-2'
                 }`}
             >
-                {scrollYPosition !== undefined && scrollYPosition > 0 && '-'}{' '}
+                {scrollYPosition !== undefined &&
+                    scrollYPosition > 0 &&
+                    subHeader &&
+                    '-'}{' '}
                 {subHeader}
             </h2>
         </header>

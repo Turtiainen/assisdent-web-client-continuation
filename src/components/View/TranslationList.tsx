@@ -17,18 +17,14 @@ export const TranslationList = ({ translations }: TranslationListProps) => {
         <table className={`border-collapse border-spacing-1 bg-white w-full`}>
             <thead className={`bg-[#d2dce6]`}>
                 <tr>
-                    {Array.from(columnsAndBindings.values()).map(
-                        (column, idx) => (
-                            <th
-                                key={column[0]
-                                    .toString()
-                                    .concat('-', column[1])}
-                                className="text-left p-2 font-semibold text-slate-600"
-                            >
-                                {column[0]}
-                            </th>
-                        ),
-                    )}
+                    {Array.from(columnsAndBindings.values()).map((column) => (
+                        <th
+                            key={column[0].toString().concat('-', column[1])}
+                            className="text-left p-2 font-semibold text-slate-600"
+                        >
+                            {column[0]}
+                        </th>
+                    ))}
                     <th className="text-left w-8 p-2 font-semibold text-slate-600"></th>
                 </tr>
             </thead>
@@ -49,7 +45,9 @@ export const TranslationList = ({ translations }: TranslationListProps) => {
                         <select
                             className={`border rounded p-1 pr-4`}
                             value={''}
-                            onChange={() => {}}
+                            onChange={() => {
+                                console.log(`dropdown onChange triggered`);
+                            }}
                         >
                             <option value={''} disabled>
                                 Lisää uusi...

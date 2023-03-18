@@ -10,7 +10,7 @@ export const ViewList = ({ className }: { className?: string }) => {
     const { data: schema } = useQuery(schemaQuery());
     const { data: registerViews } = useQuery({
         queryKey: ['schema', 'metaview', 'register', 'all'],
-        queryFn: () => getRegisterViewsFromSchema(schema!),
+        queryFn: () => getRegisterViewsFromSchema(schema),
         enabled: !!schema,
     });
     const isLoading =
@@ -24,9 +24,9 @@ export const ViewList = ({ className }: { className?: string }) => {
     const registerViewNames = registerViews
         ?.sort(sortByDocumentHeader)
         .map((doc: Document) => {
-            const docName = doc!.documentElement!.getAttribute('Name')!;
+            const docName = doc.documentElement.getAttribute('Name')!;
             const header =
-                doc!.documentElement!.getAttribute('Header') || docName;
+                doc.documentElement.getAttribute('Header') || docName;
 
             return (
                 <option key={docName} value={docName}>

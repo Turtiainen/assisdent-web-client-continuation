@@ -245,7 +245,12 @@ const resolveCardFormattedText = (
     return parseHandlebars(formattedText, entity);
 };
 
-export const resolveCardBindings = (entity: DynamicObject, binding: string) => {
+export const resolveCardBindings = (
+    entity: DynamicObject | null,
+    binding: string,
+) => {
+    if (!entity) return binding;
+
     const bindingType = getBindingType(binding);
     const sanitizedBinding = sanitizeBinding(binding);
 

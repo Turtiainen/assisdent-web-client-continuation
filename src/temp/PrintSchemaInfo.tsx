@@ -26,25 +26,33 @@ export const PrintSchemaInfo = () => {
 
     if (filter !== null) {
         MetaViewXmlList = MetaViewXmlList.filter((doc) => {
-            return doc
-                .firstElementChild!.getAttribute('Name')!
-                .toLowerCase()
-                .includes(filter.toLowerCase());
+            if (!doc.firstElementChild) return null;
+            const Name = doc.firstElementChild.getAttribute('Name');
+            if (!Name) return null;
+
+            return Name.toLowerCase().includes(filter.toLowerCase());
         });
     }
 
     MetaViewXmlList.sort((a, b) => {
-        const aName = a.firstElementChild!.getAttribute('Name')!;
-        const bName = b.firstElementChild!.getAttribute('Name')!;
+        if (!a.firstElementChild || !b.firstElementChild) return 0;
+        const aName = a.firstElementChild.getAttribute('Name');
+        const bName = b.firstElementChild.getAttribute('Name');
+        if (!aName || !bName) return 0;
+
         if (aName === bName) return 0;
         return aName < bName ? -1 : 1;
     });
 
     MetaViewXmlList.forEach((doc) => {
-        const ViewDefinitionCoreBase = doc.firstElementChild!;
-        const ViewName = ViewDefinitionCoreBase.getAttribute('Name')!;
+        const ViewDefinitionCoreBase = doc.firstElementChild;
+        if (!ViewDefinitionCoreBase) return;
+
+        const ViewName = ViewDefinitionCoreBase.getAttribute('Name');
         const ViewChildren = ViewDefinitionCoreBase.children;
-        viewList.push({ ViewName, ViewChildren, ViewDefinitionCoreBase });
+
+        if (ViewName && ViewChildren && ViewDefinitionCoreBase)
+            viewList.push({ ViewName, ViewChildren, ViewDefinitionCoreBase });
     });
 
     const printRecursive = (elements: HTMLCollection, elementList = []) => {
