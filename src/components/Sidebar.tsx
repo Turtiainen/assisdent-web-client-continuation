@@ -68,43 +68,41 @@ export const Sidebar = () => {
     ];
 
     return (
-        <>
-            <aside
-                className={`min-h-[100vh] bg-ad-sidebar overflow-x-hidden overflow-y-auto transition-[width] ${
-                    isExpanded ? 'w-64' : 'w-14'
-                }`}
-            >
-                <div className="flex">
-                    {isExpanded ? (
-                        <Link
-                            className="text-left mx-5 my-auto text-white hover:text-ad-subtitle w-2/3"
-                            to="/"
-                        >
-                            AssisDent
-                        </Link>
-                    ) : (
-                        ''
-                    )}
-                    <button
-                        className="font-medium bg-transparent text-white hover:text-ad-subtitle hover:border-transparent focus:border-transparent focus:outline-none w-1/3"
-                        onClick={() => setIsExpanded(!isExpanded)}
+        <aside
+            className={`min-h-[100vh] bg-ad-sidebar overflow-x-hidden overflow-y-auto transition-[width] ${
+                isExpanded ? 'w-64' : 'w-14'
+            }`}
+        >
+            <div className="flex">
+                {isExpanded ? (
+                    <Link
+                        className="text-left mx-5 my-auto text-white hover:text-ad-subtitle w-2/3"
+                        to="/"
                     >
-                        {isExpanded ? '<=' : '=>'}
-                    </button>
-                </div>
-                <SidebarItems
-                    title=""
-                    content={exampleSidebarItems}
-                    isExpanded={isExpanded}
-                />
-                <SidebarItems
-                    title="OMAT TIEDOT"
-                    content={exampleSidebarSubContent}
-                    isExpanded={isExpanded}
-                />
-                <SidebarFooter isExpanded={isExpanded} />
-            </aside>
-            {subSidebar && subSidebar}
-        </>
+                        AssisDent
+                    </Link>
+                ) : (
+                    ''
+                )}
+                <button
+                    className="font-medium bg-transparent text-white hover:text-ad-subtitle hover:border-transparent focus:border-transparent focus:outline-none w-1/3"
+                    onClick={() => setIsExpanded(!isExpanded)}
+                >
+                    {isExpanded ? '<=' : '=>'}
+                </button>
+            </div>
+            <SidebarItems
+                title=""
+                content={exampleSidebarItems}
+                isExpanded={isExpanded}
+            />
+            <ViewList className={`text-xs p-1 m-0`} />
+            <SidebarItems
+                title="OMAT TIEDOT"
+                content={exampleSidebarSubContent}
+                isExpanded={isExpanded}
+            />
+            <SidebarFooter isExpanded={isExpanded} />
+        </aside>
     );
 };
