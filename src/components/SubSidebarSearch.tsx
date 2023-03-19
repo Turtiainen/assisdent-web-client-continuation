@@ -1,5 +1,5 @@
 import { ChangeEventHandler, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import json from '../temp/schema.json';
 import { DtoSchema } from '../types/DtoSchema';
 
