@@ -1,6 +1,7 @@
 import React, { ChangeEventHandler, MouseEventHandler, useState } from 'react';
 import { resolveEntityBindings } from '../../utils/utils';
 import { DynamicObject } from '../../types/DynamicObject';
+import { Link } from 'react-router-dom';
 
 export type RegisterTableProps = {
     columns: string[];
@@ -128,14 +129,17 @@ export const RegisterTable = ({
                         <td className="text-left text-xs px-2" key={idx}>
                             {isLink ? (
                                 <>
-                                    <a
-                                        className={`underline font-semibold cursor-pointer`}
-                                    >
+
                                         {bindingValues.map(
                                             (bindingValue, idx) => {
                                                 return (
                                                     <p key={idx}>
-                                                        {bindingValue}
+                                                        <Link
+                                                          to={`/view/${entityType}CardView/${entity.Id}`}
+                                                          className={`underline font-semibold cursor-pointer`}
+                                                        >
+                                                            {bindingValue}
+                                                        </Link>
                                                     </p>
                                                 );
                                             },

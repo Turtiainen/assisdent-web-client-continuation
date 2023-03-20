@@ -26,34 +26,36 @@ export const PrintSchemaInfo = () => {
 
     if (filter !== null) {
         MetaViewXmlList = MetaViewXmlList.filter((doc) => {
-            return doc
-                .firstElementChild!.getAttribute('Name')!
-                .toLowerCase()
-                .includes(filter.toLowerCase());
+            if (!doc.firstElementChild) return null;
+            const Name = doc.firstElementChild.getAttribute('Name');
+            if (!Name) return null;
+
+            return Name.toLowerCase().includes(filter.toLowerCase());
         });
     }
 
     MetaViewXmlList.sort((a, b) => {
-        const aName = a.firstElementChild!.getAttribute('Name')!;
-        const bName = b.firstElementChild!.getAttribute('Name')!;
+        if (!a.firstElementChild || !b.firstElementChild) return 0;
+        const aName = a.firstElementChild.getAttribute('Name');
+        const bName = b.firstElementChild.getAttribute('Name');
+        if (!aName || !bName) return 0;
+
         if (aName === bName) return 0;
         return aName < bName ? -1 : 1;
     });
 
     MetaViewXmlList.forEach((doc) => {
-        const ViewDefinitionCoreBase = doc.firstElementChild!;
-        const ViewName = ViewDefinitionCoreBase.getAttribute('Name')!;
+        const ViewDefinitionCoreBase = doc.firstElementChild;
+        if (!ViewDefinitionCoreBase) return;
+
+        const ViewName = ViewDefinitionCoreBase.getAttribute('Name');
         const ViewChildren = ViewDefinitionCoreBase.children;
-        viewList.push({ ViewName, ViewChildren, ViewDefinitionCoreBase });
+
+        if (ViewName && ViewChildren && ViewDefinitionCoreBase)
+            viewList.push({ ViewName, ViewChildren, ViewDefinitionCoreBase });
     });
 
-    const listStyles = ['circle', 'square', 'disc'];
-
-    const printRecursive = (
-        elements: HTMLCollection,
-        elementList = [],
-        level = 0,
-    ) => {
+    const printRecursive = (elements: HTMLCollection, elementList = []) => {
         if (elements.length === 0) return null;
 
         return Array.from(elements).map((element, idx) => {
@@ -78,28 +80,24 @@ export const PrintSchemaInfo = () => {
                     <pre>{`<${element.nodeName}${
                         Caption || Identifier
                     }${Value}>`}</pre>
-                    {element.hasChildNodes() ? (
+                    {element.hasChildNodes() && (
                         <ul className={`pl-4`}>
-                            {printRecursive(
-                                element.children,
-                                elementList,
-                                ++level % listStyles.length,
-                            )}
+                            {printRecursive(element.children, elementList)}
                         </ul>
-                    ) : null}
+                    )}
                 </li>
             );
         });
     };
 
     const Print = (
-        <div className={``}>
+        <div>
             {viewList.map((obj) => {
                 return (
                     <div className={`flex py-4 border-b`} key={obj.ViewName}>
                         <div className={`w-96`}>
                             <h2
-                                className={`text-xs font-bold`}
+                                className={`font-bold`}
                                 onClick={(e) => {
                                     e.preventDefault();
                                     e.stopPropagation();
