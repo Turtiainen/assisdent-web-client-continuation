@@ -35,6 +35,11 @@ function Dropdown(props: DropdownProps) {
                 disabled={disabled}
                 value={value}
             >
+                {placeholder && (
+                    <option value={''} disabled>
+                        {placeholder}
+                    </option>
+                )}
                 {options.map((option) => (
                     <option key={option} value={option}>
                         {option}

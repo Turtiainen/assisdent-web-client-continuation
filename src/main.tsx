@@ -9,6 +9,7 @@ import { ShowView } from './components/View/ShowView';
 import { loader as schemaLoader } from './temp/SchemaUtils';
 import { PrintSchemaInfo } from './temp/PrintSchemaInfo';
 import { IndexPage } from './components/IndexPage';
+import { PrintEntitySchema } from './temp/PrintEntitySchema';
 
 const queryClient = new QueryClient();
 
@@ -24,7 +25,7 @@ const router = createBrowserRouter([
                 loader: schemaLoader(queryClient),
             },
             {
-                path: 'view/:viewId',
+                path: 'view/:viewId/:Id?',
                 element: <ShowView />,
                 loader: schemaLoader(queryClient),
             },
@@ -34,6 +35,11 @@ const router = createBrowserRouter([
         // For schema debugging purposes
         path: '/print-schema-xml',
         element: <PrintSchemaInfo />,
+    },
+    {
+        // For schema debugging purposes
+        path: '/print-entity-schema',
+        element: <PrintEntitySchema />,
     },
 ]);
 
