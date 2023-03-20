@@ -84,7 +84,7 @@ jobs:
         with:
           path: node_modules
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-      - run: npm test:ci
+      - run: npm run test:ci
       - name: Test Report
         uses: dorny/test-reporter@v1
         if: success() || failure()
