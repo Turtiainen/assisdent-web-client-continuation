@@ -94,7 +94,7 @@ jobs:
           reporter: jest-junit
 
   Deploy-Production:
-    needs: Build-and-test
+    needs: Test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
