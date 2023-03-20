@@ -129,22 +129,18 @@ export const RegisterTable = ({
                         <td className="text-left text-xs px-2" key={idx}>
                             {isLink ? (
                                 <>
-
-                                        {bindingValues.map(
-                                            (bindingValue, idx) => {
-                                                return (
-                                                    <p key={idx}>
-                                                        <Link
-                                                          to={`/view/${entityType}CardView/${entity.Id}`}
-                                                          className={`underline font-semibold cursor-pointer`}
-                                                        >
-                                                            {bindingValue}
-                                                        </Link>
-                                                    </p>
-                                                );
-                                            },
-                                        )}
-                                    </a>
+                                    {bindingValues.map((bindingValue, idx) => {
+                                        return (
+                                            <p key={idx}>
+                                                <Link
+                                                    to={`/view/${entityType}CardView/${entity.Id}`}
+                                                    className={`underline font-semibold cursor-pointer`}
+                                                >
+                                                    {bindingValue}
+                                                </Link>
+                                            </p>
+                                        );
+                                    })}
                                     <span className={`font-bold`}>{`>`}</span>
                                 </>
                             ) : (
