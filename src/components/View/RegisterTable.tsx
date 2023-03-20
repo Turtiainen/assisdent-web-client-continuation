@@ -137,11 +137,13 @@ export const RegisterTable = ({
                                                     className={`underline font-semibold cursor-pointer`}
                                                 >
                                                     {bindingValue}
+                                                    <span
+                                                        className={`font-bold`}
+                                                    >{`>`}</span>
                                                 </Link>
                                             </p>
                                         );
                                     })}
-                                    <span className={`font-bold`}>{`>`}</span>
                                 </>
                             ) : (
                                 bindingValues.map((bindingValue, idx) => {
