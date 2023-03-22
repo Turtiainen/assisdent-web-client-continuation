@@ -15,7 +15,11 @@ const MockSidebar = () => {
 const MockSubSidebar = () => {
     return (
         <BrowserRouter>
-            <SubSidebarSearch onClick={() => {}}/>
+            <SubSidebarSearch
+                onClick={() => {
+                    return;
+                }}
+            />
         </BrowserRouter>
     );
 };

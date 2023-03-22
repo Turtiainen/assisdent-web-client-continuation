@@ -24,8 +24,12 @@ const MockErrorPage = () => {
 describe('Register ErrorPage', () => {
     beforeEach(() => {
         // Do not render 404 errors to console
-        jest.spyOn(console, 'warn').mockImplementation(() => {});
-        jest.spyOn(console, 'log').mockImplementation(() => {});
+        jest.spyOn(console, 'warn').mockImplementation(() => {
+            return;
+        });
+        jest.spyOn(console, 'log').mockImplementation(() => {
+            return;
+        });
     });
 
     it('should not render error page on a successful route', () => {

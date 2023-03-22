@@ -104,7 +104,10 @@ export const SubSidebarSearch = ({ onClick }: SubSidebarSearchType) => {
                     />
                 </div>
             </div>
-            <div className="flex-row justify-left items-top px-2 py-2" data-testid="search-results">
+            <div
+                className="flex-row justify-left items-top px-2 py-2"
+                data-testid="search-results"
+            >
                 {!filter && (
                     <p className="text-sm text-gray-500">
                         Etsi rekisterinäkymiä

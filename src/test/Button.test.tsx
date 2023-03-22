@@ -4,7 +4,15 @@ import '@testing-library/jest-dom';
 
 describe('Register Button', () => {
     it('should render the element with a child inside', () => {
-        render(<Button onClick={() => {}} children={<>Child</>}/>);
+        render(
+            <Button
+                onClick={() => {
+                    return;
+                }}
+            >
+                <>Child</>
+            </Button>,
+        );
         expect(screen.getByText(/Child/)).toBeInTheDocument();
     });
 });

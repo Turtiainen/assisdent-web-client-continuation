@@ -6,10 +6,10 @@ import { BrowserRouter } from 'react-router-dom';
 const MockSidebar = () => {
     return (
         <BrowserRouter>
-            <Sidebar/>
+            <Sidebar />
         </BrowserRouter>
-    )
-}
+    );
+};
 
 describe('Register Sidebar', () => {
     it('should render the element', () => {
