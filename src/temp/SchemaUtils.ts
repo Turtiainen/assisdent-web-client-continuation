@@ -34,6 +34,8 @@ const tryToGetSchema = (entityType: string | null, path: string | string[]) => {
     }, getEntitySchema(entityType));
 };
 
+// TODO: this function is not used anywhere
+// eslint-disable-next-line @typescript-eslint/no-empty-function
 export const getEntityPropertyType = () => {};
 
 export const getEntityToString = (

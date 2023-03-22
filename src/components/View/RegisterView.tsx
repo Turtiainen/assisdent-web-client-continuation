@@ -31,6 +31,8 @@ export const RegisterView = ({ view }: DataProps) => {
 
     const orderBy = parseOrderOptions(view);
     const { columns, bindings } = parseRegisterMetaView(view);
+    console.log('columns', columns);
+    console.log('bindings', bindings);
 
     const searchOptions = {
         entityType: EntityType,

@@ -55,7 +55,7 @@ const resolveFormattedText = (
 ) => {
     let path: string[] | undefined;
     let finalEntity: DynamicObject | undefined;
-    let formattedText: string | undefined;
+    // let formattedText: string | undefined;
 
     // Should use subEntity's property
     if (identifier.toLowerCase().includes('path=')) {
@@ -82,10 +82,13 @@ const resolveFormattedText = (
         return parseHandlebars(entityToString, entity);
     }
 
-    formattedText = getFormattedText(identifier);
+    console.log('identifier', identifier);
+    const formattedText = getFormattedText(identifier);
     if (!formattedText) return;
 
     if (finalEntity) return parseHandlebars(formattedText, finalEntity);
+
+    console.log('formattedText', formattedText);
 
     return parseHandlebars(formattedText, entity);
 };
@@ -162,45 +165,64 @@ const resolveObjectBindings = (
 // TODO refactor into smaller functions
 export const resolveEntityBindings = (
     entity: DynamicObject,
-    bindings: string[],
+    bindings: string[][],
     entityType: string | null,
-) => {
-    return bindings.map((rawBinding: string) => {
-        let value: any = rawBinding;
+): string[][] => {
+    return bindings.map((rawBindings: Array<string>) => {
+        return rawBindings.map((rawBinding: string) => {
+            let value: any = rawBinding;
 
-        const bindingType = getBindingType(rawBinding);
+            const bindingType = getBindingType(rawBinding);
 
-        if (bindingType === null) {
-            console.log(`Unknown Binding Type:`, rawBinding);
-            return;
-        }
+            if (bindingType === null) {
+                console.log(`Unknown Binding Type:`, rawBinding);
+                return;
+            }
 
-        const sanitizedBinding =
-            bindingType === BindingKind.BINDING
-                ? rawBinding.substring(8).trim().slice(0, -1) // BindingKind.BINDING
-                : rawBinding.substring(14).trim().slice(0, -1); // BindingKind.FORMATTED_TEXT
+            const sanitizedBinding =
+                bindingType === BindingKind.BINDING
+                    ? rawBinding.substring(8).trim().slice(0, -1)
+                    : rawBinding.substring(14).trim().slice(0, -1);
 
-        if (bindingType === BindingKind.BINDING) {
-            value = tryToGetProp(entity, sanitizedBinding);
-        } else if (bindingType === BindingKind.FORMATTED_TEXT) {
-            value = resolveFormattedText(entity, sanitizedBinding, entityType);
-        }
+            if (bindingType === BindingKind.BINDING) {
+                value = tryToGetProp(entity, sanitizedBinding);
+            } else if (bindingType === BindingKind.FORMATTED_TEXT) {
+                value = resolveFormattedText(
+                    entity,
+                    sanitizedBinding,
+                    entityType,
+                );
+            }
+            if (bindingType === BindingKind.BINDING) {
+                value = tryToGetProp(entity, sanitizedBinding);
+            } else if (bindingType === BindingKind.FORMATTED_TEXT) {
+                value = resolveFormattedText(
+                    entity,
+                    sanitizedBinding,
+                    entityType,
+                );
+            }
 
-        // TODO This breaks things when an array is returned above
-        if (Array.isArray(value)) {
-            return resolveUnhandledArray(entity, sanitizedBinding, entityType);
-        }
+            // TODO This breaks things when an array is returned above
+            if (Array.isArray(value)) {
+                return resolveUnhandledArray(
+                    entity,
+                    sanitizedBinding,
+                    entityType,
+                );
+            }
 
-        if (typeof value === 'object' && value !== null) {
-            value = resolveObjectBindings(
-                entity,
-                sanitizedBinding,
-                entityType,
-                value,
-            );
-        }
+            if (typeof value === 'object' && value !== null) {
+                value = resolveObjectBindings(
+                    entity,
+                    sanitizedBinding,
+                    entityType,
+                    value,
+                );
+            }
 
-        return value ?? '-';
+            return value ?? '-';
+        });
     });
 };
 
@@ -223,7 +245,7 @@ const resolveCardFormattedText = (
 ) => {
     let path: string[] | undefined;
     let finalEntity: DynamicObject | undefined;
-    let formattedText: string | undefined;
+    // let formattedText: string | undefined;
 
     // Should use subEntity's property
     if (identifier.toLowerCase().includes('path=')) {
@@ -237,7 +259,7 @@ const resolveCardFormattedText = (
     // Failed to find entityProperty with the given path
     if (path && !finalEntity) return;
 
-    formattedText = getFormattedText(identifier);
+    const formattedText = getFormattedText(identifier);
     if (!formattedText) return;
 
     if (finalEntity) return parseHandlebars(formattedText, finalEntity);
