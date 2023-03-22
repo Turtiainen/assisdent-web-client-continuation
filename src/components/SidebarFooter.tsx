@@ -9,6 +9,7 @@ export const SidebarFooter = ({ isExpanded }: SidebarFooterProps) => {
                 isExpanded ? 'm-5 space-x-4' : 'm-1'
             }
             `}
+            data-testid="sidebar-footer"
         >
             {isExpanded ? (
                 <>

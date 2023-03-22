@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { SidebarItems } from './SidebarItems';
 import { SidebarFooter } from './SidebarFooter';
 import { Link } from 'react-router-dom';
-import { ViewList } from './View/ViewList';
 import { SubSidebarSearch } from './SubSidebarSearch';
 
 export const Sidebar = () => {

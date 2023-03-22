@@ -41,7 +41,11 @@ function Dropdown(props: DropdownProps) {
                     </option>
                 )}
                 {options.map((option) => (
-                    <option key={option} value={option}>
+                    <option
+                        key={option}
+                        value={option}
+                        data-testid="dropdown-option"
+                    >
                         {option}
                     </option>
                 ))}

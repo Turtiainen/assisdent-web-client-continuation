@@ -74,6 +74,7 @@ export const SubSidebarSearch = ({ onClick }: SubSidebarSearchType) => {
                     <div
                         key={obj.ViewName}
                         className="w-80"
+                        data-testid="search-result-item"
                         onClick={() => {
                             onClick();
                             navigate(`/view/${obj.ViewName}`);
@@ -103,7 +104,10 @@ export const SubSidebarSearch = ({ onClick }: SubSidebarSearchType) => {
                     />
                 </div>
             </div>
-            <div className="flex-row justify-left items-top px-2 py-2">
+            <div
+                className="flex-row justify-left items-top px-2 py-2"
+                data-testid="search-results"
+            >
                 {!filter && (
                     <p className="text-sm text-gray-500">
                         Etsi rekisterinäkymiä
