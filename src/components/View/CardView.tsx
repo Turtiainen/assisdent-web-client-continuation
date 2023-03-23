@@ -16,6 +16,8 @@ import { getEntityPropertiesSchema } from '../../temp/SchemaUtils';
 import { List } from './List';
 import { TranslationList } from './TranslationList';
 import { SectionHeading } from './SectionHeading';
+import Button from '../Button';
+import { log } from 'handlebars';
 
 export type DataProps = {
     view: Element;
@@ -34,6 +36,10 @@ type CardElementType = {
 
 export const CardView = ({ view }: DataProps) => {
     const [cardData, setCardData] = useState<DynamicObject | null>(null);
+    const [changedValues, setChangedValues] = useState<Array<DynamicObject>>(
+        [],
+    );
+    console.log(changedValues.length);
 
     // const { viewId } = useParams();
     const { Id } = useParams();
@@ -130,6 +136,27 @@ export const CardView = ({ view }: DataProps) => {
     }, []);
 
     // console.log(cardData);
+    const updateChangedTextInputValue = (key: string, value: string) => {
+        console.log(`updateChangedValues: ${key} = ${value}`);
+        const newChangedValues = [...changedValues];
+        const index = newChangedValues.findIndex((item) => item.key === key);
+        if (index === -1) {
+            newChangedValues.push({ key, value });
+        } else {
+            newChangedValues[index].value = value;
+        }
+        console.log(newChangedValues);
+        setChangedValues(newChangedValues);
+    };
+
+    const saveChanges = () => {
+        console.log(`saveChanges`);
+        console.log(changedValues);
+    };
+
+    const cancelChanges = () => {
+        setChangedValues([]);
+    };
 
     const PrintList = ({ element }: { element: DynamicObject }) => {
         if (cardData === null) return null;
@@ -137,7 +164,7 @@ export const CardView = ({ view }: DataProps) => {
     };
 
     const PrintElement = ({ element }: { element: DynamicObject }) => {
-        console.log(element);
+        // console.log(element);
         const cardDetails = resolveCardBindings(
             cardData,
             element.attributes.Value,
@@ -227,8 +254,22 @@ export const CardView = ({ view }: DataProps) => {
                         <input
                             id={element.attributes.Identifier}
                             type={typeof cardDetails}
-                            defaultValue={cardDetails.toString()}
+                            // defaultValue={cardDetails.toString()}
+                            // value is changedValue with key matching element.attributes.Identifier or cardDetails.toString() if no changedValue is found
+                            value={
+                                changedValues.find(
+                                    (item) =>
+                                        item.key ===
+                                        element.attributes.Identifier,
+                                )?.value || cardDetails.toString()
+                            }
                             className={`flex-1 max-h-12 border border-ad-grey-300 rounded-sm px-2 py-1 hover:border-ad-primary focus:border-ad-primary active:border-ad-primary focus:outline-none`}
+                            onChange={(e) => {
+                                updateChangedTextInputValue(
+                                    element.attributes.Identifier,
+                                    e.target.value,
+                                );
+                            }}
                         />
                     </div>
                 )}
@@ -336,6 +377,19 @@ export const CardView = ({ view }: DataProps) => {
             {mutation.isSuccess &&
                 cardData &&
                 constructCardView(parsedCardMetaView)}
+            {/*TODO just temporary buttons here*/}
+            <Button
+                onClick={() => console.log('cancel')}
+                disabled={changedValues.length === 0}
+            >
+                Peruuta muutokset
+            </Button>
+            <Button
+                onClick={() => console.log('save')}
+                disabled={changedValues.length === 0}
+            >
+                Tallenna muutokset
+            </Button>
         </>
     );
 };
