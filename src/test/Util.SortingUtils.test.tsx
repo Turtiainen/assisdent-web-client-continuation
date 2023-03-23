@@ -22,7 +22,7 @@ const staticWordsInOrder = [
 function getMockList(list: string[]) {
     const mockDocuments: Document[] = [];
     for (let i = 0; i < list.length; i++) {
-        let doc = document.implementation.createHTMLDocument('Document');
+        const doc = document.implementation.createHTMLDocument('Document');
         doc.documentElement.setAttribute('Name', list[i]);
         doc.documentElement.setAttribute('Header', list[i]);
         mockDocuments.push(doc);
