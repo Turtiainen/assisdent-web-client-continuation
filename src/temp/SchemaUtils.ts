@@ -1,19 +1,24 @@
-import json from './schema.json';
 import { DtoSchema } from '../types/DtoSchema';
 import { DtoEntity } from '../types/DtoEntity';
 import { getSchema } from '../services/backend';
+import useSchemaStore from '../store/store';
 
-// TODO: schema data should be read from store eventually
-// Force type conversion to DtoSchema
-const schema = json as unknown as DtoSchema;
+const getStoreSchema = () => {
+    const schemaInStore = useSchemaStore.getState().schema;
+    return schemaInStore as unknown as DtoSchema;
+}
 
 export const getFormattedText = (identifier: string) => {
+    const schema = getStoreSchema();
+
     if (identifier.includes('{{')) return identifier;
     return schema.FormattedTexts.find((ft) => ft.Identifier === identifier)
         ?.Text;
 };
 
 export const getEntitySchema = (name: string | undefined | null) => {
+    const schema = getStoreSchema();
+
     if (!name || name === '') return;
     return schema.MetaData.Entities.find((e) => e.Name === name);
 };
@@ -69,6 +74,7 @@ export const loader = (queryClient: any) => async () => {
  * @param names 0..* strings
  */
 export const findEntitySchema = (...names: string[]) => {
+    const schema = getStoreSchema();
     const allEntities = schema.MetaData.Entities;
 
     if (names.length > 0) {

@@ -1,13 +1,12 @@
-import data from './schema.json';
 import { DtoSchema } from '../types/DtoSchema';
-
-const schema = data as unknown as DtoSchema;
-const Entities = schema.MetaData.Entities;
+import useSchemaStore from '../store/store';
 
 const entityPropertyTypeMap = new Map<string, string[]>();
 
 export const getEntityPropertyTypes = () => {
-    // console.log(Entities[1]);
+    const schemaInStore = useSchemaStore((state: any) => state.schema);
+    const schema = schemaInStore as unknown as DtoSchema;
+    const Entities = schema.MetaData.Entities;
 
     Entities.forEach((entity) => {
         Object.entries(entity.Properties).forEach((property) => {

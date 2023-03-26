@@ -1,13 +1,15 @@
 import { ChangeEventHandler, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import json from '../temp/schema.json';
 import { DtoSchema } from '../types/DtoSchema';
+import useSchemaStore from '../store/store';
 
 export type SubSidebarSearchType = {
     onClick: () => void;
 };
 
 export const SubSidebarSearch = ({ onClick }: SubSidebarSearchType) => {
+    const schemaInStore = useSchemaStore((state: any) => state.schema);
+
     const [filter, setFilter] = useState<string | null>(null);
     const navigate = useNavigate();
     const filterDocuments: ChangeEventHandler<HTMLInputElement> = (e) => {
@@ -17,7 +19,7 @@ export const SubSidebarSearch = ({ onClick }: SubSidebarSearchType) => {
     };
 
     // Force type conversion to DtoSchema
-    const data = json as unknown as DtoSchema;
+    const data = schemaInStore as unknown as DtoSchema;
     const xmlParser = new DOMParser();
     const MetaViews = data.MetaViews;
     const viewList: {

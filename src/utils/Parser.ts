@@ -4,6 +4,7 @@ import { DtoSchema } from '../types/DtoSchema';
 import { DynamicObject } from '../types/DynamicObject';
 
 export const getRegisterViews = async () => {
+    // TODO: use useSchemaStore to retrieve schema
     return await getSchema().then((result) => {
         if (!result) return [];
 
@@ -23,6 +24,7 @@ export const getRegisterViews = async () => {
 };
 
 export const getCardViews = async () => {
+    // TODO: use useSchemaStore to retrieve schema
     return await getSchema().then((result) => {
         if (!result) return [];
 
