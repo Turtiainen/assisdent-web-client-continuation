@@ -3,12 +3,12 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { ViewHeader } from './ViewHeader';
 import { useIsFetching, useQuery } from '@tanstack/react-query';
 import { getViewFromSchemaByName } from '../../utils/Parser';
-import { schemaQuery } from '../../temp/SchemaUtils';
 import { CardView } from './CardView';
 import { useEffect } from 'react';
+import useSchemaStore from '../../store/store';
 
 export const ShowView = () => {
-    const { data: schema } = useQuery(schemaQuery());
+    const schema = useSchemaStore((state: any) => state.schema);
     const { viewId } = useParams();
     const { Id } = useParams();
     const navigate = useNavigate();
@@ -19,14 +19,13 @@ export const ShowView = () => {
         error,
     } = useQuery({
         queryKey: ['schema', 'metaview', viewId],
-        queryFn: () => getViewFromSchemaByName(schema!, viewId!),
-        enabled: !!schema,
+        queryFn: () => getViewFromSchemaByName(schema, viewId!),
+        enabled: Object.keys(schema).length > 0,
     });
     const isLoadingSchema = useIsFetching(['schema', 'metaview', viewId]) > 0;
 
     useEffect(() => {
         if (isError) {
-            console.log(error);
             navigate('/somewhere');
         }
     }, [isError, error]);

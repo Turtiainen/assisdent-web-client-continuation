@@ -31,6 +31,7 @@ type EntitySearchTypes = {
   Also, return type is any for
 */
 export async function getSchema() {
+    console.log('----------------- Getting schema -----------------');
     const loginData: LoginData = {
         Username: import.meta.env.VITE_ASSISCARE_USER,
         Password: import.meta.env.VITE_ASSISCARE_PASS,
