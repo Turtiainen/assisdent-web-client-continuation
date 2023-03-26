@@ -98,7 +98,7 @@ export const SubSidebarSearch = ({ onClick }: SubSidebarSearchType) => {
                 <div className="flex px-2">
                     <input
                         type="text"
-                        className="w-full h-7 px-3 text-base placeholder-gray-600 border border-ad-grey-400 rounded-sm px-2 py-1 hover:border-ad-primary focus:border-ad-primary active:border-ad-primary focus:outline-none"
+                        className="w-full h-7 px-3 text-base placeholder-gray-600 border border-ad-grey-400 rounded-sm py-1 hover:border-ad-primary focus:border-ad-primary active:border-ad-primary focus:outline-none"
                         placeholder="Kirjoita hakusana 🔍"
                         onChange={filterDocuments}
                     />
