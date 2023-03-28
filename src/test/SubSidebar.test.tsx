@@ -3,7 +3,7 @@ import { Sidebar } from '../components/Sidebar';
 import { SubSidebarSearch } from '../components/SubSidebarSearch';
 import '@testing-library/jest-dom';
 import { BrowserRouter } from 'react-router-dom';
-import json from '../temp/schema.json'
+import json from '../temp/schema.json';
 import { DtoSchema } from '../types/DtoSchema';
 
 const MockSidebar = () => {
@@ -16,7 +16,11 @@ const MockSidebar = () => {
 
 // Mock the store with the static schema.json
 const mockSchema = json as unknown as DtoSchema;
-jest.mock('../store/store', () => jest.fn(() => {return mockSchema;}));
+jest.mock('../store/store', () =>
+    jest.fn(() => {
+        return mockSchema;
+    }),
+);
 
 const MockSubSidebar = () => {
     return (
