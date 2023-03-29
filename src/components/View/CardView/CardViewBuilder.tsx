@@ -6,6 +6,7 @@ import { resolveCardBindings } from '../../../utils/utils';
 import { CardElement } from './CardElement';
 import { CardGroup } from './CardGroup';
 import { CardList } from './CardList';
+import { Editor } from './Editor';
 
 type ElementAttributesType = {
     __id: string;
@@ -13,7 +14,7 @@ type ElementAttributesType = {
 };
 
 type CardElementType = {
-    name: 'Group' | 'List' | 'Element' | 'Search' | 'Button';
+    name: 'Group' | 'List' | 'Element' | 'Search' | 'Button' | 'Editor';
     attributes: ElementAttributesType;
     [index: string]: unknown;
 };
@@ -58,12 +59,11 @@ export const CardViewBuilder = ({
                             />
                         );
                     case 'Search':
-                        //console.log('search element :>> ', element);
                         return (
                             <p key={element.attributes['__id'] as Key}>
                                 {`Element type ${element.name} not
                                             yet implemented`}
-                                <b>{` - Caption: ${element.attributes.Caption} `}</b>
+                                <b>{` - Caption: ${element.attributes.Caption} & Value: ${element.attributes.Value}`}</b>
                             </p>
                         );
                     case 'Button': {
@@ -130,6 +130,20 @@ export const CardViewBuilder = ({
                                 </p>
                             );
                         }
+                    }
+                    case 'Editor': {
+                        const content = resolveCardBindings(
+                            cardData,
+                            element.attributes.Value,
+                        );
+                        return (
+                            <Editor
+                                key={element.attributes['__id'] as Key}
+                                element={element}
+                                content={content?.toString()}
+                                placeholder={element.attributes.Caption}
+                            />
+                        );
                     }
                     default:
                         return (
