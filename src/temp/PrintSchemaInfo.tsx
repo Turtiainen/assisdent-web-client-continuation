@@ -12,7 +12,7 @@ export const PrintSchemaInfo = () => {
     };
 
     // Force type conversion to DtoSchema
-    const data = json as DtoSchema;
+    const data = json as unknown as DtoSchema;
     const xmlParser = new DOMParser();
     const MetaViews = data.MetaViews;
     const viewList: {

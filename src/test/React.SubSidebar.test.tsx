@@ -15,7 +15,7 @@ const MockSidebar = () => {
 };
 
 // Mock the store with the static schema.json
-const mockSchema = json as DtoSchema;
+const mockSchema = json as unknown as DtoSchema;
 jest.mock('../store/store', () =>
     jest.fn(() => {
         return mockSchema;

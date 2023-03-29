@@ -13,7 +13,7 @@ export const PrintEntitySchema = () => {
     };
 
     // Force type conversion to DtoSchema
-    const data = json as DtoSchema;
+    const data = json as unknown as DtoSchema;
     let EntityList = data.MetaData.Entities;
 
     if (filter !== null) {
