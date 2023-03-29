@@ -1,11 +1,10 @@
 import { DtoSchema } from '../types/DtoSchema';
 import { DtoEntity } from '../types/DtoEntity';
-import { getSchema } from '../services/backend';
 import useSchemaStore from '../store/store';
 
 const getStoreSchema = () => {
     const schemaInStore = useSchemaStore.getState().schema;
-    return schemaInStore as unknown as DtoSchema;
+    return schemaInStore as DtoSchema;
 }
 
 export const getFormattedText = (identifier: string) => {
@@ -48,24 +47,6 @@ export const getEntityToString = (
 ): string | undefined => {
     const entity = getEntitySchema(name);
     return entity?.Metadata?.Metadata?.['$Entity']?.ToString;
-};
-
-/**
- * Helper function for using tanstack query with react router
- */
-export const schemaQuery = () => ({
-    queryKey: ['schema'],
-    queryFn: () => getSchema(),
-});
-
-/**
- * Function for router - loads data on route load
- * @param queryClient
- */
-export const loader = (queryClient: any) => async () => {
-    if (!queryClient.getQueryData(schemaQuery().queryKey))
-        await queryClient.fetchQuery(schemaQuery());
-    return null;
 };
 
 /**

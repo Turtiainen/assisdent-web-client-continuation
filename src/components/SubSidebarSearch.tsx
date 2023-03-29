@@ -19,7 +19,7 @@ export const SubSidebarSearch = ({ onClick }: SubSidebarSearchType) => {
     };
 
     // Force type conversion to DtoSchema
-    const data = schemaInStore as unknown as DtoSchema;
+    const data = schemaInStore as DtoSchema;
     const xmlParser = new DOMParser();
     const MetaViews = data.MetaViews;
     const viewList: {

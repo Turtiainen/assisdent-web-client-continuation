@@ -3,26 +3,6 @@ import { DtoView } from '../types/DtoView';
 import { DtoSchema } from '../types/DtoSchema';
 import { DynamicObject } from '../types/DynamicObject';
 
-export const getRegisterViews = async () => {
-    // TODO: use useSchemaStore to retrieve schema
-    return await getSchema().then((result) => {
-        if (!result) return [];
-
-        const xmlMetaViewList = result.MetaViews;
-        const xmlParser = new DOMParser();
-        const listOfMetaViews: Document[] = [];
-
-        xmlMetaViewList.map((metaView: DtoView) =>
-            listOfMetaViews.push(
-                xmlParser.parseFromString(metaView.XML, 'text/xml'),
-            ),
-        );
-        return listOfMetaViews.filter((doc) =>
-            doc.children[0].attributes[4].nodeValue!.endsWith('RegisterView'),
-        );
-    });
-};
-
 export const getCardViews = async () => {
     // TODO: use useSchemaStore to retrieve schema
     return await getSchema().then((result) => {

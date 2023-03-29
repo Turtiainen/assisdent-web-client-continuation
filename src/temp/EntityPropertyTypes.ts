@@ -5,7 +5,7 @@ const entityPropertyTypeMap = new Map<string, string[]>();
 
 export const getEntityPropertyTypes = () => {
     const schemaInStore = useSchemaStore((state: any) => state.schema);
-    const schema = schemaInStore as unknown as DtoSchema;
+    const schema = schemaInStore as DtoSchema;
     const Entities = schema.MetaData.Entities;
 
     Entities.forEach((entity) => {
