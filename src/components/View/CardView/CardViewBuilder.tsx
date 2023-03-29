@@ -28,39 +28,40 @@ export const CardViewBuilder = ({
     return (
         <>
             {elements.map((element: CardElementType) => {
-                if (element.name === 'Group')
-                    return (
-                        <CardGroup
-                            key={element.attributes['__id'] as Key}
-                            group={element}
-                            cardData={cardData}
-                            entityPropertySchema={entityPropertySchema}
-                        />
-                    );
-                else if (element.name === 'List') {
-                    return (
-                        <CardList
-                            key={element.attributes['__id'] as Key}
-                            element={element}
-                            cardData={cardData}
-                        />
-                    );
-                } else if (element.name === 'Element')
-                    return (
-                        <CardElement
-                            key={element.attributes['__id'] as Key}
-                            element={element}
-                            cardData={cardData}
-                            entityPropertySchema={entityPropertySchema}
-                        />
-                    );
-                else {
-                    return (
-                        <p key={element.attributes['__id'] as Key}>
-                            {`Element type ${element.name} not
+                switch (element.name) {
+                    case 'Group':
+                        return (
+                            <CardGroup
+                                key={element.attributes['__id'] as Key}
+                                group={element}
+                                cardData={cardData}
+                                entityPropertySchema={entityPropertySchema}
+                            />
+                        );
+                    case 'List':
+                        return (
+                            <CardList
+                                key={element.attributes['__id'] as Key}
+                                element={element}
+                                cardData={cardData}
+                            />
+                        );
+                    case 'Element':
+                        return (
+                            <CardElement
+                                key={element.attributes['__id'] as Key}
+                                element={element}
+                                cardData={cardData}
+                                entityPropertySchema={entityPropertySchema}
+                            />
+                        );
+                    default:
+                        return (
+                            <p key={element.attributes['__id'] as Key}>
+                                {`Element type ${element.name} not
                                             yet implemented`}
-                        </p>
-                    );
+                            </p>
+                        );
                 }
             })}
         </>
