@@ -15,13 +15,14 @@ type ElementAttributesType = {
 
 type CardElementType = {
     name:
-        | 'Group'
-        | 'List'
-        | 'Element'
-        | 'Search'
-        | 'Button'
-        | 'Editor'
-        | 'Custom';
+    | 'Group'
+    | 'List'
+    | 'Element'
+    | 'Search'
+    | 'Button'
+    | 'Editor'
+    | 'TextBlock'
+    | 'Custom';
     attributes: ElementAttributesType;
     [index: string]: unknown;
 };
@@ -96,6 +97,15 @@ export const CardViewBuilder = ({
                             />
                         );
                     }
+                    case 'TextBlock':
+                        return (
+                            <p
+                                key={element.attributes['__id'] as Key}
+                                className="text-ad-grey-400"
+                            >
+                                {`${element.attributes.GhostText}`}
+                            </p>
+                        );
                     case 'Custom':
                         return (
                             <div key={element.attributes['__id'] as Key}>
