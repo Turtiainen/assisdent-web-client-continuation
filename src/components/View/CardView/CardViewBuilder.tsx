@@ -6,6 +6,7 @@ import { CardButton } from './CardButton';
 import { CardElement } from './CardElement';
 import { CardGroup } from './CardGroup';
 import { CardList } from './CardList';
+import { CardSearch } from './CardSearch';
 import { Editor } from './Editor';
 
 type ElementAttributesType = {
@@ -15,14 +16,15 @@ type ElementAttributesType = {
 
 type CardElementType = {
     name:
-    | 'Group'
-    | 'List'
-    | 'Element'
-    | 'Search'
-    | 'Button'
-    | 'Editor'
-    | 'TextBlock'
-    | 'Custom';
+        | 'Group'
+        | 'List'
+        | 'Element'
+        | 'Search'
+        | 'Button'
+        | 'Editor'
+        | 'TextBlock'
+        | 'Separator'
+        | 'Custom';
     attributes: ElementAttributesType;
     [index: string]: unknown;
 };
@@ -68,11 +70,11 @@ export const CardViewBuilder = ({
                         );
                     case 'Search':
                         return (
-                            <p key={element.attributes['__id'] as Key}>
-                                {`Element type ${element.name} not
-                                            yet implemented`}
-                                <b>{` - Caption: ${element.attributes.Caption} & Value: ${element.attributes.Value}`}</b>
-                            </p>
+                            <CardSearch
+                                key={element.attributes['__id'] as Key}
+                                element={element}
+                                cardData={cardData}
+                            />
                         );
                     case 'Button': {
                         return (
@@ -106,6 +108,8 @@ export const CardViewBuilder = ({
                                 {`${element.attributes.GhostText}`}
                             </p>
                         );
+                    case 'Separator':
+                        return <br key={element.attributes['__id'] as Key} />;
                     case 'Custom':
                         return (
                             <div key={element.attributes['__id'] as Key}>
