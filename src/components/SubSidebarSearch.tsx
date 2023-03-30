@@ -2,13 +2,14 @@ import { ChangeEventHandler, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { DtoSchema } from '../types/DtoSchema';
 import useSchemaStore from '../store/store';
+import { SchemaStore } from '../types/SchemaStore';
 
 export type SubSidebarSearchType = {
     onClick: () => void;
 };
 
 export const SubSidebarSearch = ({ onClick }: SubSidebarSearchType) => {
-    const schemaInStore = useSchemaStore((state: any) => state.schema);
+    const schemaInStore = useSchemaStore((state: SchemaStore) => state.schema);
 
     const [filter, setFilter] = useState<string | null>(null);
     const navigate = useNavigate();

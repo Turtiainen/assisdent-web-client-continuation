@@ -4,11 +4,12 @@ import { sortByDocumentHeader } from '../../utils/sortingUtils';
 import { getRegisterViewsFromSchema } from '../../utils/Parser';
 import useSchemaStore from '../../store/store';
 import { useEffect, useState } from 'react';
+import { SchemaStore } from '../../types/SchemaStore';
 
 export const ViewList = ({ className }: { className?: string }) => {
     const navigate = useNavigate();
     const [registerViews, setRegisterViews] = useState<Document[]>([]);
-    const schemaInStore = useSchemaStore((state: any) => state.schema);
+    const schemaInStore = useSchemaStore((state: SchemaStore) => state.schema);
 
     const handleOnChange: ChangeEventHandler<HTMLSelectElement> = (evt) => {
         evt.preventDefault();

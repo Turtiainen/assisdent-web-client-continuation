@@ -6,9 +6,10 @@ import { getViewFromSchemaByName } from '../../utils/Parser';
 import { CardView } from './CardView';
 import { useEffect } from 'react';
 import useSchemaStore from '../../store/store';
+import { SchemaStore } from '../../types/SchemaStore';
 
 export const ShowView = () => {
-    const schema = useSchemaStore((state: any) => state.schema);
+    const schema = useSchemaStore((state: SchemaStore) => state.schema);
     const { viewId } = useParams();
     const { Id } = useParams();
     const navigate = useNavigate();

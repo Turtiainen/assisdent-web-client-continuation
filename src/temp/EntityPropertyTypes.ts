@@ -1,10 +1,11 @@
 import { DtoSchema } from '../types/DtoSchema';
 import useSchemaStore from '../store/store';
+import { SchemaStore } from '../types/SchemaStore';
 
 const entityPropertyTypeMap = new Map<string, string[]>();
 
 export const getEntityPropertyTypes = () => {
-    const schemaInStore = useSchemaStore((state: any) => state.schema);
+    const schemaInStore = useSchemaStore((state: SchemaStore) => state.schema);
     const schema = schemaInStore as DtoSchema;
     const Entities = schema.MetaData.Entities;
 

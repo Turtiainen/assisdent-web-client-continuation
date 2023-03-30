@@ -1,9 +1,6 @@
 import { create } from 'zustand';
 import { DtoSchema } from '../types/DtoSchema';
-
-interface SchemaStore {
-    schema: DtoSchema;
-}
+import { SchemaStore } from '../types/SchemaStore';
 
 const useSchemaStore = create<SchemaStore>()(() => ({
     schema: {} as DtoSchema,
