@@ -1,13 +1,16 @@
 import { ChangeEventHandler, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import json from '../temp/schema.json';
 import { DtoSchema } from '../types/DtoSchema';
+import useSchemaStore from '../store/store';
+import { SchemaStore } from '../types/SchemaStore';
 
 export type SubSidebarSearchType = {
     onClick: () => void;
 };
 
 export const SubSidebarSearch = ({ onClick }: SubSidebarSearchType) => {
+    const schemaInStore = useSchemaStore((state: SchemaStore) => state.schema);
+
     const [filter, setFilter] = useState<string | null>(null);
     const navigate = useNavigate();
     const filterDocuments: ChangeEventHandler<HTMLInputElement> = (e) => {
@@ -17,7 +20,7 @@ export const SubSidebarSearch = ({ onClick }: SubSidebarSearchType) => {
     };
 
     // Force type conversion to DtoSchema
-    const data = json as unknown as DtoSchema;
+    const data = schemaInStore as DtoSchema;
     const xmlParser = new DOMParser();
     const MetaViews = data.MetaViews;
     const viewList: {
@@ -98,7 +101,7 @@ export const SubSidebarSearch = ({ onClick }: SubSidebarSearchType) => {
                 <div className="flex px-2">
                     <input
                         type="text"
-                        className="w-full h-7 px-3 text-base placeholder-gray-600 border border-ad-grey-400 rounded-sm px-2 py-1 hover:border-ad-primary focus:border-ad-primary active:border-ad-primary focus:outline-none"
+                        className="w-full h-7 px-3 text-base placeholder-gray-600 border border-ad-grey-400 rounded-sm py-1 hover:border-ad-primary focus:border-ad-primary active:border-ad-primary focus:outline-none"
                         placeholder="Kirjoita hakusana 🔍"
                         onChange={filterDocuments}
                     />
