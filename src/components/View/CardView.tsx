@@ -1,6 +1,6 @@
 import { DynamicObject } from '../../types/DynamicObject';
 import { ErrorPage } from '../ErrorPage';
-import { getViewModelData } from '../../services/backend';
+import { getViewModelData, putEntityData } from '../../services/backend';
 import { LoadingSpinner } from '../LoadingSpinner';
 import { parseCardMetaView } from '../../utils/Parser';
 import { useMutation } from '@tanstack/react-query';
@@ -18,6 +18,7 @@ import { TranslationList } from './TranslationList';
 import { SectionHeading } from './SectionHeading';
 import Button from '../Button';
 import { log } from 'handlebars';
+import { recursivelyLogEntityKeysAndValues } from '../../temp/debuggers';
 
 export type DataProps = {
     view: Element;
@@ -39,7 +40,7 @@ export const CardView = ({ view }: DataProps) => {
     const [changedValues, setChangedValues] = useState<Array<DynamicObject>>(
         [],
     );
-    console.log(changedValues.length);
+    console.log('changedValues length:', changedValues.length);
 
     // const { viewId } = useParams();
     const { Id } = useParams();
@@ -127,7 +128,18 @@ export const CardView = ({ view }: DataProps) => {
             console.log('error :>> ', error);
         },
         onSuccess: (apiData) => {
+            console.log('apiData :>> ', JSON.stringify(apiData?.ViewModelData));
             if (apiData) setCardData(apiData.ViewModelData);
+        },
+    });
+
+    const putData = useMutation({
+        mutationFn: putEntityData,
+        onError: (error) => {
+            console.log('error :>> ', error);
+        },
+        onSuccess: (apiData) => {
+            console.log('apiData :>> ', apiData);
         },
     });
 
@@ -136,26 +148,69 @@ export const CardView = ({ view }: DataProps) => {
     }, []);
 
     // console.log(cardData);
-    const updateChangedTextInputValue = (key: string, value: string) => {
-        console.log(`updateChangedValues: ${key} = ${value}`);
-        const newChangedValues = [...changedValues];
-        const index = newChangedValues.findIndex((item) => item.key === key);
-        if (index === -1) {
-            newChangedValues.push({ key, value });
-        } else {
-            newChangedValues[index].value = value;
-        }
-        console.log(newChangedValues);
-        setChangedValues(newChangedValues);
-    };
 
     const saveChanges = () => {
+        const reducedChangedValues = changedValues.reduce((acc, obj) => {
+            for (const [key, value] of Object.entries(obj)) {
+                // eslint-disable-next-line no-prototype-builtins
+                if (acc.hasOwnProperty(key)) {
+                    Object.assign(acc[key], value);
+                } else {
+                    acc[key] = value;
+                }
+            }
+            return acc;
+        }, {});
+        console.log(EntityType);
+        console.log(Id);
         console.log(`saveChanges`);
+        console.log(reducedChangedValues);
         console.log(changedValues);
+        const putDataOptions = {
+            EntityType: EntityType,
+            Patch: {
+                ...reducedChangedValues,
+                Id: Id,
+            },
+            // TODO these are now hardcoded
+            PropertiesToSelect: ['Person.FirstName', 'Person.LastName'],
+        };
+        console.log(putDataOptions);
+        putData.mutate(putDataOptions);
+        mutation.mutate(viewModelSearchOptions);
+        setChangedValues([]);
     };
 
     const cancelChanges = () => {
         setChangedValues([]);
+    };
+
+    const getNestedKeyValue = (
+        obj: DynamicObject,
+        target: string,
+    ): string | null => {
+        for (const key in obj) {
+            if (key === target) {
+                console.log(obj[key]);
+                console.log(key);
+                return obj[key];
+            } else if (typeof obj[key] === 'object') {
+                return getNestedKeyValue(obj[key], target);
+            }
+        }
+        return null;
+    };
+
+    const getMatchingNestedKeyValueFromchangedValuesArray = (
+        target: string,
+    ) => {
+        for (const obj of changedValues) {
+            const valueOfMatchingKey = getNestedKeyValue(obj, target);
+            if (valueOfMatchingKey) {
+                return valueOfMatchingKey;
+            }
+        }
+        return null;
     };
 
     const PrintList = ({ element }: { element: DynamicObject }) => {
@@ -169,6 +224,86 @@ export const CardView = ({ view }: DataProps) => {
             cardData,
             element.attributes.Value,
         );
+
+        const changedValue = getMatchingNestedKeyValueFromchangedValuesArray(
+            element.attributes.Identifier,
+        );
+
+        const [elementValue, setElementValue] = useState(
+            changedValue || cardDetails?.toString(),
+        );
+
+        const updateChangedTextInputValue = (
+            valueString: string,
+            key: string,
+            value: string,
+        ) => {
+            const newChangedValues = [...changedValues];
+
+            console.log(`value: ${valueString}`);
+            console.log(`updateChangedValues: ${key} = ${value}`);
+            // TODO there are some ready made functions for this
+            const keys = valueString
+                .replace('{Binding ', '')
+                .replace('}', '')
+                .split('.')
+                .slice(1);
+            const valueObj: DynamicObject = {};
+            let currentObj = valueObj;
+            console.log(`keys: ${JSON.stringify(keys)}`);
+
+            keys.forEach((key, index) => {
+                if (index === keys.length - 1) {
+                    currentObj[key] = value;
+                } else {
+                    currentObj[key] = {};
+                    currentObj = currentObj[key];
+                }
+            });
+
+            // valueObj[keys[keys.length - 1]] = value;
+            console.log(`valueObj: ${JSON.stringify(valueObj)}`);
+
+            const existingObject = newChangedValues.findIndex((obj) => {
+                console.log(`obj: ${JSON.stringify(obj)}`);
+                let keyFound = true;
+                let currentObjKey = obj;
+                for (let i = 0; i < keys.length; i++) {
+                    console.log(`keys[i]: ${keys[i]}`);
+                    if (currentObjKey[keys[i]] === undefined) {
+                        keyFound = false;
+                        break;
+                    }
+                    currentObjKey = currentObjKey[keys[i]];
+                    console.log(keyFound);
+                }
+                console.log(`keyFound: ${keyFound}`);
+                return keyFound;
+            });
+            console.log(`existingObject: ${JSON.stringify(existingObject)}`);
+
+            if (existingObject > -1) {
+                newChangedValues[existingObject] = valueObj;
+            } else {
+                newChangedValues.push(valueObj);
+            }
+            console.log(
+                `newChangedValues: ${JSON.stringify(newChangedValues)}`,
+            );
+
+            // const newChangedValues = [...changedValues];
+            // const index = newChangedValues.findIndex((item) => item.key === key);
+            // if (index === -1) {
+            //     newChangedValues.push({ key, value });
+            // } else {
+            //     newChangedValues[index].value = value;
+            // }
+            setChangedValues(newChangedValues);
+        };
+
+        const updateInputValue = (value: string) => {
+            setElementValue(value);
+        };
 
         const sanitizedBinding = sanitizeBinding(element.attributes.Value);
         const woEntity = sanitizedBinding.replace('Entity.', '');
@@ -254,21 +389,21 @@ export const CardView = ({ view }: DataProps) => {
                         <input
                             id={element.attributes.Identifier}
                             type={typeof cardDetails}
-                            // defaultValue={cardDetails.toString()}
-                            // value is changedValue with key matching element.attributes.Identifier or cardDetails.toString() if no changedValue is found
-                            value={
-                                changedValues.find(
-                                    (item) =>
-                                        item.key ===
-                                        element.attributes.Identifier,
-                                )?.value || cardDetails.toString()
-                            }
+                            value={elementValue}
                             className={`flex-1 max-h-12 border border-ad-grey-300 rounded-sm px-2 py-1 hover:border-ad-primary focus:border-ad-primary active:border-ad-primary focus:outline-none`}
+                            onBlur={(e) => {
+                                e.preventDefault();
+                                if (elementValue) {
+                                    updateChangedTextInputValue(
+                                        element.attributes.Value,
+                                        element.attributes.Identifier,
+                                        elementValue,
+                                    );
+                                }
+                            }}
                             onChange={(e) => {
-                                updateChangedTextInputValue(
-                                    element.attributes.Identifier,
-                                    e.target.value,
-                                );
+                                e.preventDefault();
+                                updateInputValue(e.target.value);
                             }}
                         />
                     </div>
@@ -379,13 +514,13 @@ export const CardView = ({ view }: DataProps) => {
                 constructCardView(parsedCardMetaView)}
             {/*TODO just temporary buttons here*/}
             <Button
-                onClick={() => console.log('cancel')}
+                onClick={() => cancelChanges()}
                 disabled={changedValues.length === 0}
             >
                 Peruuta muutokset
             </Button>
             <Button
-                onClick={() => console.log('save')}
+                onClick={() => saveChanges()}
                 disabled={changedValues.length === 0}
             >
                 Tallenna muutokset

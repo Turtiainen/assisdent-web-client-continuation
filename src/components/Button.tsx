@@ -1,12 +1,12 @@
+import { ButtonHTMLAttributes } from 'react';
+
 export type ButtonProps = {
-    onClick: () => void;
     children: React.ReactNode;
-    disabled?: boolean;
-};
+} & ButtonHTMLAttributes<HTMLButtonElement>;
 
 export default function Button(props: ButtonProps) {
     const { onClick, disabled } = props;
-    console.log('Button disabled: ', disabled);
+    console.log('Button disabled: ');
 
     return (
         <button
