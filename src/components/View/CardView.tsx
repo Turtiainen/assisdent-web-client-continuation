@@ -40,7 +40,6 @@ export const CardView = ({ view }: DataProps) => {
     const [changedValues, setChangedValues] = useState<Array<DynamicObject>>(
         [],
     );
-    console.log('changedValues length:', changedValues.length);
 
     // const { viewId } = useParams();
     const { Id } = useParams();
@@ -149,6 +148,22 @@ export const CardView = ({ view }: DataProps) => {
 
     // console.log(cardData);
 
+    const getObjectPaths = (obj: DynamicObject, parentKey = '') => {
+        let paths: string[] = [];
+
+        for (const key in obj) {
+            const path = parentKey ? `${parentKey}.${key}` : key;
+
+            if (typeof obj[key] === 'object' && obj[key] !== null) {
+                paths = paths.concat(getObjectPaths(obj[key], path));
+            } else {
+                paths.push(path);
+            }
+        }
+
+        return paths;
+    };
+
     const saveChanges = () => {
         const reducedChangedValues = changedValues.reduce((acc, obj) => {
             for (const [key, value] of Object.entries(obj)) {
@@ -161,11 +176,7 @@ export const CardView = ({ view }: DataProps) => {
             }
             return acc;
         }, {});
-        console.log(EntityType);
-        console.log(Id);
-        console.log(`saveChanges`);
-        console.log(reducedChangedValues);
-        console.log(changedValues);
+        const propertiesToSelect = getObjectPaths(reducedChangedValues);
         const putDataOptions = {
             EntityType: EntityType,
             Patch: {
@@ -173,7 +184,7 @@ export const CardView = ({ view }: DataProps) => {
                 Id: Id,
             },
             // TODO these are now hardcoded
-            PropertiesToSelect: ['Person.FirstName', 'Person.LastName'],
+            PropertiesToSelect: propertiesToSelect,
         };
         console.log(putDataOptions);
         putData.mutate(putDataOptions);
