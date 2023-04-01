@@ -1,6 +1,6 @@
 # AssisDent web client
 
-### Tampere University COMP.SE.610/620 spring 2023 Group G project work 
+### Tampere University COMP.SE.610/620 spring 2023 Group G project work
 
 ## Running
 The program can be installed with:
@@ -26,6 +26,20 @@ Linter can be run with:
 ```
 npm run lint
 ```
+
+### Test reports
+
+Running the tests produces a test report in `/reports`. The report is in .xml
+and includes the amount of passing, failed and skipped tests. The reports are
+generated also on a push to `main` or `development`. The output can be viewed
+under a CI/CD run job *JEST Tests* in the Actions tab.
+
+### Writing a test
+
+A new (unit or integration) test can be added by creating a new file under
+`/src/test`. Jest and React Testing Library functionality can be utilized.
+When running the tests, Jest will look for files ending in `.test.tsx` in
+the test directory.
 
 ## Configuration
 Environment variables are stored in `.env`. Change the values to match
