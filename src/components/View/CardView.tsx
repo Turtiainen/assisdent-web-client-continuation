@@ -19,6 +19,7 @@ import { SectionHeading } from './SectionHeading';
 import Button from '../Button';
 import { log } from 'handlebars';
 import { recursivelyLogEntityKeysAndValues } from '../../temp/debuggers';
+import { mapObjectPaths } from '../../utils/mapUtils';
 
 export type DataProps = {
     view: Element;
@@ -148,22 +149,6 @@ export const CardView = ({ view }: DataProps) => {
 
     // console.log(cardData);
 
-    const getObjectPaths = (obj: DynamicObject, parentKey = '') => {
-        let paths: string[] = [];
-
-        for (const key in obj) {
-            const path = parentKey ? `${parentKey}.${key}` : key;
-
-            if (typeof obj[key] === 'object' && obj[key] !== null) {
-                paths = paths.concat(getObjectPaths(obj[key], path));
-            } else {
-                paths.push(path);
-            }
-        }
-
-        return paths;
-    };
-
     const saveChanges = () => {
         const reducedChangedValues = changedValues.reduce((acc, obj) => {
             for (const [key, value] of Object.entries(obj)) {
@@ -176,14 +161,13 @@ export const CardView = ({ view }: DataProps) => {
             }
             return acc;
         }, {});
-        const propertiesToSelect = getObjectPaths(reducedChangedValues);
+        const propertiesToSelect = mapObjectPaths(reducedChangedValues);
         const putDataOptions = {
             EntityType: EntityType,
             Patch: {
                 ...reducedChangedValues,
                 Id: Id,
             },
-            // TODO these are now hardcoded
             PropertiesToSelect: propertiesToSelect,
         };
         console.log(putDataOptions);
