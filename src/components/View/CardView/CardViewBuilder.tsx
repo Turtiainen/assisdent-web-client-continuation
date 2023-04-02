@@ -8,6 +8,7 @@ import { CardGroup } from './CardGroup';
 import { CardList } from './CardList';
 import { CardSearch } from './CardSearch';
 import { Editor } from './Editor';
+import { CardCustom } from './CardCustom';
 
 type ElementAttributesType = {
     __id: string;
@@ -105,17 +106,20 @@ export const CardViewBuilder = ({
                                 key={element.attributes['__id'] as Key}
                                 className="text-ad-grey-400"
                             >
-                                {`${element.attributes.GhostText}`}
+                                {element.attributes.GhostText
+                                    ? `${element.attributes.GhostText}`
+                                    : ''}
                             </p>
                         );
                     case 'Separator':
                         return <br key={element.attributes['__id'] as Key} />;
                     case 'Custom':
                         return (
-                            <div key={element.attributes['__id'] as Key}>
-                                {`Custom element not
-                                            yet implemented - Caption: ${element.attributes.Caption} & Value: ${element.attributes.Value}`}
-                            </div>
+                            <CardCustom
+                                key={element.attributes['__id'] as Key}
+                                element={element}
+                                cardData={cardData}
+                            />
                         );
                     default:
                         return (
