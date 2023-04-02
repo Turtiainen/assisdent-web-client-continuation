@@ -18,35 +18,65 @@ export const CardButton = ({
         case 'NavigateToRegisterCommand':
             return (
                 <Link
-                    className="font-semibold text-ad-primary hover:text-ad-primary-hover"
+                    className="flex flex-col lg:flex-row lg:gap-32 font-semibold text-ad-primary hover:text-ad-primary-hover"
                     to={`/view/${entity}RegisterView`}
+                    id={element.attributes.Identifier}
                 >
                     {element.attributes.Text}
                 </Link>
             );
         case 'NavigateToCardCommand': {
+            let binding = resolveCardBindings(
+                cardData,
+                element.attributes.Text,
+            );
+            if (binding && element.attributes.Text.includes('Date')) {
+                binding = binding?.split('-').slice(0, 2).reverse().join('/');
+            } else if (binding?.includes('noappointment')) {
+                binding = 'Ei ajanvarausta';
+            }
+
             const cardIdToNavigate = resolveCardBindings(cardData, childrenId);
             return (
                 <div className="flex flex-col lg:flex-row lg:gap-32">
-                    <div>{element.attributes.Caption}</div>
-                    <Link
-                        className="font-semibold text-ad-primary hover:text-ad-primary-hover"
-                        to={`/view/${entity}CardView/${cardIdToNavigate?.toString()}`}
+                    <label
+                        htmlFor={element.attributes.Identifier}
+                        className="text-sm font-semibold text-ad-grey-800 flex items-center lg:w-1/4"
                     >
-                        {element.attributes.Text}
-                    </Link>
+                        {element.attributes.Caption}
+                    </label>
+                    {cardIdToNavigate ? (
+                        <Link
+                            className="flex-1 max-h-12 px-2 py-1 font-semibold text-ad-primary hover:text-ad-primary-hover"
+                            to={`/view/${entity}CardView/${cardIdToNavigate?.toString()}`}
+                            id={element.attributes.Identifier}
+                        >
+                            {binding?.toString()}
+                        </Link>
+                    ) : (
+                        <div
+                            id={element.attributes.Identifier}
+                            className="flex-1 max-h-12 px-2 py-1 text-ad-grey-400"
+                        >
+                            {binding?.toString()}
+                        </div>
+                    )}
                 </div>
             );
         }
         case 'CommandReference':
             return (
                 <div className="flex flex-col lg:flex-row lg:gap-32">
-                    <div>
+                    <label
+                        htmlFor={element.attributes.Identifier}
+                        className="text-sm font-semibold text-ad-grey-800 flex items-center lg:w-1/4"
+                    >
                         <b>Tämän pitäis aueta popuppina? </b>
-                    </div>
+                    </label>
                     <Link
-                        className="font-semibold text-ad-primary hover:text-ad-primary-hover"
+                        className="flex-1 max-h-12 px-2 py-1 font-semibold text-ad-primary hover:text-ad-primary-hover"
                         to={`/`}
+                        id={element.attributes.Identifier}
                     >
                         {element.attributes.Text}
                     </Link>
