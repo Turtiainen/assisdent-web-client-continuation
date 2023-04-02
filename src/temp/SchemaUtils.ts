@@ -71,3 +71,8 @@ export const findEntitySchema = (...names: string[]) => {
         });
     }
 };
+
+export const getCatalogType = (name: string | null) => {
+    const schema = getStoreSchema();
+    return schema.MetaData.Catalogs.find((obj) => obj.Name === name);
+};

@@ -5,6 +5,7 @@ import { BooleanInput } from './BooleanInput';
 import { DateInput } from './DateInput';
 import { Exception } from './Exception';
 import { BasicInput } from './BasicInput';
+import { CatalogInput } from './CatalogInput';
 
 export const CardElement = ({
     element,
@@ -16,7 +17,6 @@ export const CardElement = ({
     entityPropertySchema: { [index: string]: DtoProperty } | undefined;
 }) => {
     const cardDetails = resolveCardBindings(cardData, element.attributes.Value);
-
     const entityPropertiesAndTypes = new Map<string, string>();
     const exceptionElements = new Set<string>();
     const ExceptionEntityTypes = new Set([
@@ -53,13 +53,23 @@ export const CardElement = ({
 
     const sanitizedBinding = sanitizeBinding(element.attributes.Value);
     const woEntity = sanitizedBinding.replace('Entity.', '');
+    const propertyType = entityPropertiesAndTypes.get(woEntity);
 
-    if (entityPropertiesAndTypes.get(woEntity) === 'Boolean') {
+    if (cardDetails && propertyType === 'Boolean') {
         return <BooleanInput element={element} content={cardDetails} />;
     }
 
-    if (cardDetails && entityPropertiesAndTypes.get(woEntity) === 'Date') {
+    if (cardDetails && propertyType === 'Date') {
         return <DateInput element={element} content={cardDetails} />;
+    }
+    if (propertyType?.includes('Type')) {
+        return (
+            <CatalogInput
+                element={element}
+                content={cardDetails}
+                propertyType={propertyType}
+            />
+        );
     }
 
     const isCardDetailsNull = cardDetails === null || cardDetails === undefined;
