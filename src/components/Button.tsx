@@ -6,7 +6,6 @@ export type ButtonProps = {
 
 export default function Button(props: ButtonProps) {
     const { onClick, disabled } = props;
-    console.log('Button disabled: ');
 
     return (
         <button

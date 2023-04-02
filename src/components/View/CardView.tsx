@@ -17,9 +17,8 @@ import { List } from './List';
 import { TranslationList } from './TranslationList';
 import { SectionHeading } from './SectionHeading';
 import Button from '../Button';
-import { log } from 'handlebars';
-import { recursivelyLogEntityKeysAndValues } from '../../temp/debuggers';
 import { mapObjectPaths } from '../../utils/mapUtils';
+import { getValueOfMatchingKeyFromNestedArray } from '../../utils/objectUtils';
 
 export type DataProps = {
     view: Element;
@@ -34,6 +33,12 @@ type CardElementType = {
     name: 'Group' | 'List' | 'Element';
     attributes: ElementAttributesType;
     [index: string]: unknown;
+};
+
+type putDataOptionsType = {
+    EntityType: string | null;
+    Patch: DynamicObject;
+    PropertiesToSelect: Array<string>;
 };
 
 export const CardView = ({ view }: DataProps) => {
@@ -149,7 +154,7 @@ export const CardView = ({ view }: DataProps) => {
 
     // console.log(cardData);
 
-    const saveChanges = () => {
+    const saveChanges = async () => {
         const reducedChangedValues = changedValues.reduce((acc, obj) => {
             for (const [key, value] of Object.entries(obj)) {
                 // eslint-disable-next-line no-prototype-builtins
@@ -162,7 +167,7 @@ export const CardView = ({ view }: DataProps) => {
             return acc;
         }, {});
         const propertiesToSelect = mapObjectPaths(reducedChangedValues);
-        const putDataOptions = {
+        const putDataOptions: putDataOptionsType = {
             EntityType: EntityType,
             Patch: {
                 ...reducedChangedValues,
@@ -171,41 +176,13 @@ export const CardView = ({ view }: DataProps) => {
             PropertiesToSelect: propertiesToSelect,
         };
         console.log(putDataOptions);
-        putData.mutate(putDataOptions);
-        mutation.mutate(viewModelSearchOptions);
+        await putData.mutate(putDataOptions);
+        await mutation.mutate(viewModelSearchOptions);
         setChangedValues([]);
     };
 
     const cancelChanges = () => {
         setChangedValues([]);
-    };
-
-    const getNestedKeyValue = (
-        obj: DynamicObject,
-        target: string,
-    ): string | null => {
-        for (const key in obj) {
-            if (key === target) {
-                console.log(obj[key]);
-                console.log(key);
-                return obj[key];
-            } else if (typeof obj[key] === 'object') {
-                return getNestedKeyValue(obj[key], target);
-            }
-        }
-        return null;
-    };
-
-    const getMatchingNestedKeyValueFromchangedValuesArray = (
-        target: string,
-    ) => {
-        for (const obj of changedValues) {
-            const valueOfMatchingKey = getNestedKeyValue(obj, target);
-            if (valueOfMatchingKey) {
-                return valueOfMatchingKey;
-            }
-        }
-        return null;
     };
 
     const PrintList = ({ element }: { element: DynamicObject }) => {
@@ -220,8 +197,9 @@ export const CardView = ({ view }: DataProps) => {
             element.attributes.Value,
         );
 
-        const changedValue = getMatchingNestedKeyValueFromchangedValuesArray(
+        const changedValue = getValueOfMatchingKeyFromNestedArray(
             element.attributes.Identifier,
+            changedValues,
         );
 
         const [elementValue, setElementValue] = useState(
@@ -237,18 +215,17 @@ export const CardView = ({ view }: DataProps) => {
 
             console.log(`value: ${valueString}`);
             console.log(`updateChangedValues: ${key} = ${value}`);
-            // TODO there are some ready made functions for this
-            const keys = valueString
+            // TODO there might be some ready made functions for this
+            const keysArray = valueString
                 .replace('{Binding ', '')
                 .replace('}', '')
                 .split('.')
                 .slice(1);
             const valueObj: DynamicObject = {};
             let currentObj = valueObj;
-            console.log(`keys: ${JSON.stringify(keys)}`);
 
-            keys.forEach((key, index) => {
-                if (index === keys.length - 1) {
+            keysArray.forEach((key, index) => {
+                if (index === keysArray.length - 1) {
                     currentObj[key] = value;
                 } else {
                     currentObj[key] = {};
@@ -257,25 +234,23 @@ export const CardView = ({ view }: DataProps) => {
             });
 
             // valueObj[keys[keys.length - 1]] = value;
-            console.log(`valueObj: ${JSON.stringify(valueObj)}`);
 
             const existingObject = newChangedValues.findIndex((obj) => {
                 console.log(`obj: ${JSON.stringify(obj)}`);
                 let keyFound = true;
                 let currentObjKey = obj;
-                for (let i = 0; i < keys.length; i++) {
-                    console.log(`keys[i]: ${keys[i]}`);
-                    if (currentObjKey[keys[i]] === undefined) {
+                for (let i = 0; i < keysArray.length; i++) {
+                    console.log(`keys[i]: ${keysArray[i]}`);
+                    if (currentObjKey[keysArray[i]] === undefined) {
                         keyFound = false;
                         break;
                     }
-                    currentObjKey = currentObjKey[keys[i]];
+                    currentObjKey = currentObjKey[keysArray[i]];
                     console.log(keyFound);
                 }
                 console.log(`keyFound: ${keyFound}`);
                 return keyFound;
             });
-            console.log(`existingObject: ${JSON.stringify(existingObject)}`);
 
             if (existingObject > -1) {
                 newChangedValues[existingObject] = valueObj;
@@ -285,14 +260,6 @@ export const CardView = ({ view }: DataProps) => {
             console.log(
                 `newChangedValues: ${JSON.stringify(newChangedValues)}`,
             );
-
-            // const newChangedValues = [...changedValues];
-            // const index = newChangedValues.findIndex((item) => item.key === key);
-            // if (index === -1) {
-            //     newChangedValues.push({ key, value });
-            // } else {
-            //     newChangedValues[index].value = value;
-            // }
             setChangedValues(newChangedValues);
         };
 
