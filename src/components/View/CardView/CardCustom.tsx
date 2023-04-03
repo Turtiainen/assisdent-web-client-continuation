@@ -1,4 +1,3 @@
-import { getEntitySchema } from '../../../temp/SchemaUtils';
 import { DynamicObject } from '../../../types/DynamicObject';
 
 export const CardCustom = ({
@@ -8,10 +7,6 @@ export const CardCustom = ({
     element: DynamicObject;
     cardData: DynamicObject | null;
 }) => {
-    console.log('element :>> ', element);
-    console.log('cardData :>> ', cardData);
-    const elementSchema = getEntitySchema(element.attributes.Type);
-    console.log('elementSchema :>> ', elementSchema);
     switch (element.attributes.Type) {
         case 'CardContactMethods':
             return (

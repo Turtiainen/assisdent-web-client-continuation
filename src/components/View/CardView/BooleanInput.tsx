@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { DynamicObject } from '../../../types/DynamicObject';
 
 export const BooleanInput = ({
@@ -7,6 +8,14 @@ export const BooleanInput = ({
     element: DynamicObject;
     content: string | DynamicObject | null | undefined;
 }) => {
+    const [checked, setChecked] = useState<boolean>(
+        content?.toString() === 'true',
+    );
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        e.persist();
+        setChecked(!checked);
+    };
     return (
         <div className={`flex flex-col lg:flex-row lg:gap-32`}>
             <label
@@ -18,12 +27,8 @@ export const BooleanInput = ({
             <input
                 id={element.attributes.Identifier}
                 type={`checkbox`}
-                checked={content?.toString() === 'true'}
-                onChange={() => {
-                    console.log(
-                        `checkbox clicked: ${element.attributes.Caption}`,
-                    );
-                }}
+                checked={checked}
+                onChange={handleChange}
             />
         </div>
     );

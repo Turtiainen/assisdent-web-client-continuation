@@ -6,6 +6,7 @@ import { DateInput } from './DateInput';
 import { Exception } from './Exception';
 import { BasicInput } from './BasicInput';
 import { CatalogInput } from './CatalogInput';
+import { getEntitySchema } from '../../../temp/SchemaUtils';
 
 export const CardElement = ({
     element,
@@ -50,24 +51,31 @@ export const CardElement = ({
             },
         );
     }
-
     const sanitizedBinding = sanitizeBinding(element.attributes.Value);
     const woEntity = sanitizedBinding.replace('Entity.', '');
     const propertyType = entityPropertiesAndTypes.get(woEntity);
-
-    if (cardDetails && propertyType === 'Boolean') {
+    if (propertyType === 'Boolean' || typeof cardDetails === 'boolean') {
         return <BooleanInput element={element} content={cardDetails} />;
     }
 
     if (cardDetails && propertyType === 'Date') {
         return <DateInput element={element} content={cardDetails} />;
     }
-    if (propertyType?.includes('Type')) {
+    if (propertyType?.includes('Type') || typeof cardDetails === 'number') {
         return (
             <CatalogInput
                 element={element}
                 content={cardDetails}
                 propertyType={propertyType}
+            />
+        );
+    }
+    if (woEntity === 'Language') {
+        return (
+            <CatalogInput
+                element={element}
+                content={cardDetails}
+                propertyType={'PatientLanguage'}
             />
         );
     }
