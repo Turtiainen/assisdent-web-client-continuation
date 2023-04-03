@@ -18,7 +18,10 @@ import { TranslationList } from './TranslationList';
 import { SectionHeading } from './SectionHeading';
 import Button from '../Button';
 import { mapObjectPaths } from '../../utils/mapUtils';
-import { getValueOfMatchingKeyFromNestedArray } from '../../utils/objectUtils';
+import {
+    checkIfObjectHasNestedProperty,
+    findValueFromArrayOfNestedObjects,
+} from '../../utils/objectUtils';
 
 export type DataProps = {
     view: Element;
@@ -191,14 +194,16 @@ export const CardView = ({ view }: DataProps) => {
     };
 
     const PrintElement = ({ element }: { element: DynamicObject }) => {
-        // console.log(element);
         const cardDetails = resolveCardBindings(
             cardData,
             element.attributes.Value,
         );
 
-        const changedValue = getValueOfMatchingKeyFromNestedArray(
-            element.attributes.Identifier,
+        const propertyArray = sanitizeBinding(element.attributes.Value)
+            .split('Entity.')[1]
+            .split('.');
+        const changedValue = findValueFromArrayOfNestedObjects(
+            propertyArray,
             changedValues,
         );
 
@@ -213,14 +218,9 @@ export const CardView = ({ view }: DataProps) => {
         ) => {
             const newChangedValues = [...changedValues];
 
-            console.log(`value: ${valueString}`);
-            console.log(`updateChangedValues: ${key} = ${value}`);
-            // TODO there might be some ready made functions for this
-            const keysArray = valueString
-                .replace('{Binding ', '')
-                .replace('}', '')
-                .split('.')
-                .slice(1);
+            const keysArray = sanitizeBinding(valueString)
+                .split('Entity.')[1]
+                .split('.');
             const valueObj: DynamicObject = {};
             let currentObj = valueObj;
 
@@ -233,23 +233,8 @@ export const CardView = ({ view }: DataProps) => {
                 }
             });
 
-            // valueObj[keys[keys.length - 1]] = value;
-
             const existingObject = newChangedValues.findIndex((obj) => {
-                console.log(`obj: ${JSON.stringify(obj)}`);
-                let keyFound = true;
-                let currentObjKey = obj;
-                for (let i = 0; i < keysArray.length; i++) {
-                    console.log(`keys[i]: ${keysArray[i]}`);
-                    if (currentObjKey[keysArray[i]] === undefined) {
-                        keyFound = false;
-                        break;
-                    }
-                    currentObjKey = currentObjKey[keysArray[i]];
-                    console.log(keyFound);
-                }
-                console.log(`keyFound: ${keyFound}`);
-                return keyFound;
+                return checkIfObjectHasNestedProperty(obj, keysArray);
             });
 
             if (existingObject > -1) {
@@ -257,9 +242,6 @@ export const CardView = ({ view }: DataProps) => {
             } else {
                 newChangedValues.push(valueObj);
             }
-            console.log(
-                `newChangedValues: ${JSON.stringify(newChangedValues)}`,
-            );
             setChangedValues(newChangedValues);
         };
 
