@@ -1,45 +1,27 @@
+import { getCatalogType } from '../../../temp/SchemaUtils';
 import { DynamicObject } from '../../../types/DynamicObject';
 
-export const CardCustom = ({
-    element,
-    cardData,
-}: {
-    element: DynamicObject;
-    cardData: DynamicObject | null;
-}) => {
+export const CardCustom = ({ element }: { element: DynamicObject }) => {
     switch (element.attributes.Type) {
-        case 'CardContactMethods':
+        case 'CardContactMethods': {
+            const contactMethods = getCatalogType('ContactMethodEnum');
             return (
-                <div className={`flex flex-col lg:flex-col`}>
+                <div className={`flex flex-col lg:flex-col col-span-2`}>
                     <h2 className="text-xl font-semibold py-4">
                         {element.attributes.Caption.toUpperCase()}
                     </h2>
-                    <label className="text-base font-semibold text-ad-grey-800 flex items-center lg:w-1/4">
-                        Soitto
-                    </label>
-                    <div className="flex-1 max-h-12 px-2 py-2 hover:border-ad-primary focus:border-ad-primary active:border-ad-primary focus:outline-none">
-                        {' '}
-                    </div>
-                    <label className="text-base font-semibold text-ad-grey-800 flex items-center lg:w-1/4">
-                        Kirje
-                    </label>
-                    <div className="flex-1 max-h-12 px-2 py-2 hover:border-ad-primary focus:border-ad-primary active:border-ad-primary focus:outline-none">
-                        {' '}
-                    </div>
-                    <label className="text-base font-semibold text-ad-grey-800 flex items-center lg:w-1/4">
-                        Tekstiviesti
-                    </label>
-                    <div className="flex-1 max-h-12 px-2 py-2 hover:border-ad-primary focus:border-ad-primary active:border-ad-primary focus:outline-none">
-                        {' '}
-                    </div>
-                    <label className="text-base font-semibold text-ad-grey-800 flex items-center lg:w-1/4">
-                        Sähköposti
-                    </label>
-                    <div className="flex-1 max-h-12 px-2 py-2 hover:border-ad-primary focus:border-ad-primary active:border-ad-primary focus:outline-none">
-                        {' '}
-                    </div>
+                    {contactMethods &&
+                        contactMethods.Entries.map((contactMethod) => (
+                            <label
+                                key={contactMethod.Key.toString()}
+                                className="py-1 text-base font-semibold text-ad-grey-800 flex items-center lg:w-1/4"
+                            >
+                                {contactMethod.DisplayName}
+                            </label>
+                        ))}
                 </div>
             );
+        }
         default:
             return (
                 <p>

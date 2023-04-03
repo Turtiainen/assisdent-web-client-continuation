@@ -118,7 +118,6 @@ export const CardViewBuilder = ({
                             <CardCustom
                                 key={element.attributes['__id'] as Key}
                                 element={element}
-                                cardData={cardData}
                             />
                         );
                     default:
