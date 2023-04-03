@@ -1,7 +1,16 @@
 import { getCatalogType } from '../../../temp/SchemaUtils';
 import { DynamicObject } from '../../../types/DynamicObject';
+import { CardSearch } from './CardSearch';
 
-export const CardCustom = ({ element }: { element: DynamicObject }) => {
+export const CardCustom = ({
+    element,
+    cardData,
+    entityType,
+}: {
+    element: DynamicObject;
+    cardData: DynamicObject | null;
+    entityType: string | null;
+}) => {
     switch (element.attributes.Type) {
         case 'CardContactMethods': {
             const contactMethods = getCatalogType('ContactMethodEnum');
@@ -20,6 +29,28 @@ export const CardCustom = ({ element }: { element: DynamicObject }) => {
                             </label>
                         ))}
                 </div>
+            );
+        }
+        case 'SearchSoteRegister': {
+            // TODO: Implement SearchSoteRegister element type
+            console.log('element type SearchSoteRegister :>> ', element);
+            return (
+                <CardSearch
+                    element={element}
+                    cardData={cardData}
+                    entityType={entityType}
+                />
+            );
+        }
+        case 'SearchIAHRegister': {
+            // TODO: Implement SearchIAHRegister element type
+            console.log('element type SearchIAHRegister :>> ', element);
+            return (
+                <CardSearch
+                    element={element}
+                    cardData={cardData}
+                    entityType={entityType}
+                />
             );
         }
         default:
