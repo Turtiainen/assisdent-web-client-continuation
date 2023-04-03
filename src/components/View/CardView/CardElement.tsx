@@ -6,7 +6,6 @@ import { DateInput } from './DateInput';
 import { Exception } from './Exception';
 import { BasicInput } from './BasicInput';
 import { CatalogInput } from './CatalogInput';
-import { getEntitySchema } from '../../../temp/SchemaUtils';
 
 export const CardElement = ({
     element,

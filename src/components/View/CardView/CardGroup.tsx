@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { DtoProperty } from '../../../types/DtoProperty';
 import { DynamicObject } from '../../../types/DynamicObject';
 import { SectionHeading } from '../SectionHeading';
 import { CardViewBuilder } from './CardViewBuilder';
@@ -7,11 +6,11 @@ import { CardViewBuilder } from './CardViewBuilder';
 export const CardGroup = ({
     group,
     cardData,
-    entityPropertySchema,
+    entityType,
 }: {
     group: DynamicObject;
     cardData: DynamicObject | null;
-    entityPropertySchema: { [index: string]: DtoProperty } | undefined;
+    entityType: string | null;
 }) => {
     const [isContentHidden, setIsContentHidden] = useState(false);
 
@@ -30,7 +29,7 @@ export const CardGroup = ({
                     <CardViewBuilder
                         elements={group.children}
                         cardData={cardData}
-                        entityPropertySchema={entityPropertySchema}
+                        entityType={entityType}
                     />
                 )}
             </>

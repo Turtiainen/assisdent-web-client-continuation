@@ -1,4 +1,3 @@
-import { useParams } from 'react-router-dom';
 import { getEntitySchema } from '../../../temp/SchemaUtils';
 import { DynamicObject } from '../../../types/DynamicObject';
 import { resolveCardBindings, sanitizeBinding } from '../../../utils/utils';
@@ -6,9 +5,11 @@ import { resolveCardBindings, sanitizeBinding } from '../../../utils/utils';
 export const CardSearch = ({
     element,
     cardData,
+    entityType,
 }: {
     element: DynamicObject;
     cardData: DynamicObject | null;
+    entityType: string | null;
 }) => {
     const getPrintStyleFromEntitySchema = (
         entity: DynamicObject,
@@ -45,17 +46,15 @@ export const CardSearch = ({
         return result;
     };
 
-    const { viewId } = useParams();
-    const cardEntityName = viewId && viewId.replace('CardView', '');
-    const entitySchema = getEntitySchema(cardEntityName);
+    const entitySchema = getEntitySchema(entityType);
     const woEntity = sanitizeBinding(element.attributes.Value).replace(
         'Entity.',
         '',
     );
 
     const content = resolveCardBindings(cardData, element.attributes.Value);
-    const searchEntityName = woEntity.split('.')[0];
-    const valueEntity = entitySchema?.Properties[searchEntityName];
+    const elementEntityName = woEntity.split('.')[0];
+    const valueEntity = entitySchema?.Properties[elementEntityName];
     const valuePrintStyle =
         valueEntity && getPrintStyleFromEntitySchema(valueEntity);
     const value = constructValuePrintStyle(content, valuePrintStyle);

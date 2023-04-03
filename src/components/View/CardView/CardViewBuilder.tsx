@@ -9,6 +9,7 @@ import { CardList } from './CardList';
 import { CardSearch } from './CardSearch';
 import { Editor } from './Editor';
 import { CardCustom } from './CardCustom';
+import { getEntityPropertiesSchema } from '../../../temp/SchemaUtils';
 
 type ElementAttributesType = {
     __id: string;
@@ -33,12 +34,13 @@ type CardElementType = {
 export const CardViewBuilder = ({
     elements,
     cardData,
-    entityPropertySchema,
+    entityType,
 }: {
     elements: Array<CardElementType>;
     cardData: DynamicObject | null;
-    entityPropertySchema: { [index: string]: DtoProperty } | undefined;
+    entityType: string | null;
 }) => {
+    const entityPropertySchema = getEntityPropertiesSchema(entityType);
     return (
         <>
             {elements.map((element: CardElementType) => {
@@ -49,7 +51,7 @@ export const CardViewBuilder = ({
                                 key={element.attributes['__id'] as Key}
                                 group={element}
                                 cardData={cardData}
-                                entityPropertySchema={entityPropertySchema}
+                                entityType={entityType}
                             />
                         );
                     case 'List':
@@ -75,6 +77,7 @@ export const CardViewBuilder = ({
                                 key={element.attributes['__id'] as Key}
                                 element={element}
                                 cardData={cardData}
+                                entityType={entityType}
                             />
                         );
                     case 'Button': {

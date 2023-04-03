@@ -1,15 +1,16 @@
 import { Key, useState } from 'react';
 import { DynamicObject } from '../../../types/DynamicObject';
 
-type EditorProps = {
+export const Editor = ({
+    element,
+    content,
+    placeholder,
+}: {
     element: DynamicObject;
     content: string | undefined;
     placeholder: string | undefined;
-};
-
-export const Editor = (props: EditorProps) => {
-    const { element, content, placeholder } = props;
-    const [value, setValue] = useState<string | undefined>(content);
+}) => {
+    const [value, setValue] = useState<string>(content || '');
     return (
         <div
             key={element.attributes['__id'] as Key}

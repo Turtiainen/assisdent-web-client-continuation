@@ -8,7 +8,6 @@ import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { ViewHeader } from './ViewHeader';
 import { getUserLanguage, resolveCardBindings } from '../../utils/utils';
-import { getEntityPropertiesSchema } from '../../temp/SchemaUtils';
 import { CardViewBuilder } from './CardView/CardViewBuilder';
 
 export type DataProps = {
@@ -28,8 +27,7 @@ export const CardView = ({ view }: DataProps) => {
         Id: Id,
     };
     const viewName = view.getAttribute('Name');
-    const EntityType = view.getAttribute('EntityType');
-    const EntityPropertySchema = getEntityPropertiesSchema(EntityType);
+    const entityType = view.getAttribute('EntityType');
     const Header = view.getAttribute('Header');
     let resolvedHeader: string | null;
 
@@ -41,7 +39,6 @@ export const CardView = ({ view }: DataProps) => {
     } else {
         resolvedHeader = Header;
     }
-
     const SubHeader = view.getAttribute('SubHeader');
     let resolvedSubHeader: string | null;
 
@@ -90,7 +87,7 @@ export const CardView = ({ view }: DataProps) => {
                         <CardViewBuilder
                             elements={parsedCardMetaView.children}
                             cardData={cardData}
-                            entityPropertySchema={EntityPropertySchema}
+                            entityType={entityType}
                         />
                     </div>
                 )}
