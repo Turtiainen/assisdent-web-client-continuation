@@ -1,12 +1,20 @@
-import { ReactElement, JSXElementConstructor, ReactFragment, ReactPortal } from "react"
+import {
+    ReactElement,
+    JSXElementConstructor,
+    ReactFragment,
+    ReactPortal,
+} from 'react';
 
-type badgeProps = { isActive: any; title: string | number | boolean 
-  | ReactElement<any, string | JSXElementConstructor<any>> 
-  | ReactFragment | ReactPortal | null | undefined }
+type badgeProps = {
+    isInactive?: boolean;
+    children: React.ReactNode;
+};
 
 export const Badge = (props: badgeProps) => {
-    return <div className={
-      "header" +
-      (props.isActive ? " active" : "")
-    }>{props.title}</div>
-  }
+    return (
+        <span className={`${props.isInactive ? 'bg-ad-grey-400 hover:bg-ad-grey-200' : 
+        'text-white bg-ad-primary hover:bg-ad-primary-hover active:bg-ad-primary-pressed'} p-1 rounded-full w-6 h-6 inline-block text-xs text-center`}>
+            {props.children}
+        </span>
+    );
+};
