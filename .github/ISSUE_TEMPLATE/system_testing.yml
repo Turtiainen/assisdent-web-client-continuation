@@ -1,0 +1,61 @@
+name: "System testing bug report"
+description: "Report a problem in the application"
+title: "Bug: "
+labels: ["System", "Bug"]
+body:
+- type: dropdown
+  attributes:
+    label: How was the application run?
+    options:
+      - Vercel
+      - Locally
+  validations:
+    required: true
+- type: input
+  attributes:
+    label: Version or Git branch
+    description: |
+      Fill in if the project was run locally.
+      What was the running version or the active Git branch upon testing?
+- type: textarea
+  attributes:
+    label: Describe the bug
+    description: |
+      Detailed description of the bug; how it affects the use of the application.
+      If applicable, what is expected to happen.
+    placeholder: |
+      E.g. The sidebar arrow needs to be clicked twice in order to minimize the sidebar.
+      Happens on all views and on each load.
+      The sidebar should minimize on the first click.
+  validations:
+    required: true
+- type: dropdown
+  attributes:
+    label: How often does this bug happen?
+    description: |
+      Following the description above, how easily are you able to reproduce this bug?
+    options:
+      - Every time
+      - Often
+      - Sometimes
+      - Only once
+  validations:
+    required: true
+- type: textarea
+  attributes:
+    label: Steps to reproduce
+    description: |
+      Clear and concise steps to reproduce the bug in case it can be reproduced.
+    placeholder: |
+      Go to '...'
+      Click on '....'
+      Scroll down to '....'
+      See '...'
+  validations:
+    required: true
+- type: textarea
+  attributes:
+    label: Additional notes or screenshots
+    description: |
+      If seen necessary, provide additional information on the bug, environment
+      or anything related. If a screenshot can be taken, it can be included here.
