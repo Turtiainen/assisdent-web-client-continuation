@@ -12,7 +12,10 @@ import {
     resolveCardBindings,
     sanitizeBinding,
 } from '../../utils/utils';
-import { getEntityPropertiesSchema } from '../../temp/SchemaUtils';
+import {
+    getEntityPropertiesSchema,
+    getEntitySchema,
+} from '../../temp/SchemaUtils';
 import { List } from './List';
 import { TranslationList } from './TranslationList';
 import { SectionHeading } from './SectionHeading';
@@ -22,6 +25,11 @@ import {
     checkIfObjectHasNestedProperty,
     findValueFromArrayOfNestedObjects,
 } from '../../utils/objectUtils';
+import {
+    commonFieldsReducer,
+    getAssociationType,
+    mapAssociationTypePatchCommands,
+} from '../../utils/associationUtils';
 
 export type DataProps = {
     view: Element;
@@ -155,20 +163,18 @@ export const CardView = ({ view }: DataProps) => {
         mutation.mutate(viewModelSearchOptions);
     }, []);
 
-    // console.log(cardData);
-
     const saveChanges = async () => {
-        const reducedChangedValues = changedValues.reduce((acc, obj) => {
-            for (const [key, value] of Object.entries(obj)) {
-                // eslint-disable-next-line no-prototype-builtins
-                if (acc.hasOwnProperty(key)) {
-                    Object.assign(acc[key], value);
-                } else {
-                    acc[key] = value;
-                }
-            }
-            return acc;
-        }, {});
+        const changedValuesWithPatchCommands =
+            mapAssociationTypePatchCommands(changedValues);
+
+        console.log('changedValuesCopy', changedValuesWithPatchCommands);
+
+        const reducedChangedValues = changedValuesWithPatchCommands.reduce(
+            commonFieldsReducer,
+            {},
+        );
+
+        console.log('reducedChangedValues', reducedChangedValues);
         const propertiesToSelect = mapObjectPaths(reducedChangedValues);
         const putDataOptions: putDataOptionsType = {
             EntityType: EntityType,
@@ -223,8 +229,17 @@ export const CardView = ({ view }: DataProps) => {
                 .split('.');
             const valueObj: DynamicObject = {};
             let currentObj = valueObj;
+            const propertySchemaObj = EntityPropertySchema?.[keysArray[0]];
+            const associationType = getAssociationType(propertySchemaObj);
 
             keysArray.forEach((key, index) => {
+                if (index === 0) {
+                    // TODO add association type from schema
+                    currentObj.associationType = associationType;
+                    // if (associationType) {
+                    //     currentObj.Id = cardData?.Entity[keysArray[0]]?.Id;
+                    // }
+                }
                 if (index === keysArray.length - 1) {
                     currentObj[key] = value;
                 } else {
@@ -241,7 +256,17 @@ export const CardView = ({ view }: DataProps) => {
                 newChangedValues[existingObject] = valueObj;
             } else {
                 newChangedValues.push(valueObj);
+                const isNewAssociation = newChangedValues.find((item) => {
+                    return Object.hasOwn(item, keysArray[0]);
+                });
+                if (associationType && isNewAssociation) {
+                    newChangedValues[newChangedValues.length - 1][
+                        keysArray[0]
+                    ].Id = cardData?.Entity[keysArray[0]]?.Id;
+                }
             }
+
+            console.log('newChangedValues :>> ', newChangedValues);
             setChangedValues(newChangedValues);
         };
 

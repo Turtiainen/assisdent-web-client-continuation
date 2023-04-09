@@ -17,6 +17,9 @@ export const mapObjectPaths = (obj: DynamicObject, parentKey = '') => {
     let paths: string[] = [];
 
     for (const key in obj) {
+        if (key === '_update' || key === '_set_ref') {
+            continue;
+        }
         const path = parentKey ? `${parentKey}.${key}` : key;
 
         if (typeof obj[key] === 'object' && obj[key] !== null) {
