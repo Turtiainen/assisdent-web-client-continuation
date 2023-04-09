@@ -1,11 +1,12 @@
 import { DtoSchema } from '../types/DtoSchema';
 import { DtoEntity } from '../types/DtoEntity';
+import { DynamicObject } from '../types/DynamicObject';
 import useSchemaStore from '../store/store';
 
 const getStoreSchema = () => {
     const schemaInStore = useSchemaStore.getState().schema;
     return schemaInStore as DtoSchema;
-}
+};
 
 export const getFormattedText = (identifier: string) => {
     const schema = getStoreSchema();
@@ -75,4 +76,50 @@ export const findEntitySchema = (...names: string[]) => {
 export const getCatalogType = (name: string | null) => {
     const schema = getStoreSchema();
     return schema.MetaData.Catalogs.find((obj) => obj.Name === name);
+};
+
+const getEntityTypeRecursively = (
+    result: DynamicObject,
+    splittedPath: string[],
+): DynamicObject => {
+    const entitySchema = getEntitySchema(splittedPath[0]);
+    if (entitySchema) {
+        const foundEntityProperty = entitySchema.Properties[splittedPath[1]];
+        if (foundEntityProperty) {
+            result = {
+                isEntity: true,
+                Type: foundEntityProperty.Type,
+                Values: foundEntityProperty,
+            };
+            return getEntityTypeRecursively(result, splittedPath.slice(1));
+        }
+    }
+    return result;
+};
+
+export const getCardElementInputProperties = (
+    woEntity: string,
+    propertyType: string,
+): DynamicObject => {
+    let result: DynamicObject = {
+        isEntity: false,
+        Type: propertyType,
+        Values: {},
+    };
+    const splittedEntityNames = woEntity.split('.');
+    //splittedEntityNames.unshift(entityType as string);
+    result = getEntityTypeRecursively(result, splittedEntityNames);
+
+    const isCatalog = getCatalogType(result.Type);
+    if (isCatalog) {
+        result = {
+            ...result,
+            Type: 'Catalog',
+            Values: isCatalog.Entries,
+        };
+    }
+    if (propertyType === 'Int32' || propertyType === 'Int64') {
+        result = { ...result, Type: 'number' };
+    }
+    return result;
 };

@@ -6,6 +6,7 @@ import { DateInput } from './DateInput';
 import { Exception } from './Exception';
 import { BasicInput } from './BasicInput';
 import { CatalogInput } from './CatalogInput';
+import { getCardElementInputProperties } from '../../../temp/SchemaUtils';
 
 export const CardElement = ({
     element,
@@ -50,36 +51,32 @@ export const CardElement = ({
             },
         );
     }
+
     const sanitizedBinding = sanitizeBinding(element.attributes.Value);
     const woEntity = sanitizedBinding.replace('Entity.', '');
     const propertyType = entityPropertiesAndTypes.get(woEntity);
-    if (propertyType === 'Boolean' || typeof cardDetails === 'boolean') {
+
+    const inputProperties = getCardElementInputProperties(
+        woEntity,
+        propertyType as string,
+    );
+
+    if (inputProperties.Type === 'Boolean') {
         return <BooleanInput element={element} content={cardDetails} />;
     }
 
-    if (cardDetails && propertyType === 'Date') {
+    if (cardDetails && inputProperties.Type === 'Date') {
         return <DateInput element={element} content={cardDetails} />;
     }
-    if (propertyType?.includes('Type') || typeof cardDetails === 'number') {
+    if (inputProperties.Type === 'Catalog') {
         return (
             <CatalogInput
                 element={element}
                 content={cardDetails}
-                propertyType={propertyType}
+                inputProperties={inputProperties}
             />
         );
     }
-    if (woEntity === 'Language') {
-        return (
-            <CatalogInput
-                element={element}
-                content={cardDetails}
-                propertyType={'PatientLanguage'}
-            />
-        );
-    }
-
-    const isCardDetailsNull = cardDetails === null || cardDetails === undefined;
 
     const isElementException = getPath(element.attributes.Value).find(
         (subPath) => exceptionElements.has(subPath),
@@ -90,10 +87,10 @@ export const CardElement = ({
     }
 
     return (
-        <>
-            {!isCardDetailsNull && !Array.isArray(cardDetails) && (
-                <BasicInput element={element} content={cardDetails} />
-            )}
-        </>
+        <BasicInput
+            element={element}
+            content={cardDetails || ''}
+            inputProperties={inputProperties}
+        />
     );
 };
