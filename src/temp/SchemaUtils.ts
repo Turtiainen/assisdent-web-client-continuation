@@ -2,6 +2,7 @@ import { DtoSchema } from '../types/DtoSchema';
 import { DtoEntity } from '../types/DtoEntity';
 import { DynamicObject } from '../types/DynamicObject';
 import useSchemaStore from '../store/store';
+import { DtoProperty } from '../types/DtoProperty';
 
 const getStoreSchema = () => {
     const schemaInStore = useSchemaStore.getState().schema;
@@ -100,11 +101,13 @@ const getEntityTypeRecursively = (
 export const getCardElementInputProperties = (
     woEntity: string,
     propertyType: string,
+    cardPropertySchema: { [index: string]: DtoProperty } | undefined,
 ): DynamicObject => {
     let result: DynamicObject = {
         isEntity: false,
         Type: propertyType,
         Values: {},
+        ElementProps: {},
     };
     const splittedEntityNames = woEntity.split('.');
     //splittedEntityNames.unshift(entityType as string);
@@ -118,8 +121,10 @@ export const getCardElementInputProperties = (
             Values: isCatalog.Entries,
         };
     }
-    if (propertyType === 'Int32' || propertyType === 'Int64') {
+    if (result.Type === 'Int32' || result.Type === 'Int64') {
         result = { ...result, Type: 'number' };
     }
+    result = { ...result, ElementProps: cardPropertySchema?.[woEntity] };
+
     return result;
 };
