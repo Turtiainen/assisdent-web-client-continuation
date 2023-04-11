@@ -59,6 +59,7 @@ export const CardElement = ({
     const inputProperties = getCardElementInputProperties(
         woEntity,
         propertyType as string,
+        entityPropertySchema,
     );
 
     if (inputProperties.Type === 'Boolean') {
@@ -66,7 +67,13 @@ export const CardElement = ({
     }
 
     if (cardDetails && inputProperties.Type === 'Date') {
-        return <DateInput element={element} content={cardDetails} />;
+        return (
+            <DateInput
+                element={element}
+                content={cardDetails}
+                inputProperties={inputProperties}
+            />
+        );
     }
     if (inputProperties.Type === 'Catalog') {
         return (
