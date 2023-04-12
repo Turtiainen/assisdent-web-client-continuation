@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { DynamicObject } from '../../../types/DynamicObject';
+import { getEntitySchema } from '../../../temp/SchemaUtils';
 
 export const BasicInput = ({
     element,
@@ -10,7 +11,41 @@ export const BasicInput = ({
     content: string | DynamicObject;
     inputProperties: DynamicObject;
 }) => {
-    const [value, setValue] = useState<string>(content.toString());
+    const constructValuePrintStyle = (
+        content: string | DynamicObject | null | undefined,
+        valuePrintStyle: string | null | undefined,
+    ) => {
+        if (!content || !valuePrintStyle) {
+            return '';
+        }
+        const data =
+            typeof content === 'string' ? JSON.parse(content) : content;
+
+        if (valuePrintStyle === 'Discount') {
+            return `${parseFloat(data.Value) * 100}%`;
+        }
+
+        const result = valuePrintStyle.replace(/{{(.*?)}}/g, (_, key) => {
+            const value = key
+                .split('.')
+                .reduce((obj: string, k: number) => obj?.[k], data);
+            return value === undefined ? '' : value;
+        });
+        return result;
+    };
+    let defaultValue = content.toString();
+
+    if (
+        content &&
+        typeof content === 'object' &&
+        inputProperties.Type !== 'List'
+    ) {
+        const elementEntitySchema = getEntitySchema(inputProperties.Type);
+        const valuePrintStyle =
+            elementEntitySchema?.Metadata.Metadata.$Entity.ToString;
+        defaultValue = constructValuePrintStyle(content, valuePrintStyle);
+    }
+    const [value, setValue] = useState<string>(defaultValue);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         e.persist();
