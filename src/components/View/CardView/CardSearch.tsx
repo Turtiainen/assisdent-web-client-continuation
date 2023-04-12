@@ -1,7 +1,13 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { getEntitySchema } from '../../../temp/SchemaUtils';
 import { DynamicObject } from '../../../types/DynamicObject';
-import { resolveCardBindings, sanitizeBinding } from '../../../utils/utils';
+import {
+    getUserLanguage,
+    resolveCardBindings,
+    sanitizeBinding,
+} from '../../../utils/utils';
+import { useMutation } from '@tanstack/react-query';
+import { getEntityData } from '../../../services/backend';
 
 export const CardSearch = ({
     element,
@@ -36,14 +42,12 @@ export const CardSearch = ({
         }
         const data =
             typeof content === 'string' ? JSON.parse(content) : content;
-
         const result = valuePrintStyle.replace(/{{(.*?)}}/g, (_, key) => {
             const value = key
                 .split('.')
                 .reduce((obj: string, k: number) => obj?.[k], data);
             return value === undefined ? '' : value;
         });
-
         return result;
     };
     const entitySchema = getEntitySchema(entityType);
@@ -51,6 +55,11 @@ export const CardSearch = ({
         'Entity.',
         '',
     );
+    const propertyType = entitySchema?.Properties[woEntity.split('.')[0]]
+        .Type as string;
+
+    //const elementMutability = entitySchema?.Properties[propertyType].Mutability;
+    //const isDisabled = elementMutability ? elementMutability > 0 : false;
 
     const content = resolveCardBindings(cardData, element.attributes.Value);
     const elementEntityName = woEntity.split('.')[0];
@@ -59,8 +68,44 @@ export const CardSearch = ({
         valueEntity && getPrintStyleFromEntitySchema(valueEntity);
     const contentValue = constructValuePrintStyle(content, valuePrintStyle);
     const [value, setValue] = useState<string>(contentValue);
-    const options: string[] = [];
+    const [options, setOptions] = useState<DynamicObject>([]);
 
+    const searchParameters = {
+        EntityType: propertyType,
+        Take: 10,
+        PropertiesToSelect: ['**'],
+        SearchLanguage: getUserLanguage(),
+    };
+
+    const mutation = useMutation({
+        mutationFn: getEntityData,
+        onError: (error) => {
+            console.log(
+                'error @CardSearch mutation :>> ',
+                error,
+                element.attributes.Caption,
+                ' Used searchParameters :>> ',
+                searchParameters,
+            );
+        },
+        onSuccess: (searchOptions) => {
+            if (searchOptions && searchOptions.Results)
+                setOptions(searchOptions.Results ?? []);
+        },
+    });
+
+    useEffect(() => {
+        if (propertyType !== 'List') {
+            console.log(
+                element.attributes.Caption,
+                ' searchParameters :>> ',
+                searchParameters,
+            );
+            mutation.mutate(searchParameters);
+        } else {
+            console.log(element.attributes.Caption, ' is a list');
+        }
+    }, []);
     return (
         <div className={`flex flex-col lg:flex-row lg:gap-32`}>
             <label
@@ -76,16 +121,27 @@ export const CardSearch = ({
                 onChange={(e) => {
                     setValue(e.target.value);
                 }}
+                placeholder={element.attributes.Caption}
+                //disabled={isDisabled}
             >
-                <option disabled value="">
-                    {element.attributes.Caption}
-                </option>
-                {options.map((option: string) => (
-                    <option key={option} value={option}>
-                        {option}
+                {options.map((option: DynamicObject) => (
+                    <option
+                        key={option.Id}
+                        value={constructValuePrintStyle(
+                            option,
+                            valuePrintStyle,
+                        )}
+                    >
+                        {constructValuePrintStyle(option, valuePrintStyle)}
                     </option>
                 ))}
-                <option value={value}>{value}</option>
+                <option
+                    key="currentValue"
+                    value={value}
+                    className="font-lg semi-bold bg-ad-primary"
+                >
+                    {value}
+                </option>
             </select>
         </div>
     );
