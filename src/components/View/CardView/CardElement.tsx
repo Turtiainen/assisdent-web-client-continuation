@@ -58,11 +58,14 @@ export const CardElement = ({
 
     const inputProperties = getCardElementInputProperties(
         woEntity,
-        propertyType as string,
+        propertyType || typeof cardDetails,
         entityPropertySchema,
     );
 
-    if (inputProperties.Type === 'Boolean') {
+    if (
+        inputProperties.Type === 'Boolean' ||
+        inputProperties.Type === 'boolean'
+    ) {
         return <BooleanInput element={element} content={cardDetails} />;
     }
 
