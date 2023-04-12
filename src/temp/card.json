@@ -1,0 +1,222 @@
+{
+  "ViewModelType": "PatientCardViewModel",
+  "ViewModelData": {
+    "Entity": {
+      "Info": { "ValidFrom": null, "ValidTo": null },
+      "Person": {
+        "Address": {
+          "City": "Sastamala",
+          "Country": "Suomi",
+          "Municipality": "Tampere",
+          "PostalCode": "38210",
+          "Street": "Puolukkatie 132 D 16"
+        },
+        "Id": "715caa68-128b-a652-938d-040f694a6936",
+        "FirstName": "Kaisa Esmeralda",
+        "LastName": "Poutiaisentytär",
+        "Gender": 2,
+        "CallingName": "Kaisa",
+        "OtherPhoneNumber": "040-0000001",
+        "Email": "kaisa.poutiainen@example.com",
+        "Image": null,
+        "PhoneNumber": "040-0000000"
+      },
+      "CompensationInfo": { "IsDirectCompensation": true },
+      "Customer": {
+        "Discount": { "Value": "0.0000", "Type": 0 },
+        "Id": "715caa68-128b-a652-938d-040f694a6936",
+        "IsInternationalInvoicing": false,
+        "PayerCustomer": {
+          "Id": "715caa68-128b-a652-938d-040f694a6936",
+          "Text1": "Kaisa Esmeralda",
+          "Text2": "Poutiaisentytär",
+          "Text3": "241187-900U"
+        },
+        "CustomerUseCounts": [],
+        "DiscountContracts": [],
+        "DiscountContractWithUseCounts": []
+      },
+      "Id": "715caa68-128b-a652-938d-040f694a6936",
+      "SSN": "241187-900U",
+      "BirthDate": "1987-11-24T00:00:00",
+      "Language": "en",
+      "CustomerNumber": "97099284",
+      "RecompenseClass": 0,
+      "InsuranceNumber": "",
+      "BenefitCardNumber": "",
+      "BenefitCardType": 0,
+      "PatientMedicalDataSharing": 0,
+      "HasPatientBeenInformedAboutEPrescription": true,
+      "IsInternetBookingAllowed": true,
+      "OnlyLastTreatmentTimeOfDay": false,
+      "AppointmentExtraInfo": "",
+      "RecallPermission": 0,
+      "CustomershipState": 0,
+      "IsDeceased": false,
+      "DeceasedDate": null,
+      "ExternalIdentifier": null,
+      "JobTitle": "Elementtisuunnittelija",
+      "EmployerText": "Entteri",
+      "PatientRegisterAccepted": true,
+      "CustomerRegisterAccepted": true,
+      "CustomershipEndDate": null,
+      "PreferredContactMethods": [],
+      "MarketingPermissions": [
+        {
+          "Id": "edca31a4-6f55-4e67-b687-a141877db0d0",
+          "State": 2,
+          "Mail": false,
+          "Email": true,
+          "ContactQuestion": {
+            "Info": {
+              "CreatedTime": "2023-02-03T08:05:57.0108114",
+              "Created": "0001-01-01T00:00:00",
+              "Modified": "0001-01-01T00:00:00",
+              "ValidFrom": null,
+              "ValidTo": null,
+              "Creator": null,
+              "Modifier": null
+            },
+            "Id": "72920dbe-6856-42e0-9b1d-600981ce2883",
+            "EmailVisible": true,
+            "MailVisible": true,
+            "PhoneVisible": true,
+            "SmsVisible": true,
+            "IsMarketingPermission": true,
+            "OrderNumber": 0,
+            "Names": {
+              "Translations": [
+                {
+                  "Id": "c0f8d7c0-c6ec-455a-ba08-a49672e38e08",
+                  "Text": "Markkinointiluvat",
+                  "Language": "fi"
+                }
+              ],
+              "Default": "Markkinointiluvat",
+              "DefaultWithoutFallback": null
+            }
+          },
+          "Phone": false,
+          "Sms": true
+        },
+        {
+          "ContactQuestion": {
+            "Info": {
+              "CreatedTime": "2023-02-03T08:05:57.0098114",
+              "Created": "0001-01-01T00:00:00",
+              "Modified": "0001-01-01T00:00:00",
+              "ValidFrom": null,
+              "ValidTo": null,
+              "Creator": null,
+              "Modifier": null
+            },
+            "Id": "045ee978-e3dc-4fdf-9b0d-23e4c00f1b6e",
+            "EmailVisible": true,
+            "MailVisible": false,
+            "PhoneVisible": false,
+            "SmsVisible": true,
+            "IsMarketingPermission": false,
+            "OrderNumber": 1,
+            "Names": {
+              "Translations": [
+                {
+                  "Id": "82c38d41-0c67-41cd-b474-304c7366e4cb",
+                  "Text": "Testilupa 1",
+                  "Language": "fi"
+                }
+              ],
+              "Default": "Testilupa 1",
+              "DefaultWithoutFallback": null
+            }
+          },
+          "State": 0,
+          "Email": null,
+          "Sms": null,
+          "Phone": null,
+          "Mail": null
+        }
+      ],
+      "IsSSNTemporary": false,
+      "IsNewPatient": true,
+      "AppointmentReminderType": 0,
+      "EmployerCompany": null,
+      "PatientInvoicingAddress": {
+        "Id": "cb5a62ea-24fe-495d-83c6-6b777ea15088",
+        "City": "Riihimäki",
+        "Country": "Suomi",
+        "Municipality": "Riihimäki",
+        "PostalCode": "11111",
+        "Street": "Katuosoite 2"
+      },
+      "ServiceContracts": [],
+      "PreferredReminderTime": [],
+      "PreferredAppointmentTimes": [],
+      "PersonalDoctor": {
+        "Person": {
+          "Id": "6a2dde06-fa55-1cbd-4d08-5a0f236532c2",
+          "FirstName": "Solja Asta",
+          "LastName": "Kalervo"
+        },
+        "Id": "6a2dde06-fa55-1cbd-4d08-5a0f236532c2"
+      },
+      "PersonalHygienist": null,
+      "OwnBranch": {
+        "Id": "bca54030-48e6-4041-3a80-78bb300b6ecb",
+        "Name": "Teuva"
+      },
+      "LegalGuardian": null
+    },
+    "CardVisibilities": [
+      { "Id": 0, "IsVisible": true },
+      { "Id": 1, "IsVisible": true },
+      { "Id": 2, "IsVisible": true },
+      { "Id": 3, "IsVisible": true },
+      { "Id": 4, "IsVisible": true },
+      { "Id": 5, "IsVisible": true },
+      { "Id": 6, "IsVisible": true },
+      { "Id": 7, "IsVisible": true },
+      { "Id": 8, "IsVisible": true },
+      { "Id": 9, "IsVisible": true },
+      { "Id": 10, "IsVisible": true },
+      { "Id": 11, "IsVisible": true },
+      { "Id": 12, "IsVisible": true },
+      { "Id": 13, "IsVisible": true },
+      { "Id": 14, "IsVisible": true },
+      { "Id": 15, "IsVisible": true },
+      { "Id": 16, "IsVisible": true },
+      { "Id": 17, "IsVisible": true },
+      { "Id": 18, "IsVisible": true },
+      { "Id": 19, "IsVisible": true },
+      { "Id": 20, "IsVisible": true },
+      { "Id": 21, "IsVisible": true },
+      { "Id": 22, "IsVisible": true },
+      { "Id": 23, "IsVisible": true },
+      { "Id": 24, "IsVisible": true },
+      { "Id": 25, "IsVisible": true },
+      { "Id": 26, "IsVisible": true },
+      { "Id": 27, "IsVisible": true },
+      { "Id": 28, "IsVisible": true },
+      { "Id": 29, "IsVisible": true },
+      { "Id": 30, "IsVisible": true },
+      { "Id": 31, "IsVisible": true },
+      { "Id": 32, "IsVisible": true },
+      { "Id": 33, "IsVisible": true },
+      { "Id": 34, "IsVisible": true },
+      { "Id": 35, "IsVisible": true },
+      { "Id": 36, "IsVisible": true },
+      { "Id": 37, "IsVisible": true },
+      { "Id": 38, "IsVisible": true },
+      { "Id": 39, "IsVisible": true },
+      { "Id": 40, "IsVisible": true },
+      { "Id": 41, "IsVisible": true },
+      { "Id": 42, "IsVisible": true },
+      { "Id": 43, "IsVisible": true },
+      { "Id": 44, "IsVisible": true },
+      { "Id": 45, "IsVisible": true },
+      { "Id": 46, "IsVisible": true },
+      { "Id": 47, "IsVisible": true },
+      { "Id": 48, "IsVisible": true },
+      { "Id": 49, "IsVisible": true }
+    ]
+  }
+}

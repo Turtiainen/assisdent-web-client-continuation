@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { CardView } from '../components/View/CardView';
 import '@testing-library/jest-dom';
 import { BrowserRouter } from 'react-router-dom';
@@ -7,39 +7,72 @@ import { DtoSchema } from '../types/DtoSchema';
 import { getViewFromSchemaByName } from '../utils/Parser';
 import cardJson from '../temp/card.json';
 import { DynamicObject } from '../types/DynamicObject';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+const queryClient = new QueryClient();
 
 // Mock the store with the static schema.json
-const mockSchema = json as unknown as DtoSchema;
+const mockSchema = json as unknown as DtoSchema & { getState: Function };
+
+mockSchema.getState = function () {
+    return {
+        schema: json,
+    };
+};
 
 const mockCard = cardJson as unknown as {
     ViewModelType: string;
     ViewModelData: DynamicObject;
 };
 
-jest.mock('../store/store', () =>
-    jest.fn(() => {
-        return mockSchema;
-    }),
-);
+jest.mock('../store/store', () => {
+    return {
+        ...mockSchema,
+        getState: jest.fn(() => {
+            return {
+                schema: mockSchema,
+            };
+        }),
+    };
+});
 
 jest.mock('../services/backend', () => ({
     getViewModelData: jest.fn(() => {
-        console.log(mockCard);
         return mockCard;
-    })
+    }),
 }));
 
 const MockCardView = () => {
     const entity = getViewFromSchemaByName(mockSchema, 'PatientRegisterView');
     return (
-        <BrowserRouter>
-            <CardView view={entity!.documentElement}/>
-        </BrowserRouter>
+        <QueryClientProvider client={queryClient}>
+            <BrowserRouter>
+                <CardView view={entity!.documentElement} />
+            </BrowserRouter>
+        </QueryClientProvider>
     );
 };
 
-describe('Register Patient CardView', () => {
-    it('should render the view', () => {
+describe('Register Patient CardView header', () => {
+    it('should render the header with a full name', async () => {
         render(<MockCardView />);
+        await waitFor(() => {
+            waitFor(() => {
+                expect(
+                    screen.getByText(/Poutiaisentytär Kaisa Esmeralda/),
+                ).toBeInTheDocument();
+            });
+        });
+    });
+
+    it('should render the header subtitle with an SNN', async () => {
+        render(<MockCardView />);
+        await waitFor(() => {
+            waitFor(() => {
+                expect(
+                    screen.getByText(/241187-900U #97099284/),
+                ).toBeInTheDocument();
+            });
+        });
     });
 });
