@@ -1,6 +1,10 @@
 import { DynamicObject } from '../../types/DynamicObject';
 import { ErrorPage } from '../ErrorPage';
-import { getViewModelData, putEntityData } from '../../services/backend';
+import {
+    getEntityData,
+    getViewModelData,
+    putEntityData,
+} from '../../services/backend';
 import { LoadingSpinner } from '../LoadingSpinner';
 import { parseCardMetaView } from '../../utils/Parser';
 import { useMutation } from '@tanstack/react-query';
@@ -176,6 +180,8 @@ export const CardView = ({ view }: DataProps) => {
 
         console.log('reducedChangedValues', reducedChangedValues);
         const propertiesToSelect = mapObjectPaths(reducedChangedValues);
+        // const propertiesToSelect = ['PatientInvoicingAddress.Street'];
+        console.log('propertiesToSelect', propertiesToSelect);
         const putDataOptions: putDataOptionsType = {
             EntityType: EntityType,
             Patch: {
@@ -234,7 +240,6 @@ export const CardView = ({ view }: DataProps) => {
 
             keysArray.forEach((key, index) => {
                 if (index === 0) {
-                    // TODO add association type from schema
                     currentObj.associationType = associationType;
                     // if (associationType) {
                     //     currentObj.Id = cardData?.Entity[keysArray[0]]?.Id;

@@ -13,21 +13,37 @@ export const mapObjectValueByIntendedUse = (
     }
 };
 
-export const mapObjectPaths = (obj: DynamicObject, parentKey = '') => {
-    let paths: string[] = [];
+export const mapObjectPaths = (
+    obj: DynamicObject,
+    parentKey = '',
+    paths: string[] = [],
+) => {
+    // console.log('obj in mapObjectPaths', obj);
+    // let paths: string[] = [];
+    //
+    // for (const key in obj) {
+    //     const path = parentKey ? `${parentKey}.${key}` : key;
+    //     if (typeof obj[key] === 'object' && obj[key] !== null) {
+    //         paths = paths.concat(mapObjectPaths(obj[key], path));
+    //     } else if (Array.isArray(obj[key])) {
+    //         paths = paths.concat(mapObjectPaths(obj[key][0], path));
+    //     } else {
+    //         paths.push(path);
+    //     }
+    // }
+    //
+    // return paths;
 
-    for (const key in obj) {
-        if (key === '_update' || key === '_set_ref') {
+    for (const [key, value] of Object.entries(obj)) {
+        if (key === 'Id' || key.startsWith('_')) {
             continue;
         }
-        const path = parentKey ? `${parentKey}.${key}` : key;
-
-        if (typeof obj[key] === 'object' && obj[key] !== null) {
-            paths = paths.concat(mapObjectPaths(obj[key], path));
+        const currentKey = parentKey ? `${parentKey}.${key}` : key;
+        if (typeof value === 'object' && !Array.isArray(value)) {
+            mapObjectPaths(value, currentKey, paths);
         } else {
-            paths.push(path);
+            paths.push(currentKey);
         }
     }
-
     return paths;
 };
