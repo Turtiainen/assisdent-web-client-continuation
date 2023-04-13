@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { CardView } from '../components/View/CardView';
 import '@testing-library/jest-dom';
 import { BrowserRouter } from 'react-router-dom';
@@ -12,7 +12,9 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 const queryClient = new QueryClient();
 
 // Mock the store with the static schema.json
-const mockSchema = json as unknown as DtoSchema & { getState: Function };
+const mockSchema = json as unknown as DtoSchema & {
+    getState: () => { schema: object };
+};
 
 mockSchema.getState = function () {
     return {
@@ -53,7 +55,7 @@ const MockCardView = () => {
     );
 };
 
-describe('Register Patient CardView header', () => {
+describe('Register Patient CardView', () => {
     it('should render the header with a full name', async () => {
         render(<MockCardView />);
         await waitFor(() => {
@@ -71,6 +73,17 @@ describe('Register Patient CardView header', () => {
             waitFor(() => {
                 expect(
                     screen.getByText(/241187-900U #97099284/),
+                ).toBeInTheDocument();
+            });
+        });
+    });
+
+    it('should render input labels', async () => {
+        render(<MockCardView />);
+        await waitFor(() => {
+            waitFor(() => {
+                expect(
+                    screen.getByText(/Last name/),
                 ).toBeInTheDocument();
             });
         });
