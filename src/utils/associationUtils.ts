@@ -44,23 +44,6 @@ export const commonFieldsReducer = (
     accumulator: DynamicObject,
     currentObject: DynamicObject,
 ) => {
-    // const key = Object.keys(currentObject)[0];
-    // const value = currentObject[key];
-    //
-    // if (accumulator[key]) {
-    //     if (value._update) {
-    //         accumulator[key]._update.push(value._update[0]);
-    //     } else if (value._set_ref) {
-    //         accumulator[key]._set_ref.push(value._set_ref[0]);
-    //     } else {
-    //         Object.assign(accumulator[key], value);
-    //     }
-    // } else {
-    //     accumulator[key] = value;
-    // }
-    //
-    // return accumulator;
-
     const [key, value] = Object.entries(currentObject)[0];
     // eslint-disable-next-line no-prototype-builtins
     if (accumulator.hasOwnProperty(key)) {
