@@ -4,6 +4,7 @@ import {
     getEntityData,
     getViewModelData,
     putEntityData,
+    saveViewModelData,
 } from '../../services/backend';
 import { LoadingSpinner } from '../LoadingSpinner';
 import { parseCardMetaView } from '../../utils/Parser';
@@ -50,10 +51,17 @@ type CardElementType = {
     [index: string]: unknown;
 };
 
-type putDataOptionsType = {
+// Old way to update card view data
+/*type putDataOptionsType = {
     EntityType: string | null;
     Patch: DynamicObject;
     PropertiesToSelect: Array<string>;
+};*/
+
+type saveViewModelOptionsType = {
+    ViewName: string | null;
+    ViewModelData: DynamicObject;
+    ArgumentType: string;
 };
 
 export const CardView = ({ view }: DataProps) => {
@@ -153,8 +161,19 @@ export const CardView = ({ view }: DataProps) => {
         },
     });
 
-    const putData = useMutation({
+    // Old way to update card view data
+    /*    const putData = useMutation({
         mutationFn: putEntityData,
+        onError: (error) => {
+            console.log('error :>> ', error);
+        },
+        onSuccess: (apiData) => {
+            console.log('apiData :>> ', apiData);
+        },
+    });*/
+
+    const saveData = useMutation({
+        mutationFn: saveViewModelData,
         onError: (error) => {
             console.log('error :>> ', error);
         },
@@ -180,9 +199,10 @@ export const CardView = ({ view }: DataProps) => {
 
         console.log('reducedChangedValues', reducedChangedValues);
         const propertiesToSelect = mapObjectPaths(reducedChangedValues);
-        // const propertiesToSelect = ['PatientInvoicingAddress.Street'];
         console.log('propertiesToSelect', propertiesToSelect);
-        const putDataOptions: putDataOptionsType = {
+
+        // Old way to update card view data
+        /*        const putDataOptions: putDataOptionsType = {
             EntityType: EntityType,
             Patch: {
                 ...reducedChangedValues,
@@ -191,7 +211,22 @@ export const CardView = ({ view }: DataProps) => {
             PropertiesToSelect: propertiesToSelect,
         };
         console.log(putDataOptions);
-        await putData.mutate(putDataOptions);
+        await putData.mutate(putDataOptions);*/
+
+        const saveViewModelOptions: saveViewModelOptionsType = {
+            ViewName: viewName,
+            // TODO is ArgumentType always in this format?
+            ArgumentType: `Edit${viewName}Argument`,
+            ViewModelData: {
+                Entity: {
+                    ...reducedChangedValues,
+                    Id: Id,
+                },
+            },
+        };
+
+        console.log('saveViewModelOptions', saveViewModelOptions);
+        await saveData.mutate(saveViewModelOptions);
         await mutation.mutate(viewModelSearchOptions);
         setChangedValues([]);
     };
@@ -241,9 +276,6 @@ export const CardView = ({ view }: DataProps) => {
             keysArray.forEach((key, index) => {
                 if (index === 0) {
                     currentObj.associationType = associationType;
-                    // if (associationType) {
-                    //     currentObj.Id = cardData?.Entity[keysArray[0]]?.Id;
-                    // }
                 }
                 if (index === keysArray.length - 1) {
                     currentObj[key] = value;
