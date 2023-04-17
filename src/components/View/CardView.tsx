@@ -187,22 +187,23 @@ export const CardView = ({ view }: DataProps) => {
     }, []);
 
     const saveChanges = async () => {
+        // We add proper patch commands to objects if necessary
         const changedValuesWithPatchCommands =
             mapAssociationTypePatchCommands(changedValues);
 
-        console.log('changedValuesCopy', changedValuesWithPatchCommands);
+        // console.log('changedValuesCopy', changedValuesWithPatchCommands);
 
         const reducedChangedValues = changedValuesWithPatchCommands.reduce(
             commonFieldsReducer,
             {},
         );
 
-        console.log('reducedChangedValues', reducedChangedValues);
-        const propertiesToSelect = mapObjectPaths(reducedChangedValues);
-        console.log('propertiesToSelect', propertiesToSelect);
+        // console.log('reducedChangedValues', reducedChangedValues);
 
         // Old way to update card view data
-        /*        const putDataOptions: putDataOptionsType = {
+        /*        const propertiesToSelect = mapObjectPaths(reducedChangedValues);
+        console.log('propertiesToSelect', propertiesToSelect);
+        const putDataOptions: putDataOptionsType = {
             EntityType: EntityType,
             Patch: {
                 ...reducedChangedValues,
@@ -265,14 +266,23 @@ export const CardView = ({ view }: DataProps) => {
         ) => {
             const newChangedValues = [...changedValues];
 
+            // From the binding string (valueString) we get the path to the property
             const keysArray = sanitizeBinding(valueString)
                 .split('Entity.')[1]
                 .split('.');
             const valueObj: DynamicObject = {};
             let currentObj = valueObj;
+
+            // FIXME Special case: PatientInvoicingAddress can not be updated currently
+            if (keysArray[0] === 'PatientInvoicingAddress') {
+                return;
+            }
+
+            // Get the association type from the schema
             const propertySchemaObj = EntityPropertySchema?.[keysArray[0]];
             const associationType = getAssociationType(propertySchemaObj);
 
+            // We carry the association type in the object to be able to use correct patch commands later
             keysArray.forEach((key, index) => {
                 if (index === 0) {
                     currentObj.associationType = associationType;
@@ -285,10 +295,10 @@ export const CardView = ({ view }: DataProps) => {
                 }
             });
 
+            // Existing objects will be just updated, new objects will be added
             const existingObject = newChangedValues.findIndex((obj) => {
                 return checkIfObjectHasNestedProperty(obj, keysArray);
             });
-
             if (existingObject > -1) {
                 newChangedValues[existingObject] = valueObj;
             } else {
