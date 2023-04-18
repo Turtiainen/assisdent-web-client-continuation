@@ -104,7 +104,7 @@ export const BasicInput = ({
                     className={`flex-1 max-h-12 border border-ad-grey-300 rounded-sm px-2 py-1 hover:border-ad-primary focus:border-ad-primary active:border-ad-primary focus:outline-none`}
                     onBlur={(e) => {
                         e.preventDefault();
-                        if (value) {
+                        if (value && value !== defaultValue) {
                             updateChangedTextInputValue(
                                 element.attributes.Value,
                                 element.attributes.Identifier,
