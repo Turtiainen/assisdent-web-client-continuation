@@ -14,9 +14,20 @@ import { useEffect, useState } from 'react';
 import { ViewHeader } from './ViewHeader';
 import { getUserLanguage, resolveCardBindings } from '../../utils/utils';
 import { CardViewBuilder } from './CardView/CardViewBuilder';
+import Button from '../Button';
+import {
+    commonFieldsReducer,
+    mapAssociationTypePatchCommands,
+} from '../../utils/associationUtils';
 
 export type DataProps = {
     view: Element;
+};
+
+type saveViewModelOptionsType = {
+    ViewName: string | null;
+    ViewModelData: DynamicObject;
+    ArgumentType: string;
 };
 
 export const CardView = ({ view }: DataProps) => {
@@ -77,17 +88,6 @@ export const CardView = ({ view }: DataProps) => {
         },
     });
 
-    // Old way to update card view data
-    /*    const putData = useMutation({
-        mutationFn: putEntityData,
-        onError: (error) => {
-            console.log('error :>> ', error);
-        },
-        onSuccess: (apiData) => {
-            console.log('apiData :>> ', apiData);
-        },
-    });*/
-
     const saveData = useMutation({
         mutationFn: saveViewModelData,
         onError: (error) => {
@@ -102,7 +102,46 @@ export const CardView = ({ view }: DataProps) => {
         mutation.mutate(viewModelSearchOptions);
     }, []);
 
+    const saveChanges = async () => {
+        // We add proper patch commands to objects if necessary
+        const changedValuesWithPatchCommands =
+            mapAssociationTypePatchCommands(changedValues);
+
+        const reducedChangedValues = changedValuesWithPatchCommands.reduce(
+            commonFieldsReducer,
+            {},
+        );
+
+        const saveViewModelOptions: saveViewModelOptionsType = {
+            ViewName: viewName,
+            // TODO is ArgumentType always in this format?
+            ArgumentType: `Edit${viewName}Argument`,
+            ViewModelData: {
+                Entity: {
+                    ...reducedChangedValues,
+                    Id: Id,
+                },
+            },
+        };
+
+        console.log('saveViewModelOptions', saveViewModelOptions);
+        saveData.mutate(saveViewModelOptions);
+        mutation.mutate(viewModelSearchOptions);
+        setChangedValues([]);
+    };
+
+    const cancelChanges = () => {
+        setChangedValues([]);
+    };
+
     const constructCardView = (parsedCardMetaView: DynamicObject) => {
+        console.log('constructCardView');
+        const updateChangedValues = (
+            newChangedValues: Array<DynamicObject>,
+        ) => {
+            setChangedValues(newChangedValues);
+        };
+        const newChangedValues = [...changedValues];
         return (
             <>
                 {resolvedHeader && (
@@ -117,6 +156,8 @@ export const CardView = ({ view }: DataProps) => {
                             elements={parsedCardMetaView.children}
                             cardData={cardData}
                             entityType={entityType}
+                            updateChangedValues={updateChangedValues}
+                            changedValues={newChangedValues}
                         />
                     </div>
                 )}

@@ -12,10 +12,16 @@ export const CardElement = ({
     element,
     cardData,
     entityPropertySchema,
+    updateChangedTextInputValue,
 }: {
     element: DynamicObject;
     cardData: DynamicObject | null;
     entityPropertySchema: { [index: string]: DtoProperty } | undefined;
+    updateChangedTextInputValue: (
+        valueString: string,
+        key: string,
+        value: string,
+    ) => void;
 }) => {
     const cardDetails = resolveCardBindings(cardData, element.attributes.Value);
     const entityPropertiesAndTypes = new Map<string, string>();
@@ -101,6 +107,7 @@ export const CardElement = ({
             element={element}
             content={cardDetails || ''}
             inputProperties={inputProperties}
+            updateChangedTextInputValue={updateChangedTextInputValue}
         />
     );
 };

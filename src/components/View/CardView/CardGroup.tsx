@@ -7,10 +7,14 @@ export const CardGroup = ({
     group,
     cardData,
     entityType,
+    updateChangedValues,
+    changedValues,
 }: {
     group: DynamicObject;
     cardData: DynamicObject | null;
     entityType: string | null;
+    updateChangedValues: (changedValues: Array<DynamicObject>) => void;
+    changedValues: Array<DynamicObject>;
 }) => {
     const [isContentHidden, setIsContentHidden] = useState(false);
 
@@ -30,6 +34,10 @@ export const CardGroup = ({
                         elements={group.children}
                         cardData={cardData}
                         entityType={entityType}
+                        updateChangedValues={(newValues) =>
+                            updateChangedValues(newValues)
+                        }
+                        changedValues={changedValues}
                     />
                 )}
             </>
