@@ -178,4 +178,34 @@ describe('Call commonFieldsReducer', () => {
             },
         });
     });
+
+    it('should work with deeply nnested objects', () => {
+        const testArray = [
+            {
+                Person: {
+                    Address: {
+                        Street: 'Linnanpellontie 21',
+                    },
+                },
+            },
+            {
+                Person: {
+                    Address: {
+                        PostalCode: '03600',
+                    },
+                },
+            },
+        ];
+
+        const result = testArray.reduce(commonFieldsReducer, {});
+        console.log(result);
+        expect(result).toEqual({
+            Person: {
+                Address: {
+                    PostalCode: '03600',
+                    Street: 'Linnanpellontie 21',
+                },
+            },
+        });
+    });
 });

@@ -44,21 +44,49 @@ export const commonFieldsReducer = (
     accumulator: DynamicObject,
     currentObject: DynamicObject,
 ) => {
+    const mergeObjects = (
+        obj1: DynamicObject,
+        obj2: DynamicObject,
+    ): DynamicObject => {
+        const result: DynamicObject = { ...obj1 };
+        for (const [key, value] of Object.entries(obj2)) {
+            // eslint-disable-next-line no-prototype-builtins
+            if (result.hasOwnProperty(key)) {
+                const currentValue = result[key];
+                if (Array.isArray(currentValue) && Array.isArray(value)) {
+                    result[key] = currentValue.concat(value);
+                } else if (
+                    typeof currentValue === 'object' &&
+                    typeof value === 'object'
+                ) {
+                    result[key] = mergeObjects(currentValue, value);
+                } else {
+                    result[key] = value;
+                }
+            } else {
+                result[key] = value;
+            }
+        }
+        return result;
+    };
+
     const [key, value] = Object.entries(currentObject)[0];
     // eslint-disable-next-line no-prototype-builtins
     if (accumulator.hasOwnProperty(key)) {
-        if (Array.isArray(accumulator[key]._update)) {
-            accumulator[key]._update[0] = {
-                ...accumulator[key]._update[0],
-                ...value._update[0],
-            };
-        } else if (Array.isArray(accumulator[key]._set_ref)) {
-            accumulator[key]._set_ref[0] = {
-                ...accumulator[key]._set_ref[0],
-                ...value._set_ref[0],
-            };
+        if (Array.isArray(accumulator[key]?._set_ref)) {
+            const setRefArray = accumulator[key]._set_ref.concat(
+                value._set_ref,
+            );
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            accumulator[key]._set_ref = [mergeObjects(...setRefArray)];
+        } else if (Array.isArray(accumulator[key]?._update)) {
+            const updateArray = accumulator[key]._update.concat(value._update);
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            accumulator[key]._update = [mergeObjects(...updateArray)];
         } else {
-            accumulator[key] = { ...accumulator[key], ...value };
+            accumulator[key] = mergeObjects(accumulator[key], value);
         }
     } else {
         accumulator[key] = value;
