@@ -95,6 +95,7 @@ export const CardView = ({ view }: DataProps) => {
         },
         onSuccess: (apiData) => {
             console.log('apiData :>> ', apiData);
+            mutation.mutate(viewModelSearchOptions);
         },
     });
 
@@ -126,7 +127,6 @@ export const CardView = ({ view }: DataProps) => {
 
         console.log('saveViewModelOptions', saveViewModelOptions);
         saveData.mutate(saveViewModelOptions);
-        mutation.mutate(viewModelSearchOptions);
         setChangedValues([]);
     };
 
