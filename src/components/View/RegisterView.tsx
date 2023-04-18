@@ -16,6 +16,31 @@ export const RegisterView = ({ view }: DataProps) => {
 
     const EntityType = view.getAttribute('EntityType');
     const ViewName = view.getAttribute('Name');
+    const ContextMenuElement = view.getElementsByTagName('ContextMenu').item(0);
+    let ContextMenuItems;
+    let ContextMenuItemsFormatted;
+    if (ContextMenuElement)
+        ContextMenuItems = Array.from(
+            ContextMenuElement.childNodes,
+        ) as Element[];
+    if (ContextMenuItems) {
+        ContextMenuItemsFormatted = ContextMenuItems.filter(
+            (elem) => elem.nodeType !== Node.TEXT_NODE,
+        ).map((elem) => {
+            let Text;
+            if (elem.getAttribute) Text = elem.getAttribute('Text');
+            else {
+                console.warn(elem);
+            }
+            const Command = (Array.from(elem.childNodes) as Element[]).filter(
+                (elem) => elem.nodeType !== Node.TEXT_NODE,
+            );
+            return { Text, Command };
+        });
+        console.log(ContextMenuItemsFormatted);
+    }
+
+    const contextMenu = ContextMenuItemsFormatted;
 
     // This object has all attributes of the view root element
     // TODO: Keep only the list above, or this object
@@ -65,6 +90,7 @@ export const RegisterView = ({ view }: DataProps) => {
                     entities={fetchedEntities}
                     bindings={bindings}
                     entityType={EntityType}
+                    contextMenu={contextMenu}
                 />
             )}
             {fetchedEntities && fetchedEntities?.length < 1 && (

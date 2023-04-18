@@ -2,12 +2,19 @@ import React, { ChangeEventHandler, MouseEventHandler, useState } from 'react';
 import { resolveEntityBindings } from '../../utils/utils';
 import { DynamicObject } from '../../types/DynamicObject';
 import { Link } from 'react-router-dom';
+import { useContextMenu } from '../../context/ContextMenuProvider';
 
 export type RegisterTableProps = {
     columns: string[];
     entities: DynamicObject[];
     bindings: string[][];
     entityType: string | null;
+    contextMenu:
+        | {
+              Text: string | null | undefined;
+              Command: Element[];
+          }[]
+        | undefined;
 };
 
 export const RegisterTable = ({
@@ -15,9 +22,29 @@ export const RegisterTable = ({
     entities,
     bindings,
     entityType,
+    contextMenu,
 }: RegisterTableProps) => {
     const [selectedList, setSelectedList] = useState<Set<string>>(new Set());
     const [favoriteList, setFavoriteList] = useState<Set<string>>(new Set());
+
+    const { elements, open, positionX, positionY, updateContextMenu } =
+        useContextMenu();
+
+    const openContextMenu = (
+        clickEvent: React.MouseEvent<HTMLSpanElement, MouseEvent>,
+    ) => {
+        // Get cursor coordinates
+        const x = clickEvent.clientX;
+        const y = clickEvent.clientY;
+        
+        // Set context menu state
+        updateContextMenu(true);
+
+// work in progress
+
+
+
+    };
 
     entities.map((entity) => {
         if (entity.IsFavorite) {
@@ -169,7 +196,7 @@ export const RegisterTable = ({
                             ⭐
                         </button>
                     </span>
-                    <span>🎚️</span>
+                    <span onClick={(e) => openContextMenu(e)}>🎚️</span>
                 </td>
             </tr>
         );
