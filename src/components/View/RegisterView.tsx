@@ -26,18 +26,22 @@ export const RegisterView = ({ view }: DataProps) => {
     if (ContextMenuItems) {
         ContextMenuItemsFormatted = ContextMenuItems.filter(
             (elem) => elem.nodeType !== Node.TEXT_NODE,
-        ).map((elem) => {
-            let Text;
-            if (elem.getAttribute) Text = elem.getAttribute('Text');
-            else {
-                console.warn(elem);
-            }
-            const Command = (Array.from(elem.childNodes) as Element[]).filter(
-                (elem) => elem.nodeType !== Node.TEXT_NODE,
-            );
-            return { Text, Command };
-        });
-        console.log(ContextMenuItemsFormatted);
+        )
+            .map((elem) => {
+                let Text = 'null';
+                if (elem.getAttribute) Text = elem.getAttribute('Text')!;
+                else {
+                    console.warn(elem);
+                }
+                const Command = (
+                    Array.from(elem.childNodes) as Element[]
+                ).filter((elem) => elem.nodeType !== Node.TEXT_NODE);
+
+                if (Text === 'null') return null;
+
+                return { Text, Command };
+            })
+            .filter((elem) => elem !== null);
     }
 
     const contextMenu = ContextMenuItemsFormatted;
@@ -56,8 +60,6 @@ export const RegisterView = ({ view }: DataProps) => {
 
     const orderBy = parseOrderOptions(view);
     const { columns, bindings } = parseRegisterMetaView(view);
-    console.log('columns', columns);
-    console.log('bindings', bindings);
 
     const searchOptions = {
         entityType: EntityType,

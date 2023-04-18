@@ -11,7 +11,7 @@ export type RegisterTableProps = {
     entityType: string | null;
     contextMenu:
         | {
-              Text: string | null | undefined;
+              Text: string;
               Command: Element[];
           }[]
         | undefined;
@@ -27,23 +27,25 @@ export const RegisterTable = ({
     const [selectedList, setSelectedList] = useState<Set<string>>(new Set());
     const [favoriteList, setFavoriteList] = useState<Set<string>>(new Set());
 
-    const { elements, open, positionX, positionY, updateContextMenu } =
-        useContextMenu();
+    // Opens and updates context menu, the context file handlers closing when clicked outside
+    const { updateContextMenu } = useContextMenu();
 
     const openContextMenu = (
         clickEvent: React.MouseEvent<HTMLSpanElement, MouseEvent>,
     ) => {
-        // Get cursor coordinates
         const x = clickEvent.clientX;
         const y = clickEvent.clientY;
-        
-        // Set context menu state
-        updateContextMenu(true);
 
-// work in progress
+        const elements = contextMenu?.map((e) => {
+            return {
+                name: e.Text,
+                onClick: () => {
+                    console.log({ command: e.Command });
+                },
+            };
+        });
 
-
-
+        if (elements) updateContextMenu({ x, y, elements });
     };
 
     entities.map((entity) => {
