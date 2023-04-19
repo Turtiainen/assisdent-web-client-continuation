@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom';
 import { parseOrderOptions } from '../utils/Parser';
-import { OrderBy, OrderOption } from '../types/ViewTypes/OrderOptions';
+import { OrderBy } from '../types/ViewTypes/OrderOptions';
 import json from '../temp/schema.json';
 import { DtoSchema } from '../types/DtoSchema';
 import { DynamicObject } from '../types/DynamicObject';

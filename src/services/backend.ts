@@ -97,7 +97,7 @@ export async function getSchema() {
     }
 
     console.warn('should login');
-    return null;
+    return;
 }
 
 export const getEntitiesForRegisterView = async (options: DynamicObject) => {

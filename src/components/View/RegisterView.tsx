@@ -41,7 +41,7 @@ export const RegisterView = ({ view }: DataProps) => {
 
     if (!EntitySchema) {
         console.error(`Did not find Schema for entity '${EntityType}'`);
-        return;
+        return null;
     }
 
     const orderBy: OrderBy[] = parseOrderOptions(OrderOptionsEl, EntitySchema);
