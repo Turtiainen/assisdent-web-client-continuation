@@ -83,13 +83,10 @@ const resolveFormattedText = (
         return parseHandlebars(entityToString, entity);
     }
 
-    console.log('identifier', identifier);
     const formattedText = getFormattedText(identifier);
     if (!formattedText) return;
 
     if (finalEntity) return parseHandlebars(formattedText, finalEntity);
-
-    console.log('formattedText', formattedText);
 
     return parseHandlebars(formattedText, entity);
 };

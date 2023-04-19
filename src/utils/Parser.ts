@@ -203,14 +203,18 @@ export const parseOrderOptions = (
             return [];
         }
 
-        OrderOption.OrderOptionNames = orderNameToObjectArray(
+        const orderOptionNames = orderNameToObjectArray(
             OrderOption.OrderingName,
             SchemaOrderOptions,
         );
 
-        // Set the IsDescending property only to the first object
-        OrderOption.OrderOptionNames.at(0).IsDescending =
-            OrderOption['IsDescending'];
+        // Set the IsDescending property to all column order objects
+        OrderOption.OrderOptionNames = orderOptionNames.map(
+            (oo: OrderOptionNameObject) => {
+                oo.IsDescending = OrderOption.IsDescending;
+                return oo;
+            },
+        );
 
         OrderOptions.push({
             Caption: OrderOption['Caption'],

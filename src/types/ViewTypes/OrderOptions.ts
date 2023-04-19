@@ -1,6 +1,6 @@
 export type OrderOptionNameObject = {
     OrderOptionName: string;
-    IsDescending?: boolean;
+    IsDescending: boolean;
 };
 
 export type OrderOption = {
