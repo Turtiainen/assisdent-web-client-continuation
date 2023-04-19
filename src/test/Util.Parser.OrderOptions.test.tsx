@@ -155,8 +155,8 @@ const expectedComplicatedOutput: OrderBy[] = [
             IsDescending: false,
             OrderOptionNames: [
                 { OrderOptionName: 'DateOrdering', IsDescending: false },
-                { OrderOptionName: 'LastNameOrdering' },
-                { OrderOptionName: 'IdOrderOption' },
+                { OrderOptionName: 'LastNameOrdering', IsDescending: false },
+                { OrderOptionName: 'IdOrderOption', IsDescending: false },
             ],
         },
     },
@@ -170,7 +170,7 @@ const expectedComplicatedOutput: OrderBy[] = [
             IsDescending: false,
             OrderOptionNames: [
                 { OrderOptionName: 'LastNameOrdering', IsDescending: false },
-                { OrderOptionName: 'FirstNameOrdering' },
+                { OrderOptionName: 'FirstNameOrdering', IsDescending: false },
             ],
         },
     },

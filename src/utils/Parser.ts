@@ -143,22 +143,21 @@ export const parseRegisterMetaView = (view: Element) => {
 
 // Split OrderName attribute into an array, if the string has commas in it
 // e.g. OrderName="ordering1,..,orderingN"
-// Returns an array of objects with OrderOptionName property
-// @return { OrderOptionName: string }[]
 const orderNameToObjectArray = (
     OrderName: string,
     SchemaOrderOptions: DynamicObject,
+    IsDescending: boolean,
 ) => {
     let result: OrderOptionNameObject[] = [];
     if (OrderName.includes(',')) {
         let tempArr = OrderName.split(',');
         tempArr.forEach((opt) => {
             const name: string = SchemaOrderOptions[opt]?.Name || opt;
-            result.push({ OrderOptionName: name });
+            result.push({ OrderOptionName: name, IsDescending });
         });
     } else {
         const name = SchemaOrderOptions[OrderName]?.Name || OrderName;
-        result.push({ OrderOptionName: name });
+        result.push({ OrderOptionName: name, IsDescending });
     }
     return result;
 };
@@ -203,17 +202,10 @@ export const parseOrderOptions = (
             return [];
         }
 
-        const orderOptionNames = orderNameToObjectArray(
+        OrderOption.OrderOptionNames = orderNameToObjectArray(
             OrderOption.OrderingName,
             SchemaOrderOptions,
-        );
-
-        // Set the IsDescending property to all column order objects
-        OrderOption.OrderOptionNames = orderOptionNames.map(
-            (oo: OrderOptionNameObject) => {
-                oo.IsDescending = OrderOption.IsDescending;
-                return oo;
-            },
+            OrderOption.IsDescending,
         );
 
         OrderOptions.push({
