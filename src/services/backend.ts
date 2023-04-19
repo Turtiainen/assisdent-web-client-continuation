@@ -127,10 +127,34 @@ export const getEntitiesForRegisterView = async (options: DynamicObject) => {
     return null;
 };
 
+export const getEntityData = async (searchOptions: DynamicObject) => {
+    const token = sessionStorage.getItem('bt');
+    if (token === null) {
+        console.warn('should login');
+        return;
+    }
+    try {
+        const body = {
+            ...searchOptions,
+        };
+        const { data } = await axios.post(ENDPOINT_ENTITY_SEARCH, body, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+        return data;
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            console.error(`error at getEntityData: ${error.message}`);
+        } else {
+            console.error(`unknown error at getEntityData: ${error}`);
+        }
+        return null;
+    }
+};
+
 export const getViewModelData = async (searchOptions: DynamicObject) => {
     const token = sessionStorage.getItem('bt');
     if (token === null) {
-        console.log('should login');
+        console.warn('should login');
         return null;
     }
 
