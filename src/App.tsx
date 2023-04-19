@@ -13,7 +13,7 @@ function App() {
     }, []);
 
     return (
-        <div className="App w-full flex">
+        <div className="App w-full flex relative">
             <Sidebar />
             <MainView>
                 <ApplicationBar />

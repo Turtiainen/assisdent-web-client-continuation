@@ -5,7 +5,12 @@ import useSchemaStore from '../store/store';
 const getStoreSchema = () => {
     const schemaInStore = useSchemaStore.getState().schema;
     return schemaInStore as DtoSchema;
-}
+};
+
+export const getMetaViews = () => {
+    const schema = getStoreSchema();
+    return schema.MetaViews;
+};
 
 export const getFormattedText = (identifier: string) => {
     const schema = getStoreSchema();
