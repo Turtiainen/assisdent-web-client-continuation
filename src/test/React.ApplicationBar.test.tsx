@@ -7,4 +7,9 @@ describe('Register ApplicationBar', () => {
         render(<ApplicationBar />);
         expect(screen.getByText(/Kotisivu/)).toBeInTheDocument();
     });
+
+    it('should have a help icon', () => {
+        render(<ApplicationBar />);
+        expect(screen.getByText(/❔/)).toBeInTheDocument();
+    });
 });

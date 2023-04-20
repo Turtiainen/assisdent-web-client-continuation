@@ -1,32 +1,31 @@
 import React, { ChangeEventHandler } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { sortByDocumentHeader } from '../../utils/sortingUtils';
-import { useIsFetching, useQuery } from '@tanstack/react-query';
-import { schemaQuery } from '../../temp/SchemaUtils';
 import { getRegisterViewsFromSchema } from '../../utils/Parser';
+import useSchemaStore from '../../store/store';
+import { useEffect, useState } from 'react';
+import { SchemaStore } from '../../types/SchemaStore';
 
 export const ViewList = ({ className }: { className?: string }) => {
     const navigate = useNavigate();
-    const { data: schema } = useQuery(schemaQuery());
-    const { data: registerViews } = useQuery({
-        queryKey: ['schema', 'metaview', 'register', 'all'],
-        queryFn: () => getRegisterViewsFromSchema(schema!),
-        enabled: !!schema,
-    });
-    const isLoading =
-        useIsFetching(['schema', 'metaview', 'register', 'all']) > 0;
+    const [registerViews, setRegisterViews] = useState<Document[]>([]);
+    const schemaInStore = useSchemaStore((state: SchemaStore) => state.schema);
 
     const handleOnChange: ChangeEventHandler<HTMLSelectElement> = (evt) => {
         evt.preventDefault();
         navigate(`view/${evt.target.value}`);
     };
 
+    useEffect(() => {
+        setRegisterViews(getRegisterViewsFromSchema(schemaInStore));
+    }, [schemaInStore]);
+
     const registerViewNames = registerViews
         ?.sort(sortByDocumentHeader)
         .map((doc: Document) => {
-            const docName = doc!.documentElement!.getAttribute('Name')!;
+            const docName = doc.documentElement.getAttribute('Name')!;
             const header =
-                doc!.documentElement!.getAttribute('Header') || docName;
+                doc.documentElement.getAttribute('Header') || docName;
 
             return (
                 <option key={docName} value={docName}>
@@ -37,14 +36,15 @@ export const ViewList = ({ className }: { className?: string }) => {
 
     return (
         <div className={`px-8 py-4`}>
-            {isLoading && <p>Loading view names...</p>}
-            {registerViewNames?.length && (
+            {registerViewNames?.length !== 0 ? (
                 <select
                     className={`border-2 border-slate-200 hover:border-blue-400 cursor-pointer rounded p-2 ${className}`}
                     onChange={handleOnChange}
                 >
                     {registerViewNames}
                 </select>
+            ) : (
+                <p>Loading view names...</p>
             )}
         </div>
     );

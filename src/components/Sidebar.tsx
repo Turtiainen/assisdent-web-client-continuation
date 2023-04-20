@@ -3,10 +3,11 @@ import { useState } from 'react';
 import { SidebarItems } from './SidebarItems';
 import { SidebarFooter } from './SidebarFooter';
 import { Link } from 'react-router-dom';
-import { ViewList } from './View/ViewList';
+import { SubSidebarSearch } from './SubSidebarSearch';
 
 export const Sidebar = () => {
-    const [isExpanded, setIsExpanded] = useState(true);
+    const [isExpanded, setIsExpanded] = useState<boolean>(true);
+    const [subSidebar, setSubSidebar] = useState<null | JSX.Element>(null);
 
     const exampleSidebarItems = [
         {
@@ -18,7 +19,10 @@ export const Sidebar = () => {
         {
             text: 'Haku',
             icon: '🔍',
-            onClick: () => console.log('Haku'),
+            onClick: () =>
+                setSubSidebar(
+                    <SubSidebarSearch onClick={() => setSubSidebar(null)} />,
+                ),
             isExpanded: isExpanded,
         },
     ];
@@ -63,41 +67,43 @@ export const Sidebar = () => {
     ];
 
     return (
-        <aside
-            className={`min-h-[100vh] bg-ad-sidebar overflow-x-hidden overflow-y-auto transition-[width] ${
-                isExpanded ? 'w-64' : 'w-14'
-            }`}
-        >
-            <div className="flex">
-                {isExpanded ? (
-                    <Link
-                        className="text-left mx-5 my-auto text-white hover:text-ad-subtitle w-2/3"
-                        to="/"
+        <>
+            <aside
+                className={`min-h-[100vh] bg-ad-sidebar overflow-x-hidden overflow-y-auto transition-[width] ${
+                    isExpanded ? 'w-64' : 'w-14'
+                }`}
+            >
+                <div className="flex">
+                    {isExpanded ? (
+                        <Link
+                            className="text-left mx-5 my-auto text-white hover:text-ad-subtitle w-2/3"
+                            to="/"
+                        >
+                            AssisDent
+                        </Link>
+                    ) : (
+                        ''
+                    )}
+                    <button
+                        className="font-medium bg-transparent text-white hover:text-ad-subtitle hover:border-transparent focus:border-transparent focus:outline-none w-1/3"
+                        onClick={() => setIsExpanded(!isExpanded)}
                     >
-                        AssisDent
-                    </Link>
-                ) : (
-                    ''
-                )}
-                <button
-                    className="font-medium bg-transparent text-white hover:text-ad-subtitle hover:border-transparent focus:border-transparent focus:outline-none w-1/3"
-                    onClick={() => setIsExpanded(!isExpanded)}
-                >
-                    {isExpanded ? '<=' : '=>'}
-                </button>
-            </div>
-            <SidebarItems
-                title=""
-                content={exampleSidebarItems}
-                isExpanded={isExpanded}
-            />
-            <ViewList className={`text-xs p-1 m-0`} />
-            <SidebarItems
-                title="OMAT TIEDOT"
-                content={exampleSidebarSubContent}
-                isExpanded={isExpanded}
-            />
-            <SidebarFooter isExpanded={isExpanded} />
-        </aside>
+                        {isExpanded ? '<=' : '=>'}
+                    </button>
+                </div>
+                <SidebarItems
+                    title=""
+                    content={exampleSidebarItems}
+                    isExpanded={isExpanded}
+                />
+                <SidebarItems
+                    title="OMAT TIEDOT"
+                    content={exampleSidebarSubContent}
+                    isExpanded={isExpanded}
+                />
+                <SidebarFooter isExpanded={isExpanded} />
+            </aside>
+            {subSidebar && subSidebar}
+        </>
     );
 };

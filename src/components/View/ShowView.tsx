@@ -1,37 +1,63 @@
 import { RegisterView } from './RegisterView';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { ViewHeader } from './ViewHeader';
 import { useIsFetching, useQuery } from '@tanstack/react-query';
 import { getViewFromSchemaByName } from '../../utils/Parser';
-import { schemaQuery } from '../../temp/SchemaUtils';
+import { CardView } from './CardView';
+import { useEffect } from 'react';
+import useSchemaStore from '../../store/store';
+import { SchemaStore } from '../../types/SchemaStore';
 
 export const ShowView = () => {
-    const { data: schema } = useQuery(schemaQuery());
+    const schema = useSchemaStore((state: SchemaStore) => state.schema);
     const { viewId } = useParams();
-    const { data: entity } = useQuery({
+    const { Id } = useParams();
+    const navigate = useNavigate();
+
+    const {
+        data: entity,
+        isError,
+        error,
+    } = useQuery({
         queryKey: ['schema', 'metaview', viewId],
-        queryFn: () => getViewFromSchemaByName(schema!, viewId!),
-        enabled: !!schema,
+        queryFn: () => getViewFromSchemaByName(schema, viewId!),
+        enabled: Object.keys(schema).length > 0,
     });
     const isLoadingSchema = useIsFetching(['schema', 'metaview', viewId]) > 0;
+
+    useEffect(() => {
+        if (isError) {
+            navigate('/somewhere');
+        }
+    }, [isError, error]);
+
+    const Header = entity?.documentElement.getAttribute('Header');
 
     return (
         <>
             {isLoadingSchema && <p>Loading view</p>}
-            {entity && viewId && (
-                <ViewHeader
-                    heading={entity.documentElement.getAttribute('Header')!}
-                />
-            )}
 
-            <section className={`flex flex-col pb-4`}>
-                {entity && viewId && (
-                    <RegisterView
-                        key={entity.documentElement.getAttribute('Name')}
-                        view={entity.documentElement!}
-                    />
-                )}
-            </section>
+            {entity && viewId && viewId.includes('Register') ? (
+                <>
+                    {Header && <ViewHeader header={Header} />}
+                    <section className={`flex flex-col pb-4`}>
+                        {entity && viewId && (
+                            <RegisterView
+                                key={entity.documentElement.getAttribute(
+                                    'Name',
+                                )}
+                                view={entity.documentElement}
+                            />
+                        )}
+                    </section>
+                </>
+            ) : (
+                <>
+                    {entity && viewId && Id && (
+                        <CardView view={entity.documentElement} />
+                    )}
+                </>
+            )}
         </>
     );
 };

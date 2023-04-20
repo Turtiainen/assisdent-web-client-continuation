@@ -2,9 +2,15 @@ import { Sidebar } from './components/Sidebar';
 import { MainView } from './components/MainView';
 import { ApplicationBar } from './components/ApplicationBar';
 import { Outlet, useNavigation } from 'react-router-dom';
+import { useEffect } from 'react';
+import { getSchemaToStore } from './utils/storeUtils';
 
 function App() {
     const navigation = useNavigation();
+
+    useEffect(() => {
+        getSchemaToStore();
+    }, []);
 
     return (
         <div className="App w-full flex">

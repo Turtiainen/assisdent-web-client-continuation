@@ -1,51 +1,55 @@
-import json from './schema.json'
-import {DtoSchema} from "../types/DtoSchema";
-import {DtoEntity} from "../types/DtoEntity";
-import {getSchema} from "../services/backend";
+import { DtoSchema } from '../types/DtoSchema';
+import { DtoEntity } from '../types/DtoEntity';
+import { DynamicObject } from '../types/DynamicObject';
+import useSchemaStore from '../store/store';
+import { DtoProperty } from '../types/DtoProperty';
 
-// TODO: schema data should be read from store eventually
-// Force type conversion to DtoSchema
-const schema = json as unknown as DtoSchema
+const getStoreSchema = () => {
+    const schemaInStore = useSchemaStore.getState().schema;
+    return schemaInStore as DtoSchema;
+};
 
 export const getFormattedText = (identifier: string) => {
-  if (identifier.includes("{{")) return identifier
-  return schema.FormattedTexts.find((ft) => ft.Identifier === identifier)?.Text
-}
+    const schema = getStoreSchema();
+
+    if (identifier.includes('{{')) return identifier;
+    return schema.FormattedTexts.find((ft) => ft.Identifier === identifier)
+        ?.Text;
+};
 
 export const getEntitySchema = (name: string | undefined | null) => {
-  if (!name || name === '') return
-  return schema.MetaData.Entities.find((e) => e.Name === name)
-}
+    const schema = getStoreSchema();
+
+    if (!name || name === '') return;
+    return schema.MetaData.Entities.find((e) => e.Name === name);
+};
 
 export const getEntityPropertiesSchema = (name: string | undefined | null) => {
-  const entity = getEntitySchema(name)
-  return entity?.Properties
-}
+    const entity = getEntitySchema(name);
+    return entity?.Properties;
+};
 
-export const getEntityToString = (name: string | undefined | null): string | undefined => {
-  const entity = getEntitySchema(name)
-  return entity?.Metadata?.Metadata?.["$Entity"]?.ToString
-}
+const tryToGetSchema = (entityType: string | null, path: string | string[]) => {
+    if (entityType === null) return;
 
-/**
- * Helper function for using tanstack query with react router
- */
-export const schemaQuery = () => ({
-  queryKey: ["schema"],
-  queryFn: () => getSchema()
-})
+    if (typeof path === 'string')
+        path = path.replace(/\[["'`](.*)["'`]\]/g, '.$1').split('.');
 
-/**
- * Function for router - loads data on route load
- * @param queryClient
- */
-export const loader =
-  (queryClient: any) =>
-    async () => {
-      if (!queryClient.getQueryData(schemaQuery().queryKey))
-        await queryClient.fetchQuery(schemaQuery())
-      return null
-    }
+    return path.reduce((prev: DtoEntity | undefined, cur) => {
+        return prev && getEntitySchema(prev.Properties[cur]?.Type);
+    }, getEntitySchema(entityType));
+};
+
+// TODO: this function is not used anywhere
+// eslint-disable-next-line @typescript-eslint/no-empty-function
+export const getEntityPropertyType = () => {};
+
+export const getEntityToString = (
+    name: string | undefined | null,
+): string | undefined => {
+    const entity = getEntitySchema(name);
+    return entity?.Metadata?.Metadata?.['$Entity']?.ToString;
+};
 
 /**
  * This function is only for development purposes
@@ -53,16 +57,74 @@ export const loader =
  * @param names 0..* strings
  */
 export const findEntitySchema = (...names: string[]) => {
-  const allEntities = schema.MetaData.Entities
+    const schema = getStoreSchema();
+    const allEntities = schema.MetaData.Entities;
 
-  if (names.length > 0) {
-    return allEntities.filter((entity: DtoEntity) => names.includes(entity.Name))
-  } else {
-    console.log("entiteettejä on yht: ", allEntities.length)
-    console.log()
+    if (names.length > 0) {
+        return allEntities.filter((entity: DtoEntity) =>
+            names.includes(entity.Name),
+        );
+    } else {
+        console.log('entiteettejä on yht: ', allEntities.length);
+        console.log();
 
-    allEntities.map((entity: DtoEntity) => {
-      console.log(entity.Name)
-    })
-  }
-}
+        allEntities.map((entity: DtoEntity) => {
+            console.log(entity.Name);
+        });
+    }
+};
+
+export const getCatalogType = (name: string | null) => {
+    const schema = getStoreSchema();
+    return schema.MetaData.Catalogs.find((obj) => obj.Name === name);
+};
+
+const getEntityTypeRecursively = (
+    result: DynamicObject,
+    splittedPath: string[],
+): DynamicObject => {
+    const entitySchema = getEntitySchema(splittedPath[0]);
+    if (entitySchema) {
+        const foundEntityProperty = entitySchema.Properties[splittedPath[1]];
+        if (foundEntityProperty) {
+            result = {
+                isEntity: true,
+                Type: foundEntityProperty.Type,
+                Values: foundEntityProperty,
+            };
+            return getEntityTypeRecursively(result, splittedPath.slice(1));
+        }
+    }
+    return result;
+};
+
+export const getCardElementInputProperties = (
+    woEntity: string,
+    propertyType: string,
+    cardPropertySchema: { [index: string]: DtoProperty } | undefined,
+): DynamicObject => {
+    let result: DynamicObject = {
+        isEntity: false,
+        Type: propertyType,
+        Values: {},
+        ElementProps: {},
+    };
+    const splittedEntityNames = woEntity.split('.');
+    //splittedEntityNames.unshift(entityType as string);
+    result = getEntityTypeRecursively(result, splittedEntityNames);
+
+    const isCatalog = getCatalogType(result.Type);
+    if (isCatalog) {
+        result = {
+            ...result,
+            Type: 'Catalog',
+            Values: isCatalog.Entries,
+        };
+    }
+    if (result.Type === 'Int32' || result.Type === 'Int64') {
+        result = { ...result, Type: 'number' };
+    }
+    result = { ...result, ElementProps: cardPropertySchema?.[woEntity] };
+
+    return result;
+};

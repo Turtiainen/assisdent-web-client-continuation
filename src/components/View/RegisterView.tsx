@@ -14,12 +14,8 @@ export const RegisterView = ({ view }: DataProps) => {
         DynamicObject[] | null
     >(null);
 
-    const Header = view.getAttribute('Header');
     const EntityType = view.getAttribute('EntityType');
     const ViewName = view.getAttribute('Name');
-    const DisableCreateNewEntity = view.getAttribute('DisableCreateNewEntity');
-    const DisableItemSelection = view.getAttribute('DisableItemSelection');
-    const CreateNewCardName = view.getAttribute('CreateNewCardName');
 
     // This object has all attributes of the view root element
     // TODO: Keep only the list above, or this object
@@ -35,6 +31,8 @@ export const RegisterView = ({ view }: DataProps) => {
 
     const orderBy = parseOrderOptions(view);
     const { columns, bindings } = parseRegisterMetaView(view);
+    console.log('columns', columns);
+    console.log('bindings', bindings);
 
     const searchOptions = {
         entityType: EntityType,

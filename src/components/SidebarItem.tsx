@@ -15,6 +15,7 @@ export const SidebarItem = ({
         <a
             className="grid grid-flow-col col-span-2 auto-cols-max hover:bg-white/25 h-10 items-center text-white hover:text-white"
             onClick={onClick}
+            data-testid="sidebar-item"
         >
             <div className="mx-4 -mt-4 h-2 w-6">{icon}</div>
             {isExpanded ? (

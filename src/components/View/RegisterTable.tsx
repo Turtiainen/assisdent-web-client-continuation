@@ -1,11 +1,12 @@
 import React, { ChangeEventHandler, MouseEventHandler, useState } from 'react';
 import { resolveEntityBindings } from '../../utils/utils';
 import { DynamicObject } from '../../types/DynamicObject';
+import { Link } from 'react-router-dom';
 
 export type RegisterTableProps = {
     columns: string[];
     entities: DynamicObject[];
-    bindings: string[];
+    bindings: string[][];
     entityType: string | null;
 };
 
@@ -122,21 +123,32 @@ export const RegisterTable = ({
                         checked={selectedList.has(entity.Id)}
                     />
                 </td>
-                {entityBindings.map((bindingValue, idx) => {
+                {entityBindings.map((bindingValues, idx) => {
                     const isLink = idx === 0;
                     return (
                         <td className="text-left text-xs px-2" key={idx}>
                             {isLink ? (
                                 <>
-                                    <a
-                                        className={`underline font-semibold cursor-pointer`}
-                                    >
-                                        {bindingValue}
-                                    </a>
-                                    <span className={`font-bold`}>{`>`}</span>
+                                    {bindingValues.map((bindingValue, idx) => {
+                                        return (
+                                            <p key={idx}>
+                                                <Link
+                                                    to={`/view/${entityType}CardView/${entity.Id}`}
+                                                    className={`underline font-semibold cursor-pointer`}
+                                                >
+                                                    {bindingValue}
+                                                    <span
+                                                        className={`font-bold`}
+                                                    >{`>`}</span>
+                                                </Link>
+                                            </p>
+                                        );
+                                    })}
                                 </>
                             ) : (
-                                bindingValue
+                                bindingValues.map((bindingValue, idx) => {
+                                    return <p key={idx}>{bindingValue}</p>;
+                                })
                             )}
                         </td>
                     );
