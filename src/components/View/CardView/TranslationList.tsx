@@ -1,5 +1,5 @@
-import { DynamicObject } from '../../types/DynamicObject';
-import { ListItemRow } from './ListItemRow';
+import { DynamicObject } from '../../../types/DynamicObject';
+import { ListItemRow } from '../ListItemRow';
 
 type TranslationListProps = {
     translations: DynamicObject[];
