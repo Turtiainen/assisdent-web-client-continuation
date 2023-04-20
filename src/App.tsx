@@ -5,14 +5,12 @@ import { Outlet, useNavigation } from 'react-router-dom';
 import { useEffect } from 'react';
 import { getSchemaToStore } from './utils/storeUtils';
 
-
 function App() {
     const navigation = useNavigation();
 
     useEffect(() => {
         getSchemaToStore();
     }, []);
-
 
     return (
         <div className="App w-full flex">
