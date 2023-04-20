@@ -19,14 +19,9 @@ export const CardSearch = ({
     entityType: string | null;
 }) => {
     const getPrintStyleFromEntitySchema = (
-        entity: DynamicObject,
+        entityName: string,
     ): string | null => {
-        let name = '';
-        if (entity.Type === 'List' && entity.SubType) {
-            name = entity.SubType.Type;
-        } else name = entity.Type;
-
-        const foundObject = getEntitySchema(name);
+        const foundObject = getEntitySchema(entityName);
         if (foundObject) {
             return foundObject.Metadata.Metadata.$Entity.ToString;
         }
@@ -50,28 +45,15 @@ export const CardSearch = ({
         });
         return result;
     };
-    const entitySchema = getEntitySchema(entityType);
-    const woEntity = sanitizeBinding(element.attributes.Value).replace(
-        'Entity.',
-        '',
-    );
-    const propertyType = entitySchema?.Properties[woEntity.split('.')[0]]
-        .Type as string;
-
-    //const elementMutability = entitySchema?.Properties[propertyType].Mutability;
-    //const isDisabled = elementMutability ? elementMutability > 0 : false;
 
     const content = resolveCardBindings(cardData, element.attributes.Value);
-    const elementEntityName = woEntity.split('.')[0];
-    const valueEntity = entitySchema?.Properties[elementEntityName];
-    const valuePrintStyle =
-        valueEntity && getPrintStyleFromEntitySchema(valueEntity);
+    const valuePrintStyle = entityType && getPrintStyleFromEntitySchema(entityType);
     const contentValue = constructValuePrintStyle(content, valuePrintStyle);
     const [value, setValue] = useState<string>(contentValue);
     const [options, setOptions] = useState<DynamicObject>([]);
 
     const searchParameters = {
-        EntityType: propertyType,
+        EntityType: entityType,
         Take: 10,
         PropertiesToSelect: ['**'],
         SearchLanguage: getUserLanguage(),
@@ -95,12 +77,12 @@ export const CardSearch = ({
     });
 
     useEffect(() => {
-        if (propertyType !== 'List') {
-            console.log(
-                element.attributes.Caption,
-                ' searchParameters :>> ',
-                searchParameters,
-            );
+        if (entityType !== 'List') {
+            //console.log(
+            //    element.attributes.Caption,
+            //    ' searchParameters :>> ',
+            //    searchParameters,
+            //);
             mutation.mutate(searchParameters);
         } else {
             console.log(element.attributes.Caption, ' is a list');
