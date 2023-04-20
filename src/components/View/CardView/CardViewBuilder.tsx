@@ -9,7 +9,10 @@ import { CardList } from './CardList';
 import { CardSearch } from './CardSearch';
 import { Editor } from './Editor';
 import { CardCustom } from './CardCustom';
-import { findLastTypeObjectFromValuePath, getEntityPropertiesSchema } from '../../../temp/SchemaUtils';
+import {
+    findLastTypeObjectFromValuePath,
+    getEntityPropertiesSchema,
+} from '../../../temp/SchemaUtils';
 
 type ElementAttributesType = {
     __id: string;
@@ -71,14 +74,20 @@ export const CardViewBuilder = ({
                                 entityType={entityType}
                             />
                         );
-                    case 'Search':
-                        const sanitizedBinding = sanitizeBinding(element.attributes.Value);
-                        const woEntity = sanitizedBinding.replace('Entity.', '');
-                        const elementTypeObject = findLastTypeObjectFromValuePath(
-                            {} as DtoProperty,
-                            woEntity,
-                            entityPropertySchema,
-                        )
+                    case 'Search': {
+                        const sanitizedBinding = sanitizeBinding(
+                            element.attributes.Value,
+                        );
+                        const woEntity = sanitizedBinding.replace(
+                            'Entity.',
+                            '',
+                        );
+                        const elementTypeObject =
+                            findLastTypeObjectFromValuePath(
+                                {} as DtoProperty,
+                                woEntity,
+                                entityPropertySchema,
+                            );
                         return (
                             <CardSearch
                                 key={element.attributes['__id'] as Key}
@@ -87,6 +96,7 @@ export const CardViewBuilder = ({
                                 entityType={elementTypeObject.Name}
                             />
                         );
+                    }
                     case 'Button': {
                         return (
                             <CardButton

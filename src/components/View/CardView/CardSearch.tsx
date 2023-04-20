@@ -47,7 +47,8 @@ export const CardSearch = ({
     };
 
     const content = resolveCardBindings(cardData, element.attributes.Value);
-    const valuePrintStyle = entityType && getPrintStyleFromEntitySchema(entityType);
+    const valuePrintStyle =
+        entityType && getPrintStyleFromEntitySchema(entityType);
     const contentValue = constructValuePrintStyle(content, valuePrintStyle);
     const [value, setValue] = useState<string>(contentValue);
     const [options, setOptions] = useState<DynamicObject>([]);
