@@ -17,46 +17,23 @@ export const RegisterView = ({ view }: DataProps) => {
     const EntityType = view.getAttribute('EntityType');
     const ViewName = view.getAttribute('Name');
     const ContextMenuElement = view.getElementsByTagName('ContextMenu').item(0);
-    let ContextMenuItems;
-    let ContextMenuItemsFormatted;
-    if (ContextMenuElement)
-        ContextMenuItems = Array.from(
-            ContextMenuElement.childNodes,
-        ) as Element[];
-    if (ContextMenuItems) {
-        ContextMenuItemsFormatted = ContextMenuItems.filter(
-            (elem) => elem.nodeType !== Node.TEXT_NODE,
-        )
-            .map((elem) => {
-                let Text = 'null';
-                if (elem.getAttribute) Text = elem.getAttribute('Text')!;
-                else {
-                    console.warn(elem);
-                }
-                const Command = (
-                    Array.from(elem.childNodes) as Element[]
-                ).filter((elem) => elem.nodeType !== Node.TEXT_NODE);
+    const ContextMenuItemsFormatted: {
+        Text: string;
+        Command: Element[];
+    }[] = [];
 
-                if (Text === 'null') return null;
+    if (ContextMenuElement) {
+        const ContextMenuItems = Array.from(ContextMenuElement.children);
 
-                return { Text, Command };
-            })
-            .filter((elem) => elem !== null);
+        if (ContextMenuItems) {
+            for (const elem of ContextMenuItems) {
+                const Text = elem.getAttribute('Text');
+                const Command = Array.from(elem.children);
+                if (Text === null) continue;
+                ContextMenuItemsFormatted.push({ Text, Command });
+            }
+        }
     }
-
-    const contextMenu = ContextMenuItemsFormatted;
-
-    // This object has all attributes of the view root element
-    // TODO: Keep only the list above, or this object
-    // const ViewMetaData: { [index: string]: any} = {}
-    // for (const attr of view.attributes) {
-    //   if (attr.name.includes("xmlns") || attr.name.includes("xsi")) continue
-    //
-    //   if (attr.value === "true" || attr.value === "false")
-    //     ViewMetaData[attr.name] = attr.value === "true"
-    //   else
-    //     ViewMetaData[attr.name] = attr.value
-    // }
 
     const orderBy = parseOrderOptions(view);
     const { columns, bindings } = parseRegisterMetaView(view);
@@ -92,7 +69,7 @@ export const RegisterView = ({ view }: DataProps) => {
                     entities={fetchedEntities}
                     bindings={bindings}
                     entityType={EntityType}
-                    contextMenu={contextMenu}
+                    contextMenu={ContextMenuItemsFormatted}
                 />
             )}
             {fetchedEntities && fetchedEntities?.length < 1 && (

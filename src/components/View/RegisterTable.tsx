@@ -13,8 +13,7 @@ export type RegisterTableProps = {
         | {
               Text: string;
               Command: Element[];
-          }[]
-        | undefined;
+          }[];
 };
 
 export const RegisterTable = ({
@@ -27,26 +26,17 @@ export const RegisterTable = ({
     const [selectedList, setSelectedList] = useState<Set<string>>(new Set());
     const [favoriteList, setFavoriteList] = useState<Set<string>>(new Set());
 
-    // Opens and updates context menu, the context file handlers closing when clicked outside
-    const { updateContextMenu } = useContextMenu();
+    // Opens and updates context menu
+    const { handleOpenMenu } = useContextMenu();
 
-    const openContextMenu = (
-        clickEvent: React.MouseEvent<HTMLSpanElement, MouseEvent>,
-    ) => {
-        const x = clickEvent.clientX;
-        const y = clickEvent.clientY;
-
-        const elements = contextMenu?.map((e) => {
-            return {
-                name: e.Text,
-                onClick: () => {
-                    console.log({ command: e.Command });
-                },
-            };
-        });
-
-        if (elements) updateContextMenu({ x, y, elements });
-    };
+    const elements = contextMenu?.map((e) => {
+        return {
+            name: e.Text,
+            onClick: () => {
+                console.log({ command: e.Command });
+            },
+        };
+    });
 
     entities.map((entity) => {
         if (entity.IsFavorite) {
@@ -106,7 +96,7 @@ export const RegisterTable = ({
     };
 
     const TableHeaders = (
-        <thead className={`bg-[#d2dce6] text-xs`}>
+        <thead className={`bg-[#d2dce6] text-sm`}>
             <tr className={``}>
                 <th className="text-center w-8 h-8"></th>
                 <th className="text-center w-8 h-8 font-normal">
@@ -155,7 +145,7 @@ export const RegisterTable = ({
                 {entityBindings.map((bindingValues, idx) => {
                     const isLink = idx === 0;
                     return (
-                        <td className="text-left text-xs px-2" key={idx}>
+                        <td className="text-left text-sm px-2" key={idx}>
                             {isLink ? (
                                 <>
                                     {bindingValues.map((bindingValue, idx) => {
@@ -182,7 +172,7 @@ export const RegisterTable = ({
                         </td>
                     );
                 })}
-                <td className={`text-xs flex justify-around`}>
+                <td className={`text-sm flex justify-around`}>
                     <span
                         className={
                             favoriteList.has(entity.Id)
@@ -198,7 +188,12 @@ export const RegisterTable = ({
                             ⭐
                         </button>
                     </span>
-                    <span onClick={(e) => openContextMenu(e)}>🎚️</span>
+                    <span
+                        className={`cursor-pointer`}
+                        onClick={(e) => handleOpenMenu(e, elements)}
+                    >
+                        🎚️
+                    </span>
                 </td>
             </tr>
         );
