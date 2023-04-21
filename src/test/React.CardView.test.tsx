@@ -82,9 +82,7 @@ describe('Register Patient CardView', () => {
         render(<MockCardView />);
         await waitFor(() => {
             waitFor(() => {
-                expect(
-                    screen.getByText(/Last name/),
-                ).toBeInTheDocument();
+                expect(screen.getByText(/Last name/)).toBeInTheDocument();
             });
         });
     });
