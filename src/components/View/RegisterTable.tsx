@@ -27,7 +27,7 @@ export const RegisterTable = ({
     const [favoriteList, setFavoriteList] = useState<Set<string>>(new Set());
 
     // Opens and updates context menu
-    const { handleOpenMenu } = useContextMenu();
+    const { openMenu } = useContextMenu();
 
     const elements = contextMenu?.map((e) => {
         return {
@@ -190,7 +190,7 @@ export const RegisterTable = ({
                     </span>
                     <span
                         className={`cursor-pointer`}
-                        onClick={(e) => handleOpenMenu(e, elements)}
+                        onClick={(e) => openMenu(e, elements)}
                     >
                         🎚️
                     </span>

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 
 type ContextMenu = {
     x: number;
@@ -6,9 +6,9 @@ type ContextMenu = {
 };
 
 type ContextMenuState = {
-    handleOpenMenu: (
+    openMenu: (
         evt: React.MouseEvent,
-        elements: { name: string; onClick: () => void }[],
+        elements: { name: string; onClick: () => void; selected?: boolean }[],
     ) => void;
 };
 
@@ -59,23 +59,26 @@ export default function ContextMenuProvider({
     const rePosition = () => {
         if (currentTarget === null) return;
 
-        updateContextMenuState(
-            calculateOffset(
-                currentTarget.getBoundingClientRect().x,
-                currentTarget.getBoundingClientRect().y +
-                    currentTarget.getBoundingClientRect().height,
-            ),
-        );
+        const rect = currentTarget.getBoundingClientRect();
+        updateContextMenuState(calculateOffset(rect.x, rect.y + rect.height));
     };
 
     const handleCloseMenu = (evt: MouseEvent) => {
         if (!menuEl.current?.contains(evt.target as HTMLElement)) {
+            evt.stopPropagation();
             setIsOpen(false);
             setCurrentTarget(null);
             setMenuItems([]);
-            evt.stopPropagation();
             document.removeEventListener('click', handleCloseMenu, true);
         }
+    };
+
+    const calculateMenuPosition = (targetElement: HTMLElement) => {
+        const rect = targetElement.getBoundingClientRect();
+        const targetOffsetX = rect.x;
+        const targetOffsetY = rect.y + rect.height;
+
+        updateContextMenuState(calculateOffset(targetOffsetX, targetOffsetY));
     };
 
     const handleOpenMenu = (
@@ -85,60 +88,48 @@ export default function ContextMenuProvider({
         if (isOpen) return;
         setMenuItems(elements);
         setCurrentTarget(evt.target as HTMLElement);
-        const eventTarget = evt.target as HTMLElement;
-        const targetOffsetX = eventTarget.getBoundingClientRect().x;
-        const targetOffsetY =
-            eventTarget.getBoundingClientRect().y +
-            eventTarget.getBoundingClientRect().height;
-
-        updateContextMenuState(calculateOffset(targetOffsetX, targetOffsetY));
-
+        calculateMenuPosition(evt.target as HTMLElement);
         setIsOpen(true);
         document.addEventListener('click', handleCloseMenu, true);
     };
 
+    // These will be shared globally via useContextState
     const menuCtx: ContextMenuState = {
-        handleOpenMenu: handleOpenMenu,
+        openMenu: handleOpenMenu,
     };
 
     useEffect(() => {
         window.addEventListener('resize', rePosition);
-
         return () => {
             window.removeEventListener('resize', rePosition);
         };
     });
 
     return (
-        <>
-            {menuItems && (
-                <ContextMenuContext.Provider value={menuCtx}>
-                    <div
-                        ref={menuEl}
-                        className={`absolute bg-white border border-black items-start shadow min-w-[8rem] ${
-                            isOpen ? 'z-50 opacity-100' : '-z-1 opacity-0'
-                        } transition-[opacity] duration-300 ease-out`}
-                        style={
-                            state && {
-                                top: state.y,
-                                left: state.x,
-                            }
+        <ContextMenuContext.Provider value={menuCtx}>
+            {isOpen && menuItems.length > 0 && (
+                <div
+                    ref={menuEl}
+                    className={`absolute bg-white border border-black rounded items-start shadow-md min-w-[12rem] z-40`}
+                    style={
+                        state && {
+                            top: state.y,
+                            left: state.x,
                         }
-                    >
-                        {menuItems.map((element) => (
-                            <button
-                                key={element.name}
-                                className={`block px-2 w-full text-left hover:bg-ad-primary-hover hover:text-white`}
-                                onClick={element.onClick}
-                            >
-                                {element.name}
-                            </button>
-                        ))}
-                    </div>
-
-                    {children}
-                </ContextMenuContext.Provider>
+                    }
+                >
+                    {menuItems.map((element) => (
+                        <button
+                            key={element.name}
+                            className={`block px-2 py-1 w-full text-left hover:bg-ad-grey-100 [&:first-child]:rounded-t [&:last-child]:rounded-b`}
+                            onClick={element.onClick}
+                        >
+                            {element.name}
+                        </button>
+                    ))}
+                </div>
             )}
-        </>
+            {children}
+        </ContextMenuContext.Provider>
     );
 }
