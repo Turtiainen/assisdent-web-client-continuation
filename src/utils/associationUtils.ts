@@ -50,8 +50,7 @@ export const commonFieldsReducer = (
     ): DynamicObject => {
         const result: DynamicObject = { ...obj1 };
         for (const [key, value] of Object.entries(obj2)) {
-            // eslint-disable-next-line no-prototype-builtins
-            if (result.hasOwnProperty(key)) {
+            if (Object.hasOwn(result, key)) {
                 const currentValue = result[key];
                 if (Array.isArray(currentValue) && Array.isArray(value)) {
                     result[key] = currentValue.concat(value);
@@ -71,8 +70,7 @@ export const commonFieldsReducer = (
     };
 
     const [key, value] = Object.entries(currentObject)[0];
-    // eslint-disable-next-line no-prototype-builtins
-    if (accumulator.hasOwnProperty(key)) {
+    if (Object.hasOwn(accumulator, key)) {
         if (Array.isArray(accumulator[key]?._set_ref)) {
             const setRefArray = accumulator[key]._set_ref.concat(
                 value._set_ref,
