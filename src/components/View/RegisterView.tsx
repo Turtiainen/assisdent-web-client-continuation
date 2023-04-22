@@ -35,6 +35,28 @@ export const RegisterView = ({ view }: DataProps) => {
 
     const EntityType = view.getAttribute('EntityType');
     const ViewName = view.getAttribute('Name');
+    const TableRowContextMenuElement = view
+        .getElementsByTagName('ContextMenu')
+        .item(0);
+    const TableRowContextMenuItemsFormatted: {
+        Text: string;
+        Command: Element[];
+    }[] = [];
+
+    if (TableRowContextMenuElement) {
+        const ContextMenuItems = Array.from(
+            TableRowContextMenuElement.children,
+        );
+
+        if (ContextMenuItems) {
+            for (const elem of ContextMenuItems) {
+                const Text = elem.getAttribute('Text');
+                const Command = Array.from(elem.children);
+                if (Text === null) continue;
+                TableRowContextMenuItemsFormatted.push({ Text, Command });
+            }
+        }
+    }
 
     const EntitySchema = getEntitySchema(EntityType);
     const OrderOptionsEl = view.getElementsByTagNameNS(null, 'OrderOptions')[0];
@@ -119,12 +141,15 @@ export const RegisterView = ({ view }: DataProps) => {
                         isSelectedShowOnPage={isSelectedShowOnPage}
                         handleSelectShowOnPage={handleSelectShowOnPage}
                         filteredTotalCount={filteredTotalCount}
+                        orderOptions={orderBy}
+                        selectedOrderOption={selectedOrderOption}
                     />
                     <RegisterTable
                         columns={columns}
                         entities={fetchedEntities}
                         bindings={bindings}
                         entityType={EntityType}
+                        contextMenu={TableRowContextMenuItemsFormatted}
                     />
                 </>
             )}

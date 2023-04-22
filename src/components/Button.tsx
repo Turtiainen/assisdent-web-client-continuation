@@ -1,18 +1,48 @@
-export type ButtonProps = {
-    onClick: () => void;
-    children: React.ReactNode;
-};
+import React from 'react';
 
-export default function Button(props: ButtonProps) {
-    const { onClick } = props;
+export type ButtonProps = {
+    children: React.ReactNode;
+    className?: string;
+    onClick?: () => void;
+    buttonType?: 'primary';
+} & React.ButtonHTMLAttributes<HTMLButtonElement>;
+
+export default function Button({
+    onClick,
+    children,
+    className,
+    buttonType,
+    ...props
+}: ButtonProps) {
+    const isPrimary = buttonType === 'primary';
+    const baseStyles = `inline-flex items-center px-3 rounded text-sm ${
+        isPrimary ? 'bg-ad-primary text-white' : 'border border-gray-700'
+    }`;
+    const transitionStyles =
+        'transition-[background-color_color_border-color] duration-[300ms] ease-in-out';
+    const pseudoClassStyles = `${
+        isPrimary
+            ? 'hover:bg-ad-primary-hover active:bg-ad-primary-pressed'
+            : 'hover:border-ad-primary hover:text-ad-primary active:bg-ad-grey-200'
+    }`;
+    const focusStyles = `focus:outline-none focus-visible:ring ${
+        isPrimary
+            ? 'focus-visible:ring-ad-subtitle'
+            : 'focus-visible:ring-ad-primary'
+    }`;
+    const disabledStyles =
+        '[&:disabled]:bg-ad-grey-100 [&:disabled]:border-0 [&:disabled]:text-ad-grey-500';
 
     return (
         <button
             onClick={onClick}
-            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-ad-primary hover:bg-ad-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ad-primary-hover"
             data-testid="button"
+            className={`${baseStyles} ${pseudoClassStyles} ${focusStyles} ${disabledStyles} ${transitionStyles} ${
+                className && className
+            }`}
+            {...props}
         >
-            {props.children}
+            {children}
         </button>
     );
 }

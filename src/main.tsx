@@ -9,6 +9,7 @@ import { ShowView } from './components/View/ShowView';
 import { PrintSchemaInfo } from './temp/PrintSchemaInfo';
 import { IndexPage } from './components/IndexPage';
 import { PrintEntitySchema } from './temp/PrintEntitySchema';
+import ContextMenuProvider from './context/ContextMenuProvider';
 
 const queryClient = new QueryClient();
 
@@ -43,7 +44,9 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     <React.StrictMode>
         <QueryClientProvider client={queryClient}>
-            <RouterProvider router={router} />
+            <ContextMenuProvider>
+                <RouterProvider router={router} />
+            </ContextMenuProvider>
         </QueryClientProvider>
     </React.StrictMode>,
 );
