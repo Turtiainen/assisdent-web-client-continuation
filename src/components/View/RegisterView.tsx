@@ -13,6 +13,8 @@ import {
 } from '../../types/ViewTypes/OrderOptions';
 import { getEntitySchema } from '../../temp/SchemaUtils';
 import { LoadingSpinner } from '../LoadingSpinner';
+import Button from '../Button';
+import { Link } from 'react-router-dom';
 
 export type DataProps = {
     view: Element;
@@ -188,6 +190,11 @@ export const RegisterView = ({ view }: DataProps) => {
                         entityType={EntityType}
                         contextMenu={TableRowContextMenuItemsFormatted}
                     />
+                    <Link to={`/view/${EntityType}CardView/new`}>
+                        <Button onClick={() => console.log('test')}>
+                            Lisää uusi
+                        </Button>
+                    </Link>
                 </>
             )}
             {fetchedEntities && fetchedEntities.length < 1 && (
