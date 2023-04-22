@@ -1,5 +1,4 @@
 import { DtoSchema } from '../types/DtoSchema';
-import { DtoEntity } from '../types/DtoEntity';
 import { DynamicObject } from '../types/DynamicObject';
 import useSchemaStore from '../store/store';
 import { DtoProperty } from '../types/DtoProperty';
@@ -7,6 +6,11 @@ import { DtoProperty } from '../types/DtoProperty';
 const getStoreSchema = () => {
     const schemaInStore = useSchemaStore.getState().schema;
     return schemaInStore as DtoSchema;
+};
+
+export const getMetaViews = () => {
+    const schema = getStoreSchema();
+    return schema.MetaViews;
 };
 
 export const getFormattedText = (identifier: string) => {
@@ -29,49 +33,11 @@ export const getEntityPropertiesSchema = (name: string | undefined | null) => {
     return entity?.Properties;
 };
 
-const tryToGetSchema = (entityType: string | null, path: string | string[]) => {
-    if (entityType === null) return;
-
-    if (typeof path === 'string')
-        path = path.replace(/\[["'`](.*)["'`]\]/g, '.$1').split('.');
-
-    return path.reduce((prev: DtoEntity | undefined, cur) => {
-        return prev && getEntitySchema(prev.Properties[cur]?.Type);
-    }, getEntitySchema(entityType));
-};
-
-// TODO: this function is not used anywhere
-// eslint-disable-next-line @typescript-eslint/no-empty-function
-export const getEntityPropertyType = () => {};
-
 export const getEntityToString = (
     name: string | undefined | null,
 ): string | undefined => {
     const entity = getEntitySchema(name);
     return entity?.Metadata?.Metadata?.['$Entity']?.ToString;
-};
-
-/**
- * This function is only for development purposes
- * Finds an entity schema from schema.json, based on entity name
- * @param names 0..* strings
- */
-export const findEntitySchema = (...names: string[]) => {
-    const schema = getStoreSchema();
-    const allEntities = schema.MetaData.Entities;
-
-    if (names.length > 0) {
-        return allEntities.filter((entity: DtoEntity) =>
-            names.includes(entity.Name),
-        );
-    } else {
-        console.log('entiteettejä on yht: ', allEntities.length);
-        console.log();
-
-        allEntities.map((entity: DtoEntity) => {
-            console.log(entity.Name);
-        });
-    }
 };
 
 export const getCatalogType = (name: string | null) => {
@@ -109,11 +75,11 @@ export const getCardElementInputProperties = (
         Values: {},
         ElementProps: {},
     };
-    const splittedEntityNames = woEntity.split('.');
-    //splittedEntityNames.unshift(entityType as string);
-    result = getEntityTypeRecursively(result, splittedEntityNames);
 
+    const splittedEntityNames = woEntity.split('.');
+    result = getEntityTypeRecursively(result, splittedEntityNames);
     const isCatalog = getCatalogType(result.Type);
+
     if (isCatalog) {
         result = {
             ...result,
@@ -121,10 +87,29 @@ export const getCardElementInputProperties = (
             Values: isCatalog.Entries,
         };
     }
+
     if (result.Type === 'Int32' || result.Type === 'Int64') {
         result = { ...result, Type: 'number' };
     }
-    result = { ...result, ElementProps: cardPropertySchema?.[woEntity] };
 
+    result = { ...result, ElementProps: cardPropertySchema?.[woEntity] };
     return result;
+};
+
+export const findLastTypeObjectFromValuePath = (
+    lastFoundProp: DtoProperty,
+    name: string,
+    entityPropSchema: { [index: string]: DtoProperty } | undefined,
+): any => {
+    const splittedName = name.split('.');
+    const searchName = splittedName.shift() as string;
+    const propFound = entityPropSchema?.[searchName];
+    if (propFound) {
+        return findLastTypeObjectFromValuePath(
+            propFound,
+            splittedName.join('.'),
+            getEntityPropertiesSchema(propFound.Type),
+        );
+    }
+    return lastFoundProp;
 };

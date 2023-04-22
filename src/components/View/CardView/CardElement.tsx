@@ -5,24 +5,33 @@ import { BooleanInput } from './BooleanInput';
 import { DateInput } from './DateInput';
 import { Exception } from './Exception';
 import { BasicInput } from './BasicInput';
+import { CardSearch } from './CardSearch';
 import { CatalogInput } from './CatalogInput';
-import { getCardElementInputProperties } from '../../../temp/SchemaUtils';
+import {
+    findLastTypeObjectFromValuePath,
+    getCardElementInputProperties,
+    getCatalogType,
+    getEntitySchema,
+} from '../../../temp/SchemaUtils';
 
 export const CardElement = ({
     element,
     cardData,
-    entityPropertySchema,
     updateChangedTextInputValue,
+    entityType,
 }: {
     element: DynamicObject;
     cardData: DynamicObject | null;
-    entityPropertySchema: { [index: string]: DtoProperty } | undefined;
     updateChangedTextInputValue: (
         valueString: string,
         key: string,
         value: string,
     ) => void;
+    entityType: string | null;
 }) => {
+    const entitySchema = getEntitySchema(entityType);
+    const entityPropertySchema = entitySchema?.Properties;
+
     const cardDetails = resolveCardBindings(cardData, element.attributes.Value);
     const entityPropertiesAndTypes = new Map<string, string>();
     const exceptionElements = new Set<string>();
@@ -68,6 +77,44 @@ export const CardElement = ({
         entityPropertySchema,
     );
 
+    const elementTypeObject = findLastTypeObjectFromValuePath(
+        {} as DtoProperty,
+        woEntity,
+        entityPropertySchema,
+    );
+    if (element.attributes.Caption === 'Muu maksaja')
+        console.log('elementTypeObject :>> ', elementTypeObject);
+    if (elementTypeObject) {
+        if (typeof elementTypeObject.Type !== 'string') {
+            console.log(
+                element.attributes.Caption,
+                ' hakuparametrin tyyppi ei ole string ',
+                elementTypeObject.Type,
+            );
+        }
+        const foundCatalogSchema = getCatalogType(elementTypeObject.Type);
+        if (foundCatalogSchema) {
+            return (
+                <CatalogInput
+                    element={element}
+                    content={cardDetails}
+                    inputProperties={{ Values: foundCatalogSchema.Entries }}
+                />
+            );
+        }
+
+        const foundEntitySchema = getEntitySchema(elementTypeObject.Type);
+        if (foundEntitySchema) {
+            return (
+                <CardSearch
+                    element={element}
+                    cardData={cardData}
+                    entityType={foundEntitySchema.Name}
+                />
+            );
+        }
+    }
+
     if (
         inputProperties.Type === 'Boolean' ||
         inputProperties.Type === 'boolean'
@@ -78,15 +125,6 @@ export const CardElement = ({
     if (cardDetails && inputProperties.Type === 'Date') {
         return (
             <DateInput
-                element={element}
-                content={cardDetails}
-                inputProperties={inputProperties}
-            />
-        );
-    }
-    if (inputProperties.Type === 'Catalog') {
-        return (
-            <CatalogInput
                 element={element}
                 content={cardDetails}
                 inputProperties={inputProperties}
