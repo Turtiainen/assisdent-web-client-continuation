@@ -95,3 +95,21 @@ export const getCardElementInputProperties = (
     result = { ...result, ElementProps: cardPropertySchema?.[woEntity] };
     return result;
 };
+
+export const findLastTypeObjectFromValuePath = (
+    lastFoundProp: DtoProperty,
+    name: string,
+    entityPropSchema: { [index: string]: DtoProperty } | undefined,
+): any => {
+    const splittedName = name.split('.');
+    const searchName = splittedName.shift() as string;
+    const propFound = entityPropSchema?.[searchName];
+    if (propFound) {
+        return findLastTypeObjectFromValuePath(
+            propFound,
+            splittedName.join('.'),
+            getEntityPropertiesSchema(propFound.Type),
+        );
+    }
+    return lastFoundProp;
+};

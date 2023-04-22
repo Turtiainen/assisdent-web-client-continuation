@@ -1,7 +1,7 @@
 import { Key } from 'react';
 import { DtoProperty } from '../../../types/DtoProperty';
 import { DynamicObject } from '../../../types/DynamicObject';
-import { resolveCardBindings } from '../../../utils/utils';
+import { resolveCardBindings, sanitizeBinding } from '../../../utils/utils';
 import { CardButton } from './CardButton';
 import { CardElement } from './CardElement';
 import { CardGroup } from './CardGroup';
@@ -9,7 +9,10 @@ import { CardList } from './CardList';
 import { CardSearch } from './CardSearch';
 import { Editor } from './Editor';
 import { CardCustom } from './CardCustom';
-import { getEntityPropertiesSchema } from '../../../temp/SchemaUtils';
+import {
+    findLastTypeObjectFromValuePath,
+    getEntityPropertiesSchema,
+} from '../../../temp/SchemaUtils';
 
 type ElementAttributesType = {
     __id: string;
@@ -68,18 +71,32 @@ export const CardViewBuilder = ({
                                 key={element.attributes['__id'] as Key}
                                 element={element}
                                 cardData={cardData}
-                                entityPropertySchema={entityPropertySchema}
+                                entityType={entityType}
                             />
                         );
-                    case 'Search':
+                    case 'Search': {
+                        const sanitizedBinding = sanitizeBinding(
+                            element.attributes.Value,
+                        );
+                        const woEntity = sanitizedBinding.replace(
+                            'Entity.',
+                            '',
+                        );
+                        const elementTypeObject =
+                            findLastTypeObjectFromValuePath(
+                                {} as DtoProperty,
+                                woEntity,
+                                entityPropertySchema,
+                            );
                         return (
                             <CardSearch
                                 key={element.attributes['__id'] as Key}
                                 element={element}
                                 cardData={cardData}
-                                entityType={entityType}
+                                entityType={elementTypeObject.Name}
                             />
                         );
+                    }
                     case 'Button': {
                         return (
                             <CardButton
