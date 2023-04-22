@@ -1,8 +1,7 @@
 import { createPortal } from 'react-dom';
 
-const targetElement: HTMLElement = document.getElementsByTagName('main')[0];
-
 export const LoadingSpinner = () => {
+    const targetElement: HTMLElement | null = document.querySelector('main');
     return (
         <>
             {targetElement &&

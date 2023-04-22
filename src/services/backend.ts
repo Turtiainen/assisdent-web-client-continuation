@@ -66,17 +66,17 @@ const doLogin = async () => {
     return false;
 };
 
-const login = () => {
+const login = async () => {
     if (hasAccessToken()) {
         return getAccessToken();
     }
-    return doLogin().then((data) => data);
+    return await doLogin().then((data) => data);
 };
 
 export async function getSchema() {
     console.log('----------------- Getting schema -----------------');
 
-    login();
+    await login();
 
     if (hasAccessToken()) {
         const accessToken = getAccessToken();
