@@ -8,6 +8,7 @@ import {
 import Handlebars from 'handlebars';
 import { DtoEntity } from '../types/DtoEntity';
 import { mapObjectValueByIntendedUse } from './mapUtils';
+import { DEFAULT_LANGUAGE, SUPPORTED_LANGUAGES } from './constants';
 
 enum BindingKind {
     BINDING,
@@ -82,13 +83,10 @@ const resolveFormattedText = (
         return parseHandlebars(entityToString, entity);
     }
 
-    console.log('identifier', identifier);
     const formattedText = getFormattedText(identifier);
     if (!formattedText) return;
 
     if (finalEntity) return parseHandlebars(formattedText, finalEntity);
-
-    console.log('formattedText', formattedText);
 
     return parseHandlebars(formattedText, entity);
 };
@@ -294,7 +292,10 @@ export const parseHandlebars = (hbrTemplate: string | undefined, data: any) => {
 };
 
 export const getUserLanguage = () => {
+    let lang: string;
     if (navigator.languages !== undefined)
-        return navigator.languages[0].split('-')[0];
-    return navigator.language.split('-')[0];
+        lang = navigator.languages[0].split('-')[0];
+    else lang = navigator.language.split('-')[0];
+
+    return lang in SUPPORTED_LANGUAGES ? lang : DEFAULT_LANGUAGE;
 };

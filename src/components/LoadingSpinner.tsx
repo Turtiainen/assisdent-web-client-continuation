@@ -1,5 +1,18 @@
+import { createPortal } from 'react-dom';
+
+const targetElement = document.querySelector('main') as HTMLElement;
+
 export const LoadingSpinner = () => {
     return (
-        <div className="w-12 h-12 rounded-full animate-spin border-2 border-solid border-blue-500 border-t-transparent" />
+        <>
+            {createPortal(
+                <div
+                    className={`absolute top-0 left-0 w-full h-full flex justify-center items-center bg-white/70 z-50`}
+                >
+                    <div className="w-12 h-12 rounded-full animate-spin border-2 border-solid border-blue-500 border-t-transparent" />
+                </div>,
+                targetElement,
+            )}
+        </>
     );
 };

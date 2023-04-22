@@ -1,26 +1,26 @@
-import { getSchema } from '../services/backend';
 import { DtoView } from '../types/DtoView';
 import { DtoSchema } from '../types/DtoSchema';
 import { DynamicObject } from '../types/DynamicObject';
+import {
+    OrderBy,
+    OrderOptionNameObject,
+} from '../types/ViewTypes/OrderOptions';
+import { DtoEntity } from '../types/DtoEntity';
+import { getMetaViews } from '../temp/SchemaUtils';
 
 export const getCardViews = async () => {
-    // TODO: use useSchemaStore to retrieve schema
-    return await getSchema().then((result) => {
-        if (!result) return [];
+    const xmlMetaViewList = getMetaViews();
+    const xmlParser = new DOMParser();
+    const listOfMetaViews: Document[] = [];
 
-        const xmlMetaViewList = result.MetaViews;
-        const xmlParser = new DOMParser();
-        const listOfMetaViews: Document[] = [];
-
-        xmlMetaViewList.map((metaView: DtoView) =>
-            listOfMetaViews.push(
-                xmlParser.parseFromString(metaView.XML, 'text/xml'),
-            ),
-        );
-        return listOfMetaViews.filter((doc) =>
-            doc.children[0].attributes[4].nodeValue!.endsWith('CardView'),
-        );
-    });
+    xmlMetaViewList.map((metaView: DtoView) =>
+        listOfMetaViews.push(
+            xmlParser.parseFromString(metaView.XML, 'text/xml'),
+        ),
+    );
+    return listOfMetaViews.filter((doc) =>
+        doc.children[0].attributes[4].nodeValue!.endsWith('CardView'),
+    );
 };
 
 export const getRegisterViewsFromSchema = (schema?: DtoSchema) => {
@@ -141,13 +141,80 @@ export const parseRegisterMetaView = (view: Element) => {
     return { columns, bindings };
 };
 
-export const parseOrderOptions = (view: Element) => {
-    const orderOptions = view.getElementsByTagName('OrderOptions')[0]?.children;
+// Split OrderName attribute into an array, if the string has commas in it
+// e.g. OrderName="ordering1,..,orderingN"
+const orderNameToObjectArray = (
+    OrderName: string,
+    SchemaOrderOptions: DynamicObject,
+    IsDescending: boolean,
+) => {
+    let result: OrderOptionNameObject[] = [];
+    if (OrderName.includes(',')) {
+        let tempArr = OrderName.split(',');
+        tempArr.forEach((opt) => {
+            const name: string = SchemaOrderOptions[opt]?.Name || opt;
+            result.push({ OrderOptionName: name, IsDescending });
+        });
+    } else {
+        const name = SchemaOrderOptions[OrderName]?.Name || OrderName;
+        result.push({ OrderOptionName: name, IsDescending });
+    }
+    return result;
+};
 
-    if (orderOptions && orderOptions.length > 0)
-        return orderOptions!.item(0)!.getAttribute('OrderingName');
+export const parseOrderOptions = (
+    OrderOptionsEl: Element,
+    SchemaEntity: DtoEntity,
+) => {
+    if (!(OrderOptionsEl && OrderOptionsEl.hasChildNodes())) {
+        return [];
+    }
 
-    return null;
+    const SchemaOrderOptions: DynamicObject = SchemaEntity.OrderOptions;
+    const allOptions = OrderOptionsEl.children;
+    const OrderOptions: OrderBy[] = [];
+
+    // Create an array of different order options
+    // Parse attributes from elements and push into the result array
+    Array.from(allOptions).forEach((element) => {
+        let OrderOption: DynamicObject = {};
+        const ElementAttributeNames = element.getAttributeNames();
+
+        // Get all OrderOption attributes and values
+        for (const attr of ElementAttributeNames) {
+            // use NS version of getAttribute because regular one lowercases the attribute name
+            const value = element.getAttributeNS(null, attr);
+            if (value === null) continue;
+
+            if (attr === 'IsDescending') {
+                OrderOption[attr] = value === 'true';
+            } else OrderOption[attr] = value;
+        }
+
+        // Handle the case of ordering by multiple columns
+        // Split OrderingName into an array, if the string is in
+        // the form of 'order1,..,orderN'
+        if (OrderOption.OrderingName === undefined) {
+            console.error(
+                'Could not find OrderingName from view XML',
+                OrderOption,
+            );
+            return [];
+        }
+
+        OrderOption.OrderOptionNames = orderNameToObjectArray(
+            OrderOption.OrderingName,
+            SchemaOrderOptions,
+            OrderOption.IsDescending,
+        );
+
+        OrderOptions.push({
+            Caption: OrderOption['Caption'],
+            OrderBy: OrderOption,
+        } as OrderBy);
+    });
+
+    return OrderOptions;
 };
 
 type TreeNode = {
