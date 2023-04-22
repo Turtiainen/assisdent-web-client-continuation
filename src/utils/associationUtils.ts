@@ -1,15 +1,14 @@
 import { DynamicObject } from '../types/DynamicObject';
-
-type AssociationType = 'Composition' | 'Aggregation' | null;
+import { AssociationType } from '../types/AssociationType';
 
 export const getAssociationType = (
     propertySchemaObj: DynamicObject | undefined,
 ): AssociationType | null => {
     if (propertySchemaObj?.IsRealAssociation) {
         if (propertySchemaObj?.AssociationInfo?.AssociationType === 1) {
-            return 'Aggregation';
+            return AssociationType.Aggregation;
         } else {
-            return 'Composition';
+            return AssociationType.Composition;
         }
     } else {
         return null;
@@ -22,13 +21,13 @@ export const mapAssociationTypePatchCommands = (
     const objectArray = [...inputArray];
     for (let i = 0; i < objectArray.length; i++) {
         const obj = objectArray[i];
-        if (obj.associationType === 'Composition') {
+        if (obj.associationType === AssociationType.Composition) {
             for (const [key, value] of Object.entries(obj)) {
                 if (key !== 'associationType' && key !== 'Id') {
                     obj[key] = { _update: [value] };
                 }
             }
-        } else if (obj.associationType === 'Aggregation') {
+        } else if (obj.associationType === AssociationType.Aggregation) {
             for (const [key, value] of Object.entries(obj)) {
                 if (key !== 'associationType' && key !== 'Id') {
                     obj[key] = { _set_ref: [value] };

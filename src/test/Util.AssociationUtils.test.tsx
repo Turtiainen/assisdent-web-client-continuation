@@ -5,6 +5,7 @@ import {
     mapAssociationTypePatchCommands,
 } from '../utils/associationUtils';
 import { DynamicObject } from '../types/DynamicObject';
+import { AssociationType } from '../types/AssociationType';
 describe('Call getAssociationType', () => {
     it('should return null with empty object', () => {
         const returnValue = getAssociationType({});
@@ -25,7 +26,7 @@ describe('Call getAssociationType', () => {
                 },
             };
             const returnValue = getAssociationType(testObject);
-            expect(returnValue).toEqual('Aggregation');
+            expect(returnValue).toEqual(AssociationType.Aggregation);
         });
 
         it('Composition', () => {
@@ -33,7 +34,7 @@ describe('Call getAssociationType', () => {
                 IsRealAssociation: true,
             };
             const returnValue = getAssociationType(testObject);
-            expect(returnValue).toEqual('Composition');
+            expect(returnValue).toEqual(AssociationType.Composition);
         });
     });
 });
@@ -80,17 +81,17 @@ describe('Call mapAssociationTypePatchCommands', () => {
     it('should add _set_ref level to object with Aggregation associationType between the other key and its value', () => {
         const returnValue = mapAssociationTypePatchCommands([
             {
-                associationType: 'Aggregation',
+                associationType: AssociationType.Aggregation,
                 test: 'test',
             },
         ]);
         expect(returnValue).toEqual([{ test: { _set_ref: ['test'] } }]);
     });
 
-    it('should work similarly for Comositions but by adding _update level', () => {
+    it('should work similarly for Compositions but by adding _update level', () => {
         const returnValue = mapAssociationTypePatchCommands([
             {
-                associationType: 'Composition',
+                associationType: AssociationType.Composition,
                 test: {
                     testKey: 'testValue',
                 },
