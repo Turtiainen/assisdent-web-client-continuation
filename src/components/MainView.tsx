@@ -5,5 +5,5 @@ export const MainView = ({
 }: {
     children: ReactNode | ReactNode[];
 }) => {
-    return <main className={`w-full`}>{children}</main>;
+    return <main className={`w-full relative`}>{children}</main>;
 };
