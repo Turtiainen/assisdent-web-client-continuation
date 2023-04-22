@@ -13,6 +13,8 @@ import {
     findLastTypeObjectFromValuePath,
     getEntityPropertiesSchema,
 } from '../../../temp/SchemaUtils';
+import { getAssociationType } from '../../../utils/associationUtils';
+import { checkIfObjectHasNestedProperty } from '../../../utils/objectUtils';
 
 type ElementAttributesType = {
     __id: string;
@@ -38,15 +40,85 @@ export const CardViewBuilder = ({
     elements,
     cardData,
     entityType,
+    updateChangedValues,
+    changedValues,
 }: {
     elements: Array<CardElementType>;
     cardData: DynamicObject | null;
     entityType: string | null;
+    updateChangedValues: (changedValues: Array<DynamicObject>) => void;
+    changedValues: Array<DynamicObject>;
 }) => {
     const entityPropertySchema = getEntityPropertiesSchema(entityType);
+    // console.log('updateChangedValues', updateChangedValues);
+    // console.log('changedValues', changedValues);
+
+    /*
+     * This function is called when a basic input value in the card is changed.
+     * So, it should be passed downwards to such elements
+     * Not sure if it should be on this level, but this is the way it at least works for now.
+     */
+    const updateChangedTextInputValue = (
+        valueString: string,
+        key: string,
+        value: string,
+    ) => {
+        // const newChangedValues = changedValues ? [...changedValues] : [];
+        const newChangedValues = [...changedValues];
+
+        // From the binding string (valueString) we get the path to the property
+        const keysArray = sanitizeBinding(valueString)
+            .split('Entity.')[1]
+            .split('.');
+        const valueObj: DynamicObject = {};
+        let currentObj = valueObj;
+
+        // FIXME Special case: PatientInvoicingAddress can not be updated currently
+        if (keysArray[0] === 'PatientInvoicingAddress') {
+            return;
+        }
+
+        // Get the association type from the schema
+        const propertySchemaObj = entityPropertySchema?.[keysArray[0]];
+        const associationType = getAssociationType(propertySchemaObj);
+
+        // We carry the association type in the object to be able to use correct patch commands later
+        keysArray.forEach((key, index) => {
+            if (index === 0) {
+                currentObj.associationType = associationType;
+            }
+            if (index === keysArray.length - 1) {
+                currentObj[key] = value;
+            } else {
+                currentObj[key] = {};
+                currentObj = currentObj[key];
+            }
+        });
+
+        // Existing objects will be just updated, new objects will be added
+        const existingObject = newChangedValues.findIndex((obj) => {
+            return checkIfObjectHasNestedProperty(obj, keysArray);
+        });
+        if (existingObject > -1) {
+            newChangedValues[existingObject] = valueObj;
+        } else {
+            newChangedValues.push(valueObj);
+            const isNewAssociation = newChangedValues.find((item) => {
+                return Object.hasOwn(item, keysArray[0]);
+            });
+            if (associationType && isNewAssociation) {
+                newChangedValues[newChangedValues.length - 1][keysArray[0]].Id =
+                    cardData?.Entity[keysArray[0]]?.Id;
+            }
+        }
+
+        console.log('newChangedValues :>> ', newChangedValues);
+        updateChangedValues(newChangedValues);
+    };
+
     return (
         <>
-            {elements.map((element: CardElementType) => {
+            {elements.map((element: CardElementType, index) => {
                 switch (element.name) {
                     case 'Group':
                         return (
@@ -55,6 +127,8 @@ export const CardViewBuilder = ({
                                 group={element}
                                 cardData={cardData}
                                 entityType={entityType}
+                                updateChangedValues={updateChangedValues}
+                                changedValues={changedValues}
                             />
                         );
                     case 'List':
@@ -71,6 +145,10 @@ export const CardViewBuilder = ({
                                 key={element.attributes['__id'] as Key}
                                 element={element}
                                 cardData={cardData}
+                                // entityPropertySchema={entityPropertySchema}
+                                updateChangedTextInputValue={
+                                    updateChangedTextInputValue
+                                }
                                 entityType={entityType}
                             />
                         );

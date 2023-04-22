@@ -17,10 +17,16 @@ import {
 export const CardElement = ({
     element,
     cardData,
+    updateChangedTextInputValue,
     entityType,
 }: {
     element: DynamicObject;
     cardData: DynamicObject | null;
+    updateChangedTextInputValue: (
+        valueString: string,
+        key: string,
+        value: string,
+    ) => void;
     entityType: string | null;
 }) => {
     const entitySchema = getEntitySchema(entityType);
@@ -139,6 +145,7 @@ export const CardElement = ({
             element={element}
             content={cardDetails || ''}
             inputProperties={inputProperties}
+            updateChangedTextInputValue={updateChangedTextInputValue}
         />
     );
 };
