@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { CardView } from '../components/View/CardView';
 import '@testing-library/jest-dom';
 import { BrowserRouter } from 'react-router-dom';
@@ -45,7 +45,7 @@ jest.mock('../services/backend', () => ({
 }));
 
 const MockCardView = () => {
-    const entity = getViewFromSchemaByName(mockSchema, 'PatientRegisterView');
+    const entity = getViewFromSchemaByName(mockSchema, 'PatientCardView');
     return (
         <QueryClientProvider client={queryClient}>
             <BrowserRouter>
@@ -55,35 +55,45 @@ const MockCardView = () => {
     );
 };
 
-describe('Register Patient CardView', () => {
+// Prevent polluting stdout
+beforeEach(() => {
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+    jest.spyOn(console, 'log').mockImplementation(() => {});
+});
+
+
+describe('Register Patient CardView header', () => {
     it('should render the header with a full name', async () => {
         render(<MockCardView />);
         await waitFor(() => {
-            waitFor(() => {
-                expect(
-                    screen.getByText(/Poutiaisentytär Kaisa Esmeralda/),
-                ).toBeInTheDocument();
-            });
+            expect(
+                screen.getAllByText(/Poutiaisentytär Kaisa Esmeralda/)[0],
+            ).toBeInTheDocument();
         });
     });
 
     it('should render the header subtitle with an SNN', async () => {
         render(<MockCardView />);
         await waitFor(() => {
-            waitFor(() => {
-                expect(
-                    screen.getByText(/241187-900U #97099284/),
-                ).toBeInTheDocument();
-            });
+            expect(
+                screen.getByText(/241187-900U #97099284/),
+            ).toBeInTheDocument();
         });
     });
+});
 
+describe('Register Patient CardView content', () => {
     it('should render input labels', async () => {
         render(<MockCardView />);
         await waitFor(() => {
-            waitFor(() => {
-                expect(screen.getByText(/Last name/)).toBeInTheDocument();
-            });
+            expect(screen.getByText(/Sukunimi/)).toBeInTheDocument();
+        });
+    });
+
+    it('should render sub headings', async () => {
+        render(<MockCardView />);
+        await waitFor(() => {
+            expect(screen.getByText(/Yhteystiedot/)).toBeInTheDocument();
         });
     });
 });
