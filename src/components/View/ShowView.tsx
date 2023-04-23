@@ -57,9 +57,7 @@ export const ShowView = () => {
                     </section>
                     <Footer>
                         <Link to={`/view/${EntityType}CardView/new`}>
-                            <Button onClick={() => console.log('Lisää uusi')}>
-                                Lisää uusi
-                            </Button>
+                            <Button onClick={() => null}>Lisää uusi</Button>
                         </Link>
                     </Footer>
                 </>

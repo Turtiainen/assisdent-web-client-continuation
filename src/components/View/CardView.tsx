@@ -8,7 +8,7 @@ import {
 import { LoadingSpinner } from '../LoadingSpinner';
 import { parseCardMetaView } from '../../utils/Parser';
 import { useMutation } from '@tanstack/react-query';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { ViewHeader } from './ViewHeader';
 import { getUserLanguage, resolveCardBindings } from '../../utils/utils';
@@ -43,6 +43,7 @@ export const CardView = ({ view }: DataProps) => {
     const [changedValues, setChangedValues] = useState<Array<DynamicObject>>(
         [],
     );
+    const navigate = useNavigate();
 
     // const { viewId } = useParams();
     const { Id } = useParams();
@@ -116,6 +117,8 @@ export const CardView = ({ view }: DataProps) => {
         },
         onSuccess: (apiData) => {
             console.log('apiData :>> ', apiData);
+            // FIXME for some reason this renders empty page
+            navigate(`/view/${viewName}/${apiData.Id}`);
         },
     });
 
@@ -139,7 +142,6 @@ export const CardView = ({ view }: DataProps) => {
 
         const saveViewModelOptions: saveViewModelOptionsType = {
             ViewName: viewName,
-            // TODO is ArgumentType always in this format?
             ArgumentType: `Edit${viewName}Argument`,
             ViewModelData: {
                 Entity: {
@@ -166,7 +168,6 @@ export const CardView = ({ view }: DataProps) => {
         const addNewEntityOptions: saveNewEntityOptionsType = {
             EntityType: entityType,
             Entity: reducedChangedValues,
-            // TODO should this be something else?
             PropertiesToSelect: mapObjectPaths(reducedChangedValues),
         };
 
@@ -177,6 +178,10 @@ export const CardView = ({ view }: DataProps) => {
 
     const cancelChanges = () => {
         setChangedValues([]);
+    };
+
+    const cancelNew = () => {
+        navigate(-1);
     };
 
     const constructCardView = (parsedCardMetaView: DynamicObject) => {
@@ -218,21 +223,21 @@ export const CardView = ({ view }: DataProps) => {
                 constructCardView(parsedCardMetaView)}
             {Id === 'new' && constructCardView(parsedCardMetaView)}
             <Footer>
-                {Id !== 'new' && (
-                    <Button
-                        onClick={() => cancelChanges()}
-                        disabled={changedValues.length === 0}
-                    >
-                        Peruuta muutokset
-                    </Button>
-                )}
                 <Button
                     onClick={
                         Id === 'new' ? () => addNew() : () => saveChanges()
                     }
                     disabled={changedValues.length === 0}
                 >
-                    Tallenna muutokset
+                    {`Tallenna ${Id === 'new' ? '' : 'muutokset'}`}
+                </Button>
+                <Button
+                    onClick={
+                        Id === 'new' ? () => cancelNew() : () => cancelChanges()
+                    }
+                    disabled={Id === 'new' ? false : changedValues.length === 0}
+                >
+                    {`Peruuta ${Id === 'new' ? '' : 'muutokset'}`}
                 </Button>
             </Footer>
         </>
