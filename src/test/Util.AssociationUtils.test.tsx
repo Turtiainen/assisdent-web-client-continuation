@@ -2,7 +2,7 @@ import '@testing-library/jest-dom';
 import {
     commonFieldsReducer,
     getAssociationType,
-    mapAssociationTypePatchCommands,
+    mapAssociationTypeUpdatePatchCommands,
 } from '../utils/associationUtils';
 import { DynamicObject } from '../types/DynamicObject';
 import { AssociationType } from '../types/AssociationType';
@@ -41,12 +41,12 @@ describe('Call getAssociationType', () => {
 
 describe('Call mapAssociationTypePatchCommands', () => {
     it('should return empty array when called with such', () => {
-        const returnValue = mapAssociationTypePatchCommands([{}]);
+        const returnValue = mapAssociationTypeUpdatePatchCommands([{}]);
         expect(returnValue).toEqual([{}]);
     });
 
     it('should remove associationType field when called with such object in array', () => {
-        const returnValue = mapAssociationTypePatchCommands([
+        const returnValue = mapAssociationTypeUpdatePatchCommands([
             {
                 associationType: 'Aggregation',
             },
@@ -55,7 +55,7 @@ describe('Call mapAssociationTypePatchCommands', () => {
     });
 
     it('should leave other fields untouched', () => {
-        const returnValue = mapAssociationTypePatchCommands([
+        const returnValue = mapAssociationTypeUpdatePatchCommands([
             {
                 associationType: null,
                 test: 'test',
@@ -65,7 +65,7 @@ describe('Call mapAssociationTypePatchCommands', () => {
     });
 
     it('should work similarly with two objects in array', () => {
-        const returnValue = mapAssociationTypePatchCommands([
+        const returnValue = mapAssociationTypeUpdatePatchCommands([
             {
                 associationType: null,
                 test: 'test',
@@ -79,7 +79,7 @@ describe('Call mapAssociationTypePatchCommands', () => {
     });
 
     it('should add _set_ref level to object with Aggregation associationType between the other key and its value', () => {
-        const returnValue = mapAssociationTypePatchCommands([
+        const returnValue = mapAssociationTypeUpdatePatchCommands([
             {
                 associationType: AssociationType.Aggregation,
                 test: 'test',
@@ -89,7 +89,7 @@ describe('Call mapAssociationTypePatchCommands', () => {
     });
 
     it('should work similarly for Compositions but by adding _update level', () => {
-        const returnValue = mapAssociationTypePatchCommands([
+        const returnValue = mapAssociationTypeUpdatePatchCommands([
             {
                 associationType: AssociationType.Composition,
                 test: {

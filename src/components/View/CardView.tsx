@@ -1,9 +1,8 @@
 import { DynamicObject } from '../../types/DynamicObject';
 import { ErrorPage } from '../ErrorPage';
 import {
-    getEntityData,
     getViewModelData,
-    putEntityData,
+    postEntityData,
     saveViewModelData,
 } from '../../services/backend';
 import { LoadingSpinner } from '../LoadingSpinner';
@@ -17,8 +16,10 @@ import { CardViewBuilder } from './CardView/CardViewBuilder';
 import Button from '../Button';
 import {
     commonFieldsReducer,
-    mapAssociationTypePatchCommands,
+    mapAssociationTypeAddNewPatchCommands,
+    mapAssociationTypeUpdatePatchCommands,
 } from '../../utils/associationUtils';
+import { mapObjectPaths } from '../../utils/mapUtils';
 
 export type DataProps = {
     view: Element;
@@ -28,6 +29,12 @@ type saveViewModelOptionsType = {
     ViewName: string | null;
     ViewModelData: DynamicObject;
     ArgumentType: string;
+};
+
+type saveNewEntityOptionsType = {
+    EntityType: string | null;
+    Entity: DynamicObject;
+    PropertiesToSelect: string[];
 };
 
 export const CardView = ({ view }: DataProps) => {
@@ -99,14 +106,28 @@ export const CardView = ({ view }: DataProps) => {
         },
     });
 
+    const postNew = useMutation({
+        mutationFn: postEntityData,
+        onError: (error) => {
+            console.log('error :>> ', error);
+        },
+        onSuccess: (apiData) => {
+            console.log('apiData :>> ', apiData);
+        },
+    });
+
     useEffect(() => {
-        mutation.mutate(viewModelSearchOptions);
+        if (Id === 'new') {
+            setCardData(null);
+        } else {
+            mutation.mutate(viewModelSearchOptions);
+        }
     }, []);
 
     const saveChanges = async () => {
         // We add proper patch commands to objects if necessary
         const changedValuesWithPatchCommands =
-            mapAssociationTypePatchCommands(changedValues);
+            mapAssociationTypeUpdatePatchCommands(changedValues);
 
         const reducedChangedValues = changedValuesWithPatchCommands.reduce(
             commonFieldsReducer,
@@ -130,12 +151,32 @@ export const CardView = ({ view }: DataProps) => {
         setChangedValues([]);
     };
 
+    const addNew = async () => {
+        const changedValuesWithPatchCommands =
+            mapAssociationTypeAddNewPatchCommands(changedValues);
+
+        const reducedChangedValues = changedValuesWithPatchCommands.reduce(
+            commonFieldsReducer,
+            {},
+        );
+
+        const addNewEntityOptions: saveNewEntityOptionsType = {
+            EntityType: entityType,
+            Entity: reducedChangedValues,
+            // TODO should this be something else?
+            PropertiesToSelect: mapObjectPaths(reducedChangedValues),
+        };
+
+        console.log('addNewEntityOptions', addNewEntityOptions);
+        postNew.mutate(addNewEntityOptions);
+        setChangedValues([]);
+    };
+
     const cancelChanges = () => {
         setChangedValues([]);
     };
 
     const constructCardView = (parsedCardMetaView: DynamicObject) => {
-        console.log('constructCardView');
         const updateChangedValues = (
             newChangedValues: Array<DynamicObject>,
         ) => {
@@ -172,15 +213,18 @@ export const CardView = ({ view }: DataProps) => {
             {mutation.isSuccess &&
                 cardData &&
                 constructCardView(parsedCardMetaView)}
+            {Id === 'new' && constructCardView(parsedCardMetaView)}
             {/*TODO just temporary buttons here*/}
+            {Id !== 'new' && (
+                <Button
+                    onClick={() => cancelChanges()}
+                    disabled={changedValues.length === 0}
+                >
+                    Peruuta muutokset
+                </Button>
+            )}
             <Button
-                onClick={() => cancelChanges()}
-                disabled={changedValues.length === 0}
-            >
-                Peruuta muutokset
-            </Button>
-            <Button
-                onClick={() => saveChanges()}
+                onClick={Id === 'new' ? () => addNew() : () => saveChanges()}
                 disabled={changedValues.length === 0}
             >
                 Tallenna muutokset

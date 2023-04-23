@@ -46,7 +46,10 @@ export const CardSearch = ({
         return result;
     };
 
-    const content = resolveCardBindings(cardData, element.attributes.Value);
+    // TODO is this ok and does not break anything?
+    const content = cardData
+        ? resolveCardBindings(cardData, element.attributes.Value)
+        : '';
     const valuePrintStyle =
         entityType && getPrintStyleFromEntitySchema(entityType);
     const contentValue = constructValuePrintStyle(content, valuePrintStyle);
