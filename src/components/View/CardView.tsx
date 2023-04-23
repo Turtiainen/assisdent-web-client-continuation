@@ -20,6 +20,7 @@ import {
     mapAssociationTypeUpdatePatchCommands,
 } from '../../utils/associationUtils';
 import { mapObjectPaths } from '../../utils/mapUtils';
+import { Footer } from '../Footer';
 
 export type DataProps = {
     view: Element;
@@ -57,7 +58,9 @@ export const CardView = ({ view }: DataProps) => {
     const Header = view.getAttribute('Header');
     let resolvedHeader: string | null;
 
-    if (Header?.includes('{')) {
+    if (Id === 'new') {
+        resolvedHeader = view.getAttribute('NewCardHeader');
+    } else if (Header?.includes('{')) {
         resolvedHeader =
             cardData &&
             Header &&
@@ -214,21 +217,24 @@ export const CardView = ({ view }: DataProps) => {
                 cardData &&
                 constructCardView(parsedCardMetaView)}
             {Id === 'new' && constructCardView(parsedCardMetaView)}
-            {/*TODO just temporary buttons here*/}
-            {Id !== 'new' && (
+            <Footer>
+                {Id !== 'new' && (
+                    <Button
+                        onClick={() => cancelChanges()}
+                        disabled={changedValues.length === 0}
+                    >
+                        Peruuta muutokset
+                    </Button>
+                )}
                 <Button
-                    onClick={() => cancelChanges()}
+                    onClick={
+                        Id === 'new' ? () => addNew() : () => saveChanges()
+                    }
                     disabled={changedValues.length === 0}
                 >
-                    Peruuta muutokset
+                    Tallenna muutokset
                 </Button>
-            )}
-            <Button
-                onClick={Id === 'new' ? () => addNew() : () => saveChanges()}
-                disabled={changedValues.length === 0}
-            >
-                Tallenna muutokset
-            </Button>
+            </Footer>
         </>
     );
 };

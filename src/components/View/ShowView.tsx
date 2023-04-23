@@ -1,12 +1,14 @@
 import { RegisterView } from './RegisterView';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { ViewHeader } from './ViewHeader';
 import { useIsFetching, useQuery } from '@tanstack/react-query';
 import { getViewFromSchemaByName } from '../../utils/Parser';
 import { CardView } from './CardView';
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import useSchemaStore from '../../store/store';
 import { SchemaStore } from '../../types/SchemaStore';
+import Button from '../Button';
+import { Footer } from '../Footer';
 
 export const ShowView = () => {
     const schema = useSchemaStore((state: SchemaStore) => state.schema);
@@ -32,6 +34,7 @@ export const ShowView = () => {
     }, [isError, error]);
 
     const Header = entity?.documentElement.getAttribute('Header');
+    const EntityType = entity?.documentElement.getAttribute('EntityType');
 
     return (
         <>
@@ -42,14 +45,23 @@ export const ShowView = () => {
                     {Header && <ViewHeader header={Header} />}
                     <section className={`flex flex-col pb-4`}>
                         {entity && viewId && (
-                            <RegisterView
-                                key={entity.documentElement.getAttribute(
-                                    'Name',
-                                )}
-                                view={entity.documentElement}
-                            />
+                            <>
+                                <RegisterView
+                                    key={entity.documentElement.getAttribute(
+                                        'Name',
+                                    )}
+                                    view={entity.documentElement}
+                                />
+                            </>
                         )}
                     </section>
+                    <Footer>
+                        <Link to={`/view/${EntityType}CardView/new`}>
+                            <Button onClick={() => console.log('Lisää uusi')}>
+                                Lisää uusi
+                            </Button>
+                        </Link>
+                    </Footer>
                 </>
             ) : (
                 <>
