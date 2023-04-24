@@ -91,11 +91,13 @@ jobs:
           htmlFile: ./reports/jest-reporter-html.html
           outputFile: ./reports/jest-report.pdf
           pdfOptions: '{"format": "A4", "margin": {"top": "10mm", "left": "10mm", "right": "10mm", "bottom": "10mm"}}'
-      - name: Upload PDF report to artifacts
+      - name: Upload readable reports to artifacts
         uses: actions/upload-artifact@v3
         with:
           name: test-report
-          path: ./reports/jest-report.pdf
+          path: |
+            ./reports/jest-report.pdf
+            ./reports/jest-reporter-html.html
       - name: Test Report to GitHub from XML
         uses: dorny/test-reporter@v1
         if: success() || failure()
