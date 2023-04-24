@@ -1,15 +1,14 @@
 import { DynamicObject } from '../../types/DynamicObject';
 import { ErrorPage } from '../ErrorPage';
 import {
-    getEntityData,
     getViewModelData,
-    putEntityData,
+    postEntityData,
     saveViewModelData,
 } from '../../services/backend';
 import { LoadingSpinner } from '../LoadingSpinner';
 import { parseCardMetaView } from '../../utils/Parser';
 import { useMutation } from '@tanstack/react-query';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { ViewHeader } from './ViewHeader';
 import { getUserLanguage, resolveCardBindings } from '../../utils/utils';
@@ -17,8 +16,11 @@ import { CardViewBuilder } from './CardView/CardViewBuilder';
 import Button from '../Button';
 import {
     commonFieldsReducer,
-    mapAssociationTypePatchCommands,
+    mapAssociationTypeAddNewPatchCommands,
+    mapAssociationTypeUpdatePatchCommands,
 } from '../../utils/associationUtils';
+import { mapObjectPaths } from '../../utils/mapUtils';
+import { Footer } from '../Footer';
 
 export type DataProps = {
     view: Element;
@@ -30,11 +32,18 @@ type saveViewModelOptionsType = {
     ArgumentType: string;
 };
 
+type saveNewEntityOptionsType = {
+    EntityType: string | null;
+    Entity: DynamicObject;
+    PropertiesToSelect: string[];
+};
+
 export const CardView = ({ view }: DataProps) => {
     const [cardData, setCardData] = useState<DynamicObject | null>(null);
     const [changedValues, setChangedValues] = useState<Array<DynamicObject>>(
         [],
     );
+    const navigate = useNavigate();
 
     // const { viewId } = useParams();
     const { Id } = useParams();
@@ -50,7 +59,9 @@ export const CardView = ({ view }: DataProps) => {
     const Header = view.getAttribute('Header');
     let resolvedHeader: string | null;
 
-    if (Header?.includes('{')) {
+    if (Id === 'new') {
+        resolvedHeader = view.getAttribute('NewCardHeader');
+    } else if (Header?.includes('{')) {
         resolvedHeader =
             cardData &&
             Header &&
@@ -99,14 +110,30 @@ export const CardView = ({ view }: DataProps) => {
         },
     });
 
+    const postNew = useMutation({
+        mutationFn: postEntityData,
+        onError: (error) => {
+            console.log('error :>> ', error);
+        },
+        onSuccess: (apiData) => {
+            console.log('apiData :>> ', apiData);
+            // FIXME for some reason this renders empty page
+            navigate(`/view/${viewName}/${apiData.Id}`);
+        },
+    });
+
     useEffect(() => {
-        mutation.mutate(viewModelSearchOptions);
+        if (Id === 'new') {
+            setCardData(null);
+        } else {
+            mutation.mutate(viewModelSearchOptions);
+        }
     }, []);
 
     const saveChanges = async () => {
         // We add proper patch commands to objects if necessary
         const changedValuesWithPatchCommands =
-            mapAssociationTypePatchCommands(changedValues);
+            mapAssociationTypeUpdatePatchCommands(changedValues);
 
         const reducedChangedValues = changedValuesWithPatchCommands.reduce(
             commonFieldsReducer,
@@ -115,7 +142,6 @@ export const CardView = ({ view }: DataProps) => {
 
         const saveViewModelOptions: saveViewModelOptionsType = {
             ViewName: viewName,
-            // TODO is ArgumentType always in this format?
             ArgumentType: `Edit${viewName}Argument`,
             ViewModelData: {
                 Entity: {
@@ -130,12 +156,35 @@ export const CardView = ({ view }: DataProps) => {
         setChangedValues([]);
     };
 
+    const addNew = async () => {
+        const changedValuesWithPatchCommands =
+            mapAssociationTypeAddNewPatchCommands(changedValues);
+
+        const reducedChangedValues = changedValuesWithPatchCommands.reduce(
+            commonFieldsReducer,
+            {},
+        );
+
+        const addNewEntityOptions: saveNewEntityOptionsType = {
+            EntityType: entityType,
+            Entity: reducedChangedValues,
+            PropertiesToSelect: mapObjectPaths(reducedChangedValues),
+        };
+
+        console.log('addNewEntityOptions', addNewEntityOptions);
+        postNew.mutate(addNewEntityOptions);
+        setChangedValues([]);
+    };
+
     const cancelChanges = () => {
         setChangedValues([]);
     };
 
+    const cancelNew = () => {
+        navigate(-1);
+    };
+
     const constructCardView = (parsedCardMetaView: DynamicObject) => {
-        console.log('constructCardView');
         const updateChangedValues = (
             newChangedValues: Array<DynamicObject>,
         ) => {
@@ -172,19 +221,25 @@ export const CardView = ({ view }: DataProps) => {
             {mutation.isSuccess &&
                 cardData &&
                 constructCardView(parsedCardMetaView)}
-            {/*TODO just temporary buttons here*/}
-            <Button
-                onClick={() => cancelChanges()}
-                disabled={changedValues.length === 0}
-            >
-                Peruuta muutokset
-            </Button>
-            <Button
-                onClick={() => saveChanges()}
-                disabled={changedValues.length === 0}
-            >
-                Tallenna muutokset
-            </Button>
+            {Id === 'new' && constructCardView(parsedCardMetaView)}
+            <Footer>
+                <Button
+                    onClick={
+                        Id === 'new' ? () => addNew() : () => saveChanges()
+                    }
+                    disabled={changedValues.length === 0}
+                >
+                    {`Tallenna ${Id === 'new' ? '' : 'muutokset'}`}
+                </Button>
+                <Button
+                    onClick={
+                        Id === 'new' ? () => cancelNew() : () => cancelChanges()
+                    }
+                    disabled={Id === 'new' ? false : changedValues.length === 0}
+                >
+                    {`Peruuta ${Id === 'new' ? '' : 'muutokset'}`}
+                </Button>
+            </Footer>
         </>
     );
 };

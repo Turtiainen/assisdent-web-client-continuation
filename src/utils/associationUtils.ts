@@ -15,7 +15,7 @@ export const getAssociationType = (
     }
 };
 
-export const mapAssociationTypePatchCommands = (
+export const mapAssociationTypeUpdatePatchCommands = (
     inputArray: DynamicObject[],
 ) => {
     const objectArray = [...inputArray];
@@ -31,6 +31,30 @@ export const mapAssociationTypePatchCommands = (
             for (const [key, value] of Object.entries(obj)) {
                 if (key !== 'associationType' && key !== 'Id') {
                     obj[key] = { _set_ref: [value] };
+                }
+            }
+        }
+        delete obj.associationType;
+    }
+    return objectArray;
+};
+
+export const mapAssociationTypeAddNewPatchCommands = (
+    inputArray: DynamicObject[],
+) => {
+    const objectArray = [...inputArray];
+    for (let i = 0; i < objectArray.length; i++) {
+        const obj = objectArray[i];
+        if (obj.associationType === AssociationType.Composition) {
+            for (const [key, value] of Object.entries(obj)) {
+                if (key !== 'associationType' && key !== 'Id') {
+                    obj[key] = { _create: [value] };
+                }
+            }
+        } else if (obj.associationType === AssociationType.Aggregation) {
+            for (const [key, value] of Object.entries(obj)) {
+                if (key !== 'associationType' && key !== 'Id') {
+                    obj[key] = { _add_ref: [value] };
                 }
             }
         }
@@ -82,6 +106,18 @@ export const commonFieldsReducer = (
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             accumulator[key]._update = [mergeObjects(...updateArray)];
+        } else if (Array.isArray(accumulator[key]?._create)) {
+            const updateArray = accumulator[key]._create.concat(value._create);
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            accumulator[key]._create = [mergeObjects(...updateArray)];
+        } else if (Array.isArray(accumulator[key]?._add_ref)) {
+            const updateArray = accumulator[key]._add_ref.concat(
+                value._add_ref,
+            );
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            accumulator[key]._add_ref = [mergeObjects(...updateArray)];
         } else {
             accumulator[key] = mergeObjects(accumulator[key], value);
         }

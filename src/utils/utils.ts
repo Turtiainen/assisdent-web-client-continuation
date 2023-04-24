@@ -269,7 +269,9 @@ export const resolveCardBindings = (
     entity: DynamicObject | null,
     binding: string,
 ) => {
-    if (!entity) return binding;
+    // TODO: Does this break something?
+    // if (!entity) return binding;
+    if (!entity) return '';
 
     const bindingType = getBindingType(binding);
     const sanitizedBinding = sanitizeBinding(binding);

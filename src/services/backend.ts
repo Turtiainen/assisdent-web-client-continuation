@@ -209,6 +209,34 @@ export const putEntityData = async (entityData: DynamicObject) => {
     }
 };
 
+export const postEntityData = async (entityData: DynamicObject) => {
+    const token = sessionStorage.getItem('bt');
+    if (!token) {
+        console.log('should login');
+        return;
+    }
+
+    try {
+        const body = {
+            ...entityData,
+        };
+        const { data } = await axios.post(
+            `${import.meta.env.VITE_ASSISCARE_BASE}${
+                import.meta.env.VITE_ASSISCARE_ROUTE
+            }dack/entity`,
+            body,
+            { headers: { Authorization: `Bearer ${token}` } },
+        );
+        return data;
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            console.log(`error at putEntityData: ${error.message}`);
+        } else {
+            console.log(`unknown error at putEntityData: ${error}`);
+        }
+    }
+};
+
 export const saveViewModelData = async (viewModelData: DynamicObject) => {
     const token = sessionStorage.getItem('bt');
     if (!token) {
