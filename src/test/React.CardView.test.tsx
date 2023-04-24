@@ -57,10 +57,9 @@ const MockCardView = () => {
 
 // Prevent polluting stdout
 beforeEach(() => {
-    jest.spyOn(console, 'error').mockImplementation(() => {});
-    jest.spyOn(console, 'log').mockImplementation(() => {});
+    jest.spyOn(console, 'error').mockImplementation(() => jest.fn());
+    jest.spyOn(console, 'log').mockImplementation(() => jest.fn());
 });
-
 
 describe('Register Patient CardView header', () => {
     it('should render the header with a full name', async () => {
