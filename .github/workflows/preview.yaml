@@ -85,17 +85,24 @@ jobs:
           path: node_modules
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
       - run: npm run test:ci
-      - name: Test report
+      - name: Test report pdf generation
         uses: fifsky/html-to-pdf-action@master
         with:
           htmlFile: ./reports/jest-reporter-html.html
           outputFile: ./reports/jest-report.pdf
           pdfOptions: '{"format": "A4", "margin": {"top": "10mm", "left": "10mm", "right": "10mm", "bottom": "10mm"}}'
-      - name: Upload PDF report
+      - name: Upload PDF report to artifacts
         uses: actions/upload-artifact@v3
         with:
           name: test-report
           path: ./reports/jest-report.pdf
+      - name: Test Report to GitHub from XML
+        uses: dorny/test-reporter@v1
+        if: success() || failure()
+        with:
+          name: JEST Tests
+          path: reports/jest-*.xml
+          reporter: jest-junit
 
 
 

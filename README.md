@@ -29,10 +29,20 @@ npm run lint
 
 ### Test reports
 
-Running the tests produces a test report in `/reports`. The report is in .xml
-and includes the amount of passing, failed and skipped tests. The reports are
-generated also on a push to `main` or `development`. The output can be viewed
-under a CI/CD run job *JEST Tests* in the Actions tab.
+Running the tests produces a test report in two formats in `/reports`. 
+
+The reports are in .xml and .html formats,
+and they include same information: the amount of passing, failed and skipped tests. The reports are
+generated also on a push to `main` or `development`. 
+
+The output can be viewed in three ways:
+
+- Locally
+  - Run the tests locally and view the generated html report in `/reports` folder. This can be done by opening the html file in a browser.
+
+- CI/CD pipeline, on a push to `main` or `development`.
+  1. Under a CI/CD run job *JEST Tests* in the Actions tab.
+  2. Download report in pdf format (generated from the html report) from the workflow artifacts. The artifacts can be found under a specific Github Actions workflow run page, in the section *Artifacts*.
 
 ### Writing a test
 
