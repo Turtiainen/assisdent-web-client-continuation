@@ -85,6 +85,18 @@ jobs:
           path: node_modules
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
       - run: npm run test:ci
+      - name: Test report
+        uses: fifsky/html-to-pdf-action@master
+        with:
+          htmlFile: ./reports/jest-reporter-html.html
+          outputFile: ./reports/jest-report.pdf
+          pdfOptions: '{"format": "A4", "margin": {"top": "10mm", "left": "10mm", "right": "10mm", "bottom": "10mm"}}'
+      - name: Upload PDF report
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-report
+          path: ./reports/jest-report.pdf
+
 
 
   Deploy-Preview:
