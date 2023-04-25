@@ -44,6 +44,15 @@ jest.mock('../services/backend', () => ({
     }),
 }));
 
+jest.mock('../utils/constants', () => ({
+    DEFAULT_LANGUAGE: jest.fn(() => {
+        return 'fi';
+    }),
+    SUPPORTED_LANGUAGES: jest.fn(() => {
+        return ['fi', 'en', 'sv'];
+    }),
+}));
+
 const MockCardView = () => {
     const entity = getViewFromSchemaByName(mockSchema, 'PatientCardView');
     return (
