@@ -8,7 +8,7 @@ import {
 import { LoadingSpinner } from '../LoadingSpinner';
 import { parseCardMetaView } from '../../utils/Parser';
 import { useMutation } from '@tanstack/react-query';
-import { redirect, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { ViewHeader } from './ViewHeader';
 import { getUserLanguage, resolveCardBindings } from '../../utils/utils';
