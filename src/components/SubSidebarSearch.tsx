@@ -90,7 +90,7 @@ export const SubSidebarSearch = ({ onClick }: SubSidebarSearchType) => {
         </>
     );
     return (
-        <div className="min-h-[100vh] w-80 bg-ad-gray-300 left-64 shadow-md overflow-x-hidden overflow-y-hidden">
+        <div className="min-h-[100vh] max-h-screen w-80 bg-ad-gray-300 left-64 shadow-md overflow-x-hidden overflow-y-hidden sticky relative left-0 bottom-0 top-0">
             <div className="col-span-1">
                 <div className="w-full inline-flex justify-between py-2">
                     <div className="px-2 text-ad-hero-title text-sm">Haku</div>

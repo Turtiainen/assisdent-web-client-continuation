@@ -69,7 +69,7 @@ export const Sidebar = () => {
     return (
         <>
             <aside
-                className={`min-h-[100vh] bg-ad-sidebar overflow-x-hidden overflow-y-auto transition-[width] ${
+                className={`min-h-[100vh] max-h-screen bg-ad-sidebar overflow-x-hidden overflow-y-auto transition-[width] sticky relative left-0 bottom-0 top-0 ${
                     isExpanded ? 'w-64' : 'w-14'
                 }`}
             >

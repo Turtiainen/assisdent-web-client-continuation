@@ -20,7 +20,7 @@ export const Footer = (props: footerProps) => {
 
     return createPortal(
         <div
-            className={`toolbar bg-white border-t-2 border-ad-blue-600 absolute bottom-px px-4 w-full ${
+            className={`toolbar bg-white border-t-2 border-ad-blue-600 fixed bottom-px px-4 w-full ${
                 props.className && props.className
             }`}
         >
