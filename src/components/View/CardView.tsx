@@ -45,7 +45,6 @@ export const CardView = ({ view }: DataProps) => {
     );
     const navigate = useNavigate();
 
-    // const { viewId } = useParams();
     const { Id } = useParams();
 
     const parsedCardMetaView = parseCardMetaView(view);
@@ -117,8 +116,14 @@ export const CardView = ({ view }: DataProps) => {
         },
         onSuccess: (apiData) => {
             console.log('apiData :>> ', apiData);
-            // FIXME for some reason this renders empty page
             navigate(`/view/${viewName}/${apiData.Id}`);
+            const tempSearchOptions = {
+                ...viewModelSearchOptions,
+                Argument: {
+                    Id: apiData.Id,
+                },
+            };
+            mutation.mutate(tempSearchOptions);
         },
     });
 
