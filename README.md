@@ -2,11 +2,33 @@
 
 ### Tampere University COMP.SE.610/620 spring 2023 Group G project work
 
-## Running
-The program can be installed with:
+## Installing
+Before building or running the application, you need to have some prerequisites
+installed on your system.
+
+The project is built with [Vite](https://vitejs.dev/guide/), which requires Node.js version 14.18 or higher. It is recommended to update Node and npm to the latests versions available.
+
+### Windows
+On Windows, you can follow the [npm Docs](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) to install Node and npm.
+
+### Linux
+On Debian-based systems (such as Ubuntu), you can install Node and npm with:
 ```
+sudo apt update
+sudo apt install nodejs npm
+```
+Both prerequisites can be installed on Fedora with:
+```
+sudo dnf install nodejs
+```
+
+After downloading Node and npm, the program can be installed with:
+```
+cd assisdent-web-client
 npm install
 ```
+
+## Building and running
 When developing, the project can be run with:
 ```
 npm run dev
