@@ -205,7 +205,8 @@ export const CardView = ({ view }: DataProps) => {
                     />
                 )}
                 {parsedCardMetaView && (
-                    <div className="px-8 grid lg:grid-cols-2 gap-y-2 gap-x-64 pb-16 lg:max-w-[90%]">
+                    // <div className="px-8 grid lg:grid-cols-2 gap-y-2 gap-x-64 pb-16 lg:max-w-[90%]">
+                    <div className="form px-8 pb-16 xl:max-w-[90%] lg:columns-2">
                         <CardViewBuilder
                             elements={parsedCardMetaView.children}
                             cardData={cardData}
