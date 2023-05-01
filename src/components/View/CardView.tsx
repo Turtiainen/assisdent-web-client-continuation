@@ -20,7 +20,7 @@ import {
     mapAssociationTypeUpdatePatchCommands,
 } from '../../utils/associationUtils';
 import { mapObjectPaths } from '../../utils/mapUtils';
-import { Footer } from '../Footer';
+import { ApplicationBar } from '../ApplicationBar';
 
 export type DataProps = {
     view: Element;
@@ -227,7 +227,7 @@ export const CardView = ({ view }: DataProps) => {
                 cardData &&
                 constructCardView(parsedCardMetaView)}
             {Id === 'new' && constructCardView(parsedCardMetaView)}
-            <Footer>
+            <ApplicationBar>
                 <Button
                     onClick={
                         Id === 'new' ? () => addNew() : () => saveChanges()
@@ -244,7 +244,7 @@ export const CardView = ({ view }: DataProps) => {
                 >
                     {`Peruuta ${Id === 'new' ? '' : 'muutokset'}`}
                 </Button>
-            </Footer>
+            </ApplicationBar>
         </>
     );
 };

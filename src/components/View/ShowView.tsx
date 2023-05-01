@@ -8,7 +8,7 @@ import React, { useEffect } from 'react';
 import useSchemaStore from '../../store/store';
 import { SchemaStore } from '../../types/SchemaStore';
 import Button from '../Button';
-import { Footer } from '../Footer';
+import { ApplicationBar } from '../ApplicationBar';
 
 export const ShowView = () => {
     const schema = useSchemaStore((state: SchemaStore) => state.schema);
@@ -55,11 +55,11 @@ export const ShowView = () => {
                             </>
                         )}
                     </section>
-                    <Footer>
+                    <ApplicationBar>
                         <Link to={`/view/${EntityType}CardView/new`}>
                             <Button onClick={() => null}>Lisää uusi</Button>
                         </Link>
-                    </Footer>
+                    </ApplicationBar>
                 </>
             ) : (
                 <>
