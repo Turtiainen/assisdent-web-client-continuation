@@ -1,5 +1,8 @@
-import { useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { DynamicObject } from '../../../types/DynamicObject';
+import { InputRow } from '../../InputRow';
+import { CheckboxLabeled } from '../../CheckboxLabeled';
+import { Input } from '../../Input';
 
 export const BooleanInput = ({
     element,
@@ -12,24 +15,19 @@ export const BooleanInput = ({
         content?.toString() === 'true',
     );
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         e.persist();
         setChecked(!checked);
     };
     return (
-        <div className={`flex flex-col lg:flex-row lg:gap-32`}>
-            <label
-                htmlFor={element.attributes.Identifier}
-                className={`text-sm font-semibold text-ad-grey-800 flex items-center lg:w-1/4`}
-            >
-                {element.attributes.Caption}
-            </label>
-            <input
+        <InputRow>
+            <CheckboxLabeled
+                labelText={element.attributes.Caption}
                 id={element.attributes.Identifier}
                 type={`checkbox`}
                 checked={checked}
                 onChange={handleChange}
             />
-        </div>
+        </InputRow>
     );
 };
