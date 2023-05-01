@@ -156,7 +156,6 @@ export const CardView = ({ view }: DataProps) => {
             },
         };
 
-        console.log('saveViewModelOptions', saveViewModelOptions);
         saveData.mutate(saveViewModelOptions);
         setChangedValues([]);
     };
@@ -176,7 +175,6 @@ export const CardView = ({ view }: DataProps) => {
             PropertiesToSelect: mapObjectPaths(reducedChangedValues),
         };
 
-        console.log('addNewEntityOptions', addNewEntityOptions);
         postNew.mutate(addNewEntityOptions);
         setChangedValues([]);
     };
@@ -234,6 +232,7 @@ export const CardView = ({ view }: DataProps) => {
                         Id === 'new' ? () => addNew() : () => saveChanges()
                     }
                     disabled={changedValues.length === 0}
+                    buttonType={'primary'}
                 >
                     {`Tallenna ${Id === 'new' ? '' : 'muutokset'}`}
                 </Button>

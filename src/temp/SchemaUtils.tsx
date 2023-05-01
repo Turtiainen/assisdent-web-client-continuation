@@ -22,9 +22,6 @@ export const findEntitySchema = (...names: string[]) => {
             names.includes(entity.Name),
         );
     } else {
-        console.log('entiteettejä on yht: ', allEntities.length);
-        console.log();
-
         allEntities.map((entity: DtoEntity) => {
             console.log(entity.Name);
         });

@@ -272,7 +272,6 @@ describe('Call commonFieldsReducer', () => {
         ];
 
         const result = testArray.reduce(commonFieldsReducer, {});
-        console.log(result);
         expect(result).toEqual({
             Person: {
                 Address: {

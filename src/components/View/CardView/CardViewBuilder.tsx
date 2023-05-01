@@ -50,8 +50,6 @@ export const CardViewBuilder = ({
     changedValues: Array<DynamicObject>;
 }) => {
     const entityPropertySchema = getEntityPropertiesSchema(entityType);
-    // console.log('updateChangedValues', updateChangedValues);
-    // console.log('changedValues', changedValues);
 
     /*
      * This function is called when a basic input value in the card is changed.
@@ -112,7 +110,6 @@ export const CardViewBuilder = ({
             }
         }
 
-        console.log('newChangedValues :>> ', newChangedValues);
         updateChangedValues(newChangedValues);
     };
 

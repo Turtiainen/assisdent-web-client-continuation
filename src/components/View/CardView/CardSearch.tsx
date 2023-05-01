@@ -44,7 +44,6 @@ export const CardSearch = ({
         return result;
     };
 
-    // TODO is this ok and does not break anything?
     const content = cardData
         ? resolveCardBindings(cardData, element.attributes.Value)
         : '';

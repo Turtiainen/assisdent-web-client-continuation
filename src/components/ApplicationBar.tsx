@@ -1,12 +1,12 @@
 import { createPortal } from 'react-dom';
 import { useEffect, useState } from 'react';
 
-type footerProps = {
+type applicationBarProps = {
     children: React.ReactNode;
     className?: string;
 };
 
-export const ApplicationBar = (props: footerProps) => {
+export const ApplicationBar = (props: applicationBarProps) => {
     const [mainElement, setMainElement] = useState<HTMLElement | null>(null);
 
     useEffect(() => {

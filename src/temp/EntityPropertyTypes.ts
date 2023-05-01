@@ -39,6 +39,4 @@ export const getEntityPropertyTypes = () => {
     entityPropertyTypeMap.forEach((value, key) => {
         console.log(`m[${key}] = ${value.length}`);
     });
-
-    console.log(`mapSize`, entityPropertyTypeMap.size);
 };
