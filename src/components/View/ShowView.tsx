@@ -9,6 +9,8 @@ import useSchemaStore from '../../store/store';
 import { SchemaStore } from '../../types/SchemaStore';
 import Button from '../Button';
 import { ApplicationBar } from '../ApplicationBar';
+import { getRegisterMetaViewAsObject } from '../../utils/objectUtils';
+import { DynamicObject } from '../../types/DynamicObject';
 
 export const ShowView = () => {
     const schema = useSchemaStore((state: SchemaStore) => state.schema);
@@ -34,7 +36,17 @@ export const ShowView = () => {
     }, [isError, error]);
 
     const Header = entity?.documentElement.getAttribute('Header');
-    const EntityType = entity?.documentElement.getAttribute('EntityType');
+
+    let MetaViewObject: DynamicObject = {};
+    let NewCardName: string | null = null;
+    let createNewCardDisabled = false;
+
+    if (entity) {
+        MetaViewObject = getRegisterMetaViewAsObject(entity.documentElement);
+        NewCardName = MetaViewObject.CreateNewCardName;
+        createNewCardDisabled =
+            MetaViewObject.DisableCreateNewEntity === 'true';
+    }
 
     return (
         <>
@@ -55,13 +67,19 @@ export const ShowView = () => {
                             </>
                         )}
                     </section>
-                    <ApplicationBar>
-                        <Link to={`/view/${EntityType}CardView/new`}>
-                            <Button onClick={() => null} buttonType={'primary'}>
-                                Lisää uusi
-                            </Button>
-                        </Link>
-                    </ApplicationBar>
+                    {NewCardName && (
+                        <ApplicationBar>
+                            <Link to={`/view/${NewCardName}/new`}>
+                                <Button
+                                    onClick={() => null}
+                                    buttonType={'primary'}
+                                    disabled={createNewCardDisabled}
+                                >
+                                    Lisää uusi
+                                </Button>
+                            </Link>
+                        </ApplicationBar>
+                    )}
                 </>
             ) : (
                 <>
