@@ -45,3 +45,22 @@ export const checkIfObjectHasNestedProperty = (
     }
     return true;
 };
+
+const getElementsFromViewAsObjectRecursive = (root: Element) => {
+    const resultObj: DynamicObject = { TagName: root.tagName };
+    for (const attrName of root.getAttributeNames()) {
+        resultObj[attrName] = root.getAttribute(attrName);
+    }
+    if (root.hasChildNodes()) {
+        resultObj['Children'] = [] as DynamicObject[];
+        for (let i = 0; i < root.children.length; i++) {
+            resultObj['Children'].push(
+                getElementsFromViewAsObjectRecursive(root.children[i]),
+            );
+        }
+    }
+    return resultObj;
+};
+export const getRegisterMetaViewAsObject = (view: Element) => {
+    return getElementsFromViewAsObjectRecursive(view);
+};

@@ -3,7 +3,7 @@ import { useMutation } from '@tanstack/react-query';
 import { getEntitiesForRegisterView } from '../../services/backend';
 import { RegisterTable } from './RegisterTable';
 import { DynamicObject } from '../../types/DynamicObject';
-import { parseRegisterMetaView, parseOrderOptions } from '../../utils/Parser';
+import { parseOrderOptions, parseRegisterMetaView } from '../../utils/Parser';
 import { getUserLanguage } from '../../utils/utils';
 import { DEFAULT_SHOW_ON_PAGE, ShowOnPageOption } from '../../utils/constants';
 import { Toolbar } from './Toolbar';
