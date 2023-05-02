@@ -184,7 +184,6 @@ export const getViewModelData = async (searchOptions: DynamicObject) => {
 export const putEntityData = async (entityData: DynamicObject) => {
     const token = sessionStorage.getItem('bt');
     if (!token) {
-        console.log('should login');
         return;
     }
 
@@ -212,7 +211,6 @@ export const putEntityData = async (entityData: DynamicObject) => {
 export const postEntityData = async (entityData: DynamicObject) => {
     const token = sessionStorage.getItem('bt');
     if (!token) {
-        console.log('should login');
         return;
     }
 
@@ -240,7 +238,6 @@ export const postEntityData = async (entityData: DynamicObject) => {
 export const saveViewModelData = async (viewModelData: DynamicObject) => {
     const token = sessionStorage.getItem('bt');
     if (!token) {
-        console.log('should login');
         return;
     }
 
