@@ -74,7 +74,6 @@ export const PrintSchemaInfo = () => {
                     onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
-                        console.log(element);
                     }}
                 >
                     <pre>{`<${element.nodeName}${
@@ -101,7 +100,6 @@ export const PrintSchemaInfo = () => {
                                 onClick={(e) => {
                                     e.preventDefault();
                                     e.stopPropagation();
-                                    console.log(obj.ViewDefinitionCoreBase);
                                 }}
                             >
                                 {obj.ViewName}

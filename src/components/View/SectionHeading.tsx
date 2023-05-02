@@ -14,7 +14,7 @@ export const SectionHeading = ({
     return (
         <h2
             className={`
-                col-span-2 text-lg uppercase text-ad-grey-700 mt-8 cursor-pointer hover:underline hover:bg-ad-primary-hover/10
+                col-span-2 [column-span:all] text-lg uppercase text-ad-grey-700 mt-8 cursor-pointer hover:underline hover:bg-ad-primary-hover/10
                 ${className}
             `}
             onClick={onClick && (() => onClick())}

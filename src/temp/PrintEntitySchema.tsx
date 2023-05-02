@@ -40,8 +40,6 @@ export const PrintEntitySchema = () => {
         );
     };
 
-    console.log(data.FormattedTexts);
-
     return (
         <div className={`p-8`}>
             <div className={`pb-4`}>
