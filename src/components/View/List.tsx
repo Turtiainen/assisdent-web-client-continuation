@@ -74,7 +74,7 @@ export const List = ({ xmlElementTree, listData }: ListProps) => {
     ).children;
 
     return (
-        <div className={`basis-full my-8 col-span-2`}>
+        <div className={`basis-full my-8 col-span-2 [column-span:all]`}>
             <SectionHeading
                 onClick={() => setIsContentHidden(!isContentHidden)}
             >
