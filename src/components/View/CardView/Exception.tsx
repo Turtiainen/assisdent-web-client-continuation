@@ -11,7 +11,7 @@ export const Exception = ({
     if (!Array.isArray(content) || content.length === 0) return null;
 
     return (
-        <div className={`basis-full my-8 col-span-2`}>
+        <div className={`basis-full my-8 col-span-2 [column-span:all]`}>
             <h2 className={`text-lg mb-2 uppercase text-ad-grey-700`}>
                 {element.attributes.Caption}
             </h2>

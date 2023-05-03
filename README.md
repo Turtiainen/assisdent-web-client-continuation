@@ -39,6 +39,21 @@ npm run build
 npm run preview
 ```
 
+## Deployment (Vercel)
+
+To deploy the application in Vercel, you need to have an account in Vercel and a project in Vercel. You can create a project in Vercel by importing the project from Github.
+
+Another option is to deploy the application to Vercel by utilizing Github Actions, as it is currently done. You need to add the following secrets to your Github repository:
+
+- `VERCEL_PROJECT_ID`: The project ID of your Vercel project. You can find the project ID in the project settings in Vercel.
+- `VERCEL_ORG_ID`: The organization ID of your Vercel organization. You can find the organization ID in the organization settings in Vercel.
+- `VERCEL_TOKEN`: A Vercel token with the following permissions: `read`, `deployments`, `projects`, `team`. You can create a new token in the Vercel settings.
+
+After adding the secrets, you can deploy the application (production version) to Vercel by pushing to `main` or `development` branch. The deployment will be triggered by a Github Actions workflow provided.
+Pushing to other branches will trigger Preview deployment in Vercel. Deployment strategy can be changed in the workflow files in `.github/workflows` folder.
+
+Further instructions for deploying to Vercel can be found [here](https://vercel.com/guides/how-can-i-use-github-actions-with-vercel).
+
 ## Testing
 To run tests, run:
 ```
