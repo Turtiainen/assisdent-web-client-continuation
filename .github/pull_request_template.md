@@ -17,7 +17,7 @@
 
 * **Does this PR introduce a breaking change?** (What changes might users need to make in their application due to this PR?)
 
-* **Add screenshot if possible.**
+* **Add screenshot if possible.** (Add screenshot of the change)
 
 
 
