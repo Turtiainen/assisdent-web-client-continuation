@@ -185,6 +185,7 @@ export const CardViewBuilder = ({
                         const content = resolveCardBindings(
                             cardData,
                             element.attributes.Value,
+                            entityType,
                         );
                         return (
                             <Editor

@@ -32,7 +32,11 @@ export const CardElement = ({
     const entitySchema = getEntitySchema(entityType);
     const entityPropertySchema = entitySchema?.Properties;
 
-    const cardDetails = resolveCardBindings(cardData, element.attributes.Value);
+    const cardDetails = resolveCardBindings(
+        cardData,
+        element.attributes.Value,
+        entityType,
+    );
     const entityPropertiesAndTypes = new Map<string, string>();
     const exceptionElements = new Set<string>();
     const ExceptionEntityTypes = new Set([

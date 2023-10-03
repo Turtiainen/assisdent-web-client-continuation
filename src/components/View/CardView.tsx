@@ -64,7 +64,7 @@ export const CardView = ({ view }: DataProps) => {
         resolvedHeader =
             cardData &&
             Header &&
-            (resolveCardBindings(cardData, Header) as string);
+            (resolveCardBindings(cardData, Header, entityType) as string);
     } else {
         resolvedHeader = Header;
     }
@@ -75,7 +75,7 @@ export const CardView = ({ view }: DataProps) => {
         resolvedSubHeader =
             cardData &&
             SubHeader &&
-            (resolveCardBindings(cardData, SubHeader) as string);
+            (resolveCardBindings(cardData, SubHeader, entityType) as string);
     } else {
         resolvedSubHeader = SubHeader;
     }
@@ -86,6 +86,7 @@ export const CardView = ({ view }: DataProps) => {
         Argument: argument,
         SearchLanguage: userLanguage,
         AdditionalPropertiesToSelect: [],
+        CardViewType: 'Edit',
     };
 
     const mutation = useMutation({
