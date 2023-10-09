@@ -1,12 +1,15 @@
 import { DynamicObject } from '../../types/DynamicObject';
-import { resolveCardBindings } from '../../utils/utils';
+import { resolveCardBindings, resolveEntityBindings } from '../../utils/utils';
 import { ListItemRow } from './ListItemRow';
 import { useState } from 'react';
 import { SectionHeading } from './SectionHeading';
+import { getEntitySchema } from '../../temp/SchemaUtils';
+
 
 type ListProps = {
     xmlElementTree: DynamicObject;
     listData: DynamicObject;
+    entityType: string | null;
 };
 
 const PrintActions = ({
@@ -38,7 +41,7 @@ const PrintActions = ({
     return null;
 };
 
-export const List = ({ xmlElementTree, listData }: ListProps) => {
+export const List = ({ xmlElementTree, listData, entityType }: ListProps) => {
     const [isContentHidden, setIsContentHidden] = useState(false);
 
     const resolvedData = resolveCardBindings(
@@ -62,11 +65,13 @@ export const List = ({ xmlElementTree, listData }: ListProps) => {
 
     if (!columnsObject || columnsObject.children.length === 0) return null;
 
-    columnsObject.children.forEach((node: DynamicObject, idx: number) => {
-        columnsAndBindings.set(idx, [
-            node.attributes.Caption,
-            node.attributes.Value,
-        ]);
+    columnsObject.children.forEach((node: DynamicObject, idx: number) => {      
+        if(node.attributes.Caption != undefined && node.attributes.Value != undefined) {
+            columnsAndBindings.set(idx, [
+                node.attributes.Caption,
+                node.attributes.Value,
+            ]);
+        }
     });
 
     const actions: DynamicObject[] = xmlElementTree.children.find(
