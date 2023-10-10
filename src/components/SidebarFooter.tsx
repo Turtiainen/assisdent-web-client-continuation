@@ -1,3 +1,11 @@
+import {
+    assisdentMenuImage,
+    helpMenuImage,
+    powerMenuImage,
+    settingsMenuImage,
+    moreMenuImage,
+} from '../assets/ExportImages'
+
 interface SidebarFooterProps {
     isExpanded: boolean;
 }
@@ -5,31 +13,20 @@ interface SidebarFooterProps {
 export const SidebarFooter = ({ isExpanded }: SidebarFooterProps) => {
     return (
         <div
-            className={`absolute bottom-0 ${
-                isExpanded ? 'm-5 space-x-4' : 'm-1'
-            }
+            className={`absolute bottom-0 ${isExpanded ? 'm-7 space-x-6' : 'm-4'
+                }
             `}
             data-testid="sidebar-footer"
         >
             {isExpanded ? (
                 <>
-                    <button className="h-2 w-2 text-white items-center bg-transparent hover:text-ad-subtitle hover:border-transparent focus:border-transparent focus:outline-none">
-                        ?
-                    </button>
-                    <button className="h-2 w-2 text-white items-center bg-transparent hover:text-ad-subtitle hover:border-transparent focus:border-transparent focus:outline-none">
-                        S
-                    </button>
-                    <button className="h-2 w-2 text-white items-center bg-transparent hover:text-ad-subtitle hover:border-transparent focus:border-transparent focus:outline-none">
-                        A
-                    </button>
-                    <button className="h-2 w-2 text-white items-center bg-transparent hover:text-ad-subtitle hover:border-transparent focus:border-transparent focus:outline-none">
-                        Ô
-                    </button>
+                    <button><div className="h-4 w-7"><img src={helpMenuImage} /></div></button>
+                    <button><div className="h-4 w-7"><img src={settingsMenuImage} /></div></button>
+                    <button><div className="h-4 w-7"><img src={assisdentMenuImage} /></div></button>
+                    <button><div className="h-4 w-7"><img src={powerMenuImage} /></div></button>
                 </>
             ) : (
-                <button className="text-white items-center bg-transparent hover:text-ad-subtitle hover:border-transparent focus:border-transparent focus:outline-none">
-                    +
-                </button>
+                <button><div className="h-4 w-7"><img src={moreMenuImage} /></div></button>
             )}
         </div>
     );
