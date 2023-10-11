@@ -12,7 +12,7 @@ export const Menu = ({ onClick }: MenuProps) => {
             <div className="col-span-1 mx-1">
                 <div className="w-full inline-flex justify-between py-2 mb-4">
                     <div
-                        className="px-3 text-ad-hero-title text-sm cursor-pointer"
+                        className="px-3 text-ad-hero-title text-sm cursor-auto"
                         onClick={() => console.log('Valikko')}
                     >
                         Valikko
