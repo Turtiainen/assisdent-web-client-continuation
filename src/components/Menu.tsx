@@ -47,7 +47,7 @@ export const Menu = ({ onClick }: MenuProps) => {
                         ]}
                         onClick={() => console.log('POTILAAT')}
                     />
-                    <button className="bg-blue-500 hover-bg-blue-600 text-white text-sm w-full py-1 my-5 rounded">
+                    <button className="bg-blue-500 hover-bg-blue-600 text-white text-sm w-full py-1 my-2 rounded">
                         Luo uusi potilas
                     </button>
                     <MenuSection

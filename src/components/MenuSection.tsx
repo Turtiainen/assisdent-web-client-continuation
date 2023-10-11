@@ -39,7 +39,7 @@ export const MenuSection = ({ title, items, onClick }: SectionProps) => {
 
     return (
         <div>
-            <div className="flex items-center my-5">
+            <div className="flex items-center my-3">
                 <h4 className="flex-none mr-2 cursor-pointer" onClick={onClick}>
                     {title}
                 </h4>
@@ -62,7 +62,7 @@ export const MenuSection = ({ title, items, onClick }: SectionProps) => {
             </div>
 
             {showList && (
-                <ul className="w-80 pt-3 pr-4 cursor-pointer text-blue-500">
+                <ul className="w-80 pr-4 cursor-pointer text-blue-500 mb-3">
                     {items.map((item, index) => (
                         <MenuItem key={index} {...item} />
                     ))}
