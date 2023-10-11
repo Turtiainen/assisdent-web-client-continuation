@@ -27,10 +27,16 @@ export const MenuItem = ({ text, linkTo = '', onClick }: MenuItemProps) => (
 type SectionProps = {
     title: string;
     items: MenuItemProps[];
+    button?: JSX.Element;
     onClick: () => void;
 };
 
-export const MenuSection = ({ title, items, onClick }: SectionProps) => {
+export const MenuSection = ({
+    title,
+    items,
+    onClick,
+    button,
+}: SectionProps) => {
     const [showList, setShowList] = useState(false);
 
     const toggleList = () => {
@@ -40,7 +46,13 @@ export const MenuSection = ({ title, items, onClick }: SectionProps) => {
     return (
         <div>
             <div className="flex items-center my-3">
-                <h4 className="flex-none mr-2 cursor-pointer" onClick={onClick}>
+                <h4
+                    className="flex-none mr-2 cursor-pointer"
+                    onClick={() => {
+                        toggleList();
+                        onClick();
+                    }}
+                >
                     {title}
                 </h4>
                 <div className="flex-grow h-[1px] bg-black"></div>
@@ -62,11 +74,14 @@ export const MenuSection = ({ title, items, onClick }: SectionProps) => {
             </div>
 
             {showList && (
-                <ul className="w-80 pr-4 cursor-pointer text-blue-500 mb-3">
-                    {items.map((item, index) => (
-                        <MenuItem key={index} {...item} />
-                    ))}
-                </ul>
+                <div>
+                    <ul className="w-80 pr-4 cursor-pointer text-blue-500 mb-3">
+                        {items.map((item, index) => (
+                            <MenuItem key={index} {...item} />
+                        ))}
+                    </ul>
+                    {button}
+                </div>
             )}
         </div>
     );

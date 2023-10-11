@@ -240,6 +240,7 @@ export const sanitizeBinding = (binding: string) => {
 const resolveCardFormattedText = (
     entity: DynamicObject,
     identifier: string,
+    entityType?: string | null,
 ) => {
     let path: string[] | undefined;
     let finalEntity: DynamicObject | undefined;
@@ -257,6 +258,11 @@ const resolveCardFormattedText = (
     // Failed to find entityProperty with the given path
     if (path && !finalEntity) return;
 
+    if (identifier.includes('$EntityToString')) {
+        const entityToString = getEntityToString(entityType);
+        return parseHandlebars(entityToString, finalEntity);
+    }
+
     const formattedText = getFormattedText(identifier);
     if (!formattedText) return;
 
@@ -268,6 +274,7 @@ const resolveCardFormattedText = (
 export const resolveCardBindings = (
     entity: DynamicObject | null,
     binding: string,
+    entityType?: string | null,
 ) => {
     if (!entity) return '';
 
@@ -280,7 +287,7 @@ export const resolveCardBindings = (
         return tryToGetProp(entity, sanitizedBinding);
 
     if (bindingType === BindingKind.FORMATTED_TEXT)
-        return resolveCardFormattedText(entity, sanitizedBinding);
+        return resolveCardFormattedText(entity, sanitizedBinding, entityType);
 
     return binding;
 };

@@ -134,6 +134,7 @@ export const CardViewBuilder = ({
                                 key={element.attributes['__id'] as Key}
                                 element={element}
                                 cardData={cardData}
+                                entityType={entityType}
                             />
                         );
                     case 'Element':
@@ -148,7 +149,7 @@ export const CardViewBuilder = ({
                                 }
                                 entityType={entityType}
                             />
-                        );
+                        ); 
                     case 'Search': {
                         const sanitizedBinding = sanitizeBinding(
                             element.attributes.Value,
@@ -185,6 +186,7 @@ export const CardViewBuilder = ({
                         const content = resolveCardBindings(
                             cardData,
                             element.attributes.Value,
+                            entityType,
                         );
                         return (
                             <Editor

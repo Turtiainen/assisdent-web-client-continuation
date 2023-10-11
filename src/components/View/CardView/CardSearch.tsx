@@ -45,7 +45,7 @@ export const CardSearch = ({
     };
 
     const content = cardData
-        ? resolveCardBindings(cardData, element.attributes.Value)
+        ? resolveCardBindings(cardData, element.attributes.Value, entityType)
         : '';
     const valuePrintStyle =
         entityType && getPrintStyleFromEntitySchema(entityType);

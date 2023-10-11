@@ -27,17 +27,17 @@ export const Menu = ({ onClick }: MenuProps) => {
                             {
                                 text: 'Ajanvaraukset',
                                 onClick: () => console.log('Ajanvaraukset'),
-                                linkTo: '',
+                                linkTo: '/view/AppointmentRegisterView',
                             },
                             {
                                 text: 'Jatko-ohjeet',
                                 onClick: () => console.log('Jatko-ohjeet'),
-                                linkTo: '',
+                                linkTo: '/view/FollowupInstructionRegisterView',
                             },
                             {
                                 text: 'Kutsut',
                                 onClick: () => console.log('Kutsut'),
-                                linkTo: '',
+                                linkTo: '/view/RecallRegisterView',
                             },
                             {
                                 text: 'Potilaat',
@@ -46,10 +46,13 @@ export const Menu = ({ onClick }: MenuProps) => {
                             },
                         ]}
                         onClick={() => console.log('POTILAAT')}
+                        button={
+                            <button className="bg-blue-500 hover-bg-blue-600 text-white text-sm w-full py-1 my-2 rounded">
+                                Luo uusi potilas
+                            </button>
+                        }
                     />
-                    <button className="bg-blue-500 hover-bg-blue-600 text-white text-sm w-full py-1 my-2 rounded">
-                        Luo uusi potilas
-                    </button>
+
                     <MenuSection
                         title="TALOUS"
                         items={[]}
