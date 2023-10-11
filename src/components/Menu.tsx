@@ -11,7 +11,10 @@ export const Menu = ({ onClick }: MenuProps) => {
         <div className="min-h-[100vh] max-h-screen w-80 bg-ad-gray-300 left-64 shadow-md overflow-x-hidden overflow-y-hidden left-0 bottom-0 top-0">
             <div className="col-span-1 mx-1">
                 <div className="w-full inline-flex justify-between py-2 mb-4">
-                    <div className="px-3 text-ad-hero-title text-sm">
+                    <div
+                        className="px-3 text-ad-hero-title text-sm cursor-auto"
+                        onClick={() => console.log('Valikko')}
+                    >
                         Valikko
                     </div>
                     <button className="px-2" onClick={onClick}>
@@ -47,7 +50,10 @@ export const Menu = ({ onClick }: MenuProps) => {
                         ]}
                         onClick={() => console.log('POTILAAT')}
                         button={
-                            <button className="bg-blue-500 hover-bg-blue-600 text-white text-sm w-full py-1 my-2 rounded">
+                            <button
+                                className="bg-blue-500 hover-bg-blue-600 text-white text-sm w-full py-1 my-2 rounded"
+                                onClick={() => console.log('Luo uusi potilas')}
+                            >
                                 Luo uusi potilas
                             </button>
                         }
