@@ -1,27 +1,51 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import { SidebarItems } from './SidebarItems';
 import { SidebarFooter } from './SidebarFooter';
 import { Link } from 'react-router-dom';
 import { SubSidebarSearch } from './SubSidebarSearch';
 
+import {
+    calendarMenuImage,
+    menuCloseMenuImage,
+    draftMenuImage,
+    menuMenuImage,
+    messagesMenuImage,
+    officeMenuImage,
+    menuOpenMenuImage,
+    searchMenuImage,
+    userMenuImage,
+    workQueueMenuImage,
+} from '../assets/ExportImages'
+
+//TODO: check if schema sends date and fix
+const today = new Date();
+const month = today.getMonth()+1;
+const year = today.getFullYear();
+const date = today. getDate();
+const weekday = ["Sun","Mon","Tue","Wed","Thur","Fri","Sat"];
+
 export const Sidebar = () => {
-    const [isExpanded, setIsExpanded] = useState<boolean>(true);
+    const [isExpanded, setIsExpanded] = useState<boolean>(false);
     const [subSidebar, setSubSidebar] = useState<null | JSX.Element>(null);
+
+    useEffect(() => {
+        setIsExpanded(!isExpanded)
+    }, [subSidebar])
 
     const exampleSidebarItems = [
         {
             text: 'Valikko',
-            icon: '🍔',
+            icon: menuMenuImage,
             onClick: () => console.log('Valikko'),
             isExpanded: isExpanded,
         },
         {
             text: 'Haku',
-            icon: '🔍',
+            icon: searchMenuImage,
             onClick: () =>
                 setSubSidebar(
-                    <SubSidebarSearch onClick={() => setSubSidebar(null)} />,
+                    subSidebar ? null : <SubSidebarSearch onClick={() => setSubSidebar(null)} />,
                 ),
             isExpanded: isExpanded,
         },
@@ -30,37 +54,37 @@ export const Sidebar = () => {
     const exampleSidebarSubContent = [
         {
             text: 'Matti Meikäläinen',
-            icon: '👨‍💻',
+            icon: userMenuImage,
             onClick: () => console.log('Matti Meikäläinen'),
             isExpanded: isExpanded,
         },
         {
-            text: 'Tänään Xx x.x.xxxx',
-            icon: '📅',
-            onClick: () => console.log('Tänään Xx x.x.xxxx'),
+            text: 'Tänään ' + weekday[today.getDay()] + ' ' + date + "/" + month + "/" + year,
+            icon: calendarMenuImage,
+            onClick: () => console.log('Tänään'),
             isExpanded: isExpanded,
         },
         {
             text: 'Keskeneräiset',
-            icon: '0',
+            icon: draftMenuImage,
             onClick: () => console.log('Keskeneräiset'),
             isExpanded: isExpanded,
         },
         {
             text: 'Viestit ja kommentit',
-            icon: '💬',
+            icon: messagesMenuImage,
             onClick: () => console.log('Viestit ja kommentit'),
             isExpanded: isExpanded,
         },
         {
             text: 'Työjono',
-            icon: '📝',
+            icon: workQueueMenuImage,
             onClick: () => console.log('Työjono'),
             isExpanded: isExpanded,
         },
         {
             text: 'Työtila',
-            icon: '🏢',
+            icon: officeMenuImage,
             onClick: () => console.log('Työtila'),
             isExpanded: isExpanded,
         },
@@ -69,9 +93,8 @@ export const Sidebar = () => {
     return (
         <>
             <aside
-                className={`min-h-[100vh] max-h-screen bg-ad-sidebar overflow-x-hidden overflow-y-auto transition-[width] sticky relative left-0 bottom-0 top-0 ${
-                    isExpanded ? 'w-64' : 'w-14'
-                }`}
+                className={`min-h-[100vh] max-h-screen bg-ad-sidebar overflow-x-hidden overflow-y-auto transition-[width] sticky relative left-0 bottom-0 top-0 ${isExpanded ? 'w-64' : 'w-14'
+                    }`}
             >
                 <div className="flex">
                     {isExpanded ? (
@@ -88,7 +111,7 @@ export const Sidebar = () => {
                         className="font-medium bg-transparent text-white hover:text-ad-subtitle hover:border-transparent focus:border-transparent focus:outline-none w-1/3"
                         onClick={() => setIsExpanded(!isExpanded)}
                     >
-                        {isExpanded ? '<=' : '=>'}
+                        {isExpanded ? <div className="mx-4 -mt-2 h-2 w-6"><img src={menuCloseMenuImage} /></div> : <div className="mx-6 mt-4 h-8 w-6"><img src={menuOpenMenuImage} /></div>}
                     </button>
                 </div>
                 <SidebarItems
@@ -103,7 +126,7 @@ export const Sidebar = () => {
                 />
                 <SidebarFooter isExpanded={isExpanded} />
             </aside>
-            {subSidebar && subSidebar}
+            {subSidebar}
         </>
     );
 };

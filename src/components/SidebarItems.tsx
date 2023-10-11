@@ -18,7 +18,7 @@ export const SidebarItems = ({
                     className={`mb-2 ml-2 text-left text-ad-subtitle overflow-hidden after:h-[1px] after:bg-ad-subtitle after:inline-flex after:align-middle ${
                         isExpanded
                             ? 'after:w-3/6 after:ml-1 pt-2'
-                            : 'after:w-full after:ml-0 pt-2'
+                            : 'after:w-5/6 after:ml-0 pt-2'
                     }`}
                 >
                     {isExpanded ? title : ''}
