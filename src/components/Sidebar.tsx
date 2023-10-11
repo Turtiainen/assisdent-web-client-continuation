@@ -4,6 +4,7 @@ import { SidebarItems } from './SidebarItems';
 import { SidebarFooter } from './SidebarFooter';
 import { Link } from 'react-router-dom';
 import { SubSidebarSearch } from './SubSidebarSearch';
+import { Menu } from './Menu';
 
 export const Sidebar = () => {
     const [isExpanded, setIsExpanded] = useState<boolean>(true);
@@ -13,7 +14,8 @@ export const Sidebar = () => {
         {
             text: 'Valikko',
             icon: '🍔',
-            onClick: () => console.log('Valikko'),
+            onClick: () =>
+                setSubSidebar(<Menu onClick={() => setSubSidebar(null)} />),
             isExpanded: isExpanded,
         },
         {
