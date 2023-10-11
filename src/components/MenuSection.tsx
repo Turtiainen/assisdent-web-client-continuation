@@ -13,7 +13,7 @@ type MenuItemProps = {
     linkTo?: string;
 };
 
-export const MenuItem = ({ text, linkTo = '', onClick }: MenuItemProps) => (
+const MenuItem = ({ text, linkTo = '', onClick }: MenuItemProps) => (
     <li onClick={onClick}>
         <Link to={linkTo}>{text}</Link>
         <img

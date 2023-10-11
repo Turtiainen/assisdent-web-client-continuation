@@ -12,7 +12,7 @@ export const Menu = ({ onClick }: MenuProps) => {
             <div className="col-span-1 mx-1">
                 <div className="w-full inline-flex justify-between py-2 mb-4">
                     <div
-                        className="px-3 text-ad-hero-title text-sm cursor-auto"
+                        className="px-3 text-ad-hero-title text-sm cursor-pointer"
                         onClick={() => console.log('Valikko')}
                     >
                         Valikko
@@ -51,7 +51,7 @@ export const Menu = ({ onClick }: MenuProps) => {
                         onClick={() => console.log('POTILAAT')}
                         button={
                             <button
-                                className="bg-blue-500 hover-bg-blue-600 text-white text-sm w-full py-1 my-2 rounded"
+                                className="bg-blue-500 hover:bg-blue-800 text-white text-sm w-full py-1 my-2 rounded"
                                 onClick={() => console.log('Luo uusi potilas')}
                             >
                                 Luo uusi potilas
