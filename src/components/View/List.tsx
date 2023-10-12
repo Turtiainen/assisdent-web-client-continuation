@@ -5,7 +5,6 @@ import { useState } from 'react';
 import { SectionHeading } from './SectionHeading';
 import { getEntitySchema } from '../../temp/SchemaUtils';
 
-
 type ListProps = {
     xmlElementTree: DynamicObject;
     listData: DynamicObject;
@@ -65,11 +64,14 @@ export const List = ({ xmlElementTree, listData, entityType }: ListProps) => {
 
     if (!columnsObject || columnsObject.children.length === 0) return null;
 
-    columnsObject.children.forEach((node: DynamicObject, idx: number) => {      
-        if(node.attributes.Caption != undefined && node.attributes.Value != undefined) {
+    columnsObject.children.forEach((node: DynamicObject, idx: number) => {
+        if (
+            (node.attributes.Caption && node.attributes.Value) ||
+            (node.attributes.ColumnHeader && node.attributes.Text)
+        ) {
             columnsAndBindings.set(idx, [
-                node.attributes.Caption,
-                node.attributes.Value,
+                node.attributes.Caption ?? node.attributes.ColumnHeader,
+                node.attributes.Value ?? node.attributes.Text,
             ]);
         }
     });
@@ -80,11 +82,13 @@ export const List = ({ xmlElementTree, listData, entityType }: ListProps) => {
 
     return (
         <div className={`basis-full my-8 col-span-2 [column-span:all]`}>
-            <SectionHeading
-                onClick={() => setIsContentHidden(!isContentHidden)}
-            >
-                {xmlElementTree.attributes.Caption}
-            </SectionHeading>
+            {xmlElementTree.attributes.Caption && (
+                <SectionHeading
+                    onClick={() => setIsContentHidden(!isContentHidden)}
+                >
+                    {xmlElementTree.attributes.Caption}
+                </SectionHeading>
+            )}
             {!isContentHidden && (
                 <table
                     className={`border-collapse border-spacing-1 bg-white w-full mt-2`}
