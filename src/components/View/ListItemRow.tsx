@@ -21,21 +21,34 @@ export const ListItemRow = ({
                 const cellValue = resolveCardBindings(listItem, binding);
                 const nodeType = col?.name;
 
-                return (
-                    <td
-                        key={colHeader?.toString().concat(binding)}
-                        className={`p-2`}
-                    >
-                        {nodeType === 'Button' && (
-                            <CardButton
-                                element={col}
-                                cardData={listItem}
-                                isListItem
-                            />
-                        )}
-                        {nodeType === 'Element' && <>{cellValue?.toString()}</>}
-                    </td>
-                );
+                // Render different cell element depending on nodeType (from schema)
+                if (nodeType === 'Button') {
+                    return (
+                        <td
+                            key={colHeader?.toString().concat(binding)}
+                            className={`p-2`}
+                        >
+                            {nodeType === 'Button' && (
+                                <CardButton
+                                    element={col}
+                                    cardData={listItem}
+                                    isListItem
+                                />
+                            )}
+                        </td>
+                    );
+                } else if (cellValue !== null) {
+                    return (
+                        <td
+                            key={colHeader?.toString().concat(binding)}
+                            className={`p-2`}
+                        >
+                            {cellValue?.toString()}
+                        </td>
+                    );
+                } else {
+                    return null;
+                }
             })}
             <td className={`p-2`}>
                 <div

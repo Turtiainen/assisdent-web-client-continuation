@@ -23,17 +23,18 @@ export const TranslationList = ({ translations }: TranslationListProps) => {
         <table className={`border-collapse border-spacing-1 bg-white w-full`}>
             <thead className={`bg-[#d2dce6]`}>
                 <tr>
-                    {rowData?.map((col) => (
-                        <th
-                            key={col?.attributes?.Caption.toString().concat(
-                                '-',
-                                col?.attributes?.Value,
-                            )}
-                            className="text-left p-2 font-semibold text-slate-600"
-                        >
-                            {col?.attributes?.Caption}
-                        </th>
-                    ))}
+                    {rowData?.map((col) => {
+                        const header = col?.attributes?.Caption;
+                        const binding = col?.attributes?.Value;
+                        return (
+                            <th
+                                key={header.toString().concat('-', binding)}
+                                className="text-left p-2 font-semibold text-slate-600"
+                            >
+                                {header}
+                            </th>
+                        );
+                    })}
                     <th className="text-left w-8 p-2 font-semibold text-slate-600"></th>
                 </tr>
             </thead>
