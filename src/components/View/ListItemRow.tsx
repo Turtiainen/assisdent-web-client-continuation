@@ -1,28 +1,39 @@
 import { DynamicObject } from '../../types/DynamicObject';
 import { resolveCardBindings } from '../../utils/utils';
+import { CardButton } from './CardView/CardButton';
 
 export const ListItemRow = ({
     listItem,
-    columnsAndBindings,
+    rowData,
 }: {
     listItem: DynamicObject;
-    columnsAndBindings: Map<number, [string, string]>;
+    rowData: DynamicObject;
 }) => {
     return (
         <tr
             className={`border-b border-gray-300 hover:bg-blue-100/30 transition-[background-color] duration-300 ease-in-out`}
         >
-            {Array.from(columnsAndBindings.values()).map((column) => {
-                const value = resolveCardBindings(listItem, column[1]);
+            {rowData?.map((col: DynamicObject) => {
+                const colHeader =
+                    col.attributes?.Caption ?? col.attributes?.ColumnHeader;
+                const binding = col.attributes?.Value ?? col.attributes?.Text;
 
-                if (value === null || value === undefined) return null;
+                const cellValue = resolveCardBindings(listItem, binding);
+                const nodeType = col?.name;
 
                 return (
                     <td
-                        key={column[0].toString().concat(column[1])}
+                        key={colHeader?.toString().concat(binding)}
                         className={`p-2`}
                     >
-                        {value.toString()}
+                        {nodeType === 'Button' && (
+                            <CardButton
+                                element={col}
+                                cardData={listItem}
+                                isListItem
+                            />
+                        )}
+                        {nodeType === 'Element' && <>{cellValue?.toString()}</>}
                     </td>
                 );
             })}

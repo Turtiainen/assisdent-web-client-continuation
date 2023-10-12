@@ -5,10 +5,16 @@ type TranslationListProps = {
     translations: DynamicObject[];
 };
 
-const columnsAndBindings = new Map<number, [string, string]>([
-    [0, ['Kieli', '{Binding Language}']],
-    [1, ['Kuvaus', '{Binding Text}']],
-]);
+const rowData: DynamicObject[] = [
+    {
+        attributes: { Caption: 'Kieli', Value: '{Binding Language}' },
+        name: 'Element',
+    },
+    {
+        attributes: { Caption: 'Kuvaus', Value: '{Binding Text}' },
+        name: 'Element',
+    },
+];
 
 export const TranslationList = ({ translations }: TranslationListProps) => {
     if (!translations || translations.length === 0) return null;
@@ -17,12 +23,15 @@ export const TranslationList = ({ translations }: TranslationListProps) => {
         <table className={`border-collapse border-spacing-1 bg-white w-full`}>
             <thead className={`bg-[#d2dce6]`}>
                 <tr>
-                    {Array.from(columnsAndBindings.values()).map((column) => (
+                    {rowData?.map((col) => (
                         <th
-                            key={column[0].toString().concat('-', column[1])}
+                            key={col?.attributes?.Caption.toString().concat(
+                                '-',
+                                col?.attributes?.Value,
+                            )}
                             className="text-left p-2 font-semibold text-slate-600"
                         >
-                            {column[0]}
+                            {col?.attributes?.Caption}
                         </th>
                     ))}
                     <th className="text-left w-8 p-2 font-semibold text-slate-600"></th>
@@ -34,7 +43,7 @@ export const TranslationList = ({ translations }: TranslationListProps) => {
                         <ListItemRow
                             key={'language-'.concat(listItem.Language)}
                             listItem={listItem}
-                            columnsAndBindings={columnsAndBindings}
+                            rowData={rowData}
                         />
                     );
                 })}

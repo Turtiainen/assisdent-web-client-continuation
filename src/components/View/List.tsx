@@ -56,25 +56,11 @@ export const List = ({ xmlElementTree, listData, entityType }: ListProps) => {
         return null;
     }
 
-    const columnsAndBindings = new Map<number, [string, string]>();
-
     const columnsObject = xmlElementTree.children.find(
         (el: DynamicObject) => el.name === 'Columns',
     );
 
     if (!columnsObject || columnsObject.children.length === 0) return null;
-
-    columnsObject.children.forEach((node: DynamicObject, idx: number) => {
-        if (
-            (node.attributes.Caption && node.attributes.Value) ||
-            (node.attributes.ColumnHeader && node.attributes.Text)
-        ) {
-            columnsAndBindings.set(idx, [
-                node.attributes.Caption ?? node.attributes.ColumnHeader,
-                node.attributes.Value ?? node.attributes.Text,
-            ]);
-        }
-    });
 
     const actions: DynamicObject[] = xmlElementTree.children.find(
         (el: DynamicObject) => el.name === 'AddControl',
@@ -95,16 +81,24 @@ export const List = ({ xmlElementTree, listData, entityType }: ListProps) => {
                 >
                     <thead className={`bg-[#d2dce6]`}>
                         <tr>
-                            {Array.from(columnsAndBindings.values()).map(
-                                (column, idx) => (
-                                    <th
-                                        key={idx}
-                                        className="text-left p-2 font-semibold text-slate-600"
-                                    >
-                                        {column[0]}
-                                    </th>
-                                ),
+                            {columnsObject.children.map(
+                                (node: DynamicObject, idx: number) => {
+                                    const colHeader =
+                                        node.attributes.Caption ??
+                                        node.attributes.ColumnHeader;
+                                    if (colHeader) {
+                                        return (
+                                            <th
+                                                key={idx}
+                                                className="text-left p-2 font-semibold text-slate-600"
+                                            >
+                                                {colHeader}
+                                            </th>
+                                        );
+                                    }
+                                },
                             )}
+
                             <th className="text-left w-8 p-2 font-semibold text-slate-600"></th>
                         </tr>
                     </thead>
@@ -114,7 +108,7 @@ export const List = ({ xmlElementTree, listData, entityType }: ListProps) => {
                                 <ListItemRow
                                     key={listItem.Id}
                                     listItem={listItem}
-                                    columnsAndBindings={columnsAndBindings}
+                                    rowData={columnsObject.children}
                                 />
                             );
                         })}
@@ -124,7 +118,7 @@ export const List = ({ xmlElementTree, listData, entityType }: ListProps) => {
                             <tr>
                                 <PrintActions
                                     actions={actions}
-                                    colCount={columnsAndBindings.size + 1}
+                                    colCount={columnsObject.children.size + 1}
                                 />
                             </tr>
                         </tfoot>

@@ -5,9 +5,11 @@ import { resolveCardBindings } from '../../../utils/utils';
 export const CardButton = ({
     element,
     cardData,
+    isListItem,
 }: {
     element: DynamicObject;
     cardData: DynamicObject | null;
+    isListItem?: boolean | undefined;
 }) => {
     const children = element.children as DynamicObject;
     const elementName = children?.[0].name;
@@ -37,6 +39,17 @@ export const CardButton = ({
             }
 
             const cardIdToNavigate = resolveCardBindings(cardData, childrenId);
+            if (isListItem) {
+                return (
+                    <Link
+                        className="flex-1 max-h-12 px-2 py-1 font-semibold text-ad-primary hover:text-ad-primary-hover"
+                        to={`/view/${entity}CardView/${cardIdToNavigate?.toString()}`}
+                        id={element.attributes.Identifier}
+                    >
+                        {binding?.toString()}
+                    </Link>
+                );
+            }
             return (
                 <div className="flex flex-col lg:flex-row lg:gap-32">
                     <label
