@@ -5,7 +5,6 @@ import { useState } from 'react';
 import { SectionHeading } from './SectionHeading';
 import { getEntitySchema } from '../../temp/SchemaUtils';
 
-
 type ListProps = {
     xmlElementTree: DynamicObject;
     listData: DynamicObject;
@@ -57,22 +56,11 @@ export const List = ({ xmlElementTree, listData, entityType }: ListProps) => {
         return null;
     }
 
-    const columnsAndBindings = new Map<number, [string, string]>();
-
     const columnsObject = xmlElementTree.children.find(
         (el: DynamicObject) => el.name === 'Columns',
     );
 
     if (!columnsObject || columnsObject.children.length === 0) return null;
-
-    columnsObject.children.forEach((node: DynamicObject, idx: number) => {      
-        if(node.attributes.Caption != undefined && node.attributes.Value != undefined) {
-            columnsAndBindings.set(idx, [
-                node.attributes.Caption,
-                node.attributes.Value,
-            ]);
-        }
-    });
 
     const actions: DynamicObject[] = xmlElementTree.children.find(
         (el: DynamicObject) => el.name === 'AddControl',
@@ -80,27 +68,37 @@ export const List = ({ xmlElementTree, listData, entityType }: ListProps) => {
 
     return (
         <div className={`basis-full my-8 col-span-2 [column-span:all]`}>
-            <SectionHeading
-                onClick={() => setIsContentHidden(!isContentHidden)}
-            >
-                {xmlElementTree.attributes.Caption}
-            </SectionHeading>
+            {xmlElementTree.attributes.Caption && (
+                <SectionHeading
+                    onClick={() => setIsContentHidden(!isContentHidden)}
+                >
+                    {xmlElementTree.attributes.Caption}
+                </SectionHeading>
+            )}
             {!isContentHidden && (
                 <table
                     className={`border-collapse border-spacing-1 bg-white w-full mt-2`}
                 >
                     <thead className={`bg-[#d2dce6]`}>
                         <tr>
-                            {Array.from(columnsAndBindings.values()).map(
-                                (column, idx) => (
-                                    <th
-                                        key={idx}
-                                        className="text-left p-2 font-semibold text-slate-600"
-                                    >
-                                        {column[0]}
-                                    </th>
-                                ),
+                            {columnsObject.children.map(
+                                (node: DynamicObject, idx: number) => {
+                                    const colHeader =
+                                        node.attributes.Caption ??
+                                        node.attributes.ColumnHeader;
+                                    if (colHeader) {
+                                        return (
+                                            <th
+                                                key={idx}
+                                                className="text-left p-2 font-semibold text-slate-600"
+                                            >
+                                                {colHeader}
+                                            </th>
+                                        );
+                                    }
+                                },
                             )}
+
                             <th className="text-left w-8 p-2 font-semibold text-slate-600"></th>
                         </tr>
                     </thead>
@@ -110,7 +108,7 @@ export const List = ({ xmlElementTree, listData, entityType }: ListProps) => {
                                 <ListItemRow
                                     key={listItem.Id}
                                     listItem={listItem}
-                                    columnsAndBindings={columnsAndBindings}
+                                    rowData={columnsObject.children}
                                 />
                             );
                         })}
@@ -120,7 +118,7 @@ export const List = ({ xmlElementTree, listData, entityType }: ListProps) => {
                             <tr>
                                 <PrintActions
                                     actions={actions}
-                                    colCount={columnsAndBindings.size + 1}
+                                    colCount={columnsObject.children.size + 1}
                                 />
                             </tr>
                         </tfoot>
