@@ -4,6 +4,7 @@ import {
     getEntitySchema,
     getEntityToString,
     getFormattedText,
+    getMetaViews,
 } from '../temp/SchemaUtils';
 import Handlebars from 'handlebars';
 import { DtoEntity } from '../types/DtoEntity';
@@ -305,4 +306,51 @@ export const getUserLanguage = () => {
     else lang = navigator.language.split('-')[0];
 
     return lang in SUPPORTED_LANGUAGES ? lang : DEFAULT_LANGUAGE;
+};
+
+/**
+ * A function for resolving navigation link target view name based on the entity name and command type.
+ * View name is resolved by iterating the whole metaviewList for a view that includes both
+ * the entity name and a specific command target view type.
+ *
+ * @param {string} entityName target view entity
+ * @param {string} command "NavigateToCardCommand" | "NavigateToRegisterCommand" | "CommandReference"
+ * @returns {string} The resolved target view name. If no matching view is found, the original entity name is returned.
+ *
+ * @example
+ *  // finds and returns a target view "Economy:DiscountContractCardView"
+ *  resolveLinkTargetView("DiscoundContract", "NavigateToCardCommand")
+ */
+export const resolveLinkTargetView = (
+    entityName: string,
+    command: string,
+): string => {
+    const xmlMetaViewList = getMetaViews();
+    const xmlParser = new DOMParser();
+
+    const commandTargetViewTypes: { [key: string]: string } = {
+        NavigateToCardCommand: 'CardView',
+        NavigateToRegisterCommand: 'RegisterView',
+        CommandReference: '',
+    };
+
+    let targetViewName;
+    // Iterate through the xmlMetaViewList and check if there is a metaview item with name
+    // that includes both entity name and commandTargetViewType.
+    for (const metaView of xmlMetaViewList) {
+        const doc = xmlParser.parseFromString(
+            metaView.XML,
+            'text/xml',
+        ).documentElement;
+        const name = doc.getAttribute('Name');
+
+        if (
+            name?.includes(entityName) &&
+            name?.includes(commandTargetViewTypes?.[command])
+        ) {
+            targetViewName = name;
+            break;
+        }
+    }
+    return targetViewName || entityName;
 };

@@ -1,6 +1,9 @@
 import { Link } from 'react-router-dom';
 import { DynamicObject } from '../../../types/DynamicObject';
-import { resolveCardBindings } from '../../../utils/utils';
+import {
+    resolveCardBindings,
+    resolveLinkTargetView,
+} from '../../../utils/utils';
 
 export const CardButton = ({
     element,
@@ -16,12 +19,14 @@ export const CardButton = ({
     const entity = children?.[0].attributes.Entity;
     const childrenId = children?.[0].attributes.Id;
 
+    const linkTargetView = resolveLinkTargetView(entity, elementName);
+
     switch (elementName) {
         case 'NavigateToRegisterCommand':
             return (
                 <Link
                     className="flex flex-col lg:flex-row lg:gap-32 font-semibold text-ad-primary hover:text-ad-primary-hover"
-                    to={`/view/${entity}RegisterView`}
+                    to={`/view/${linkTargetView}`}
                     id={element.attributes.Identifier}
                 >
                     {element.attributes.Text}
@@ -43,7 +48,7 @@ export const CardButton = ({
                 return (
                     <Link
                         className="flex-1 max-h-12 px-2 py-1 font-semibold text-ad-primary hover:text-ad-primary-hover"
-                        to={`/view/${entity}CardView/${cardIdToNavigate?.toString()}`}
+                        to={`/view/${linkTargetView}/${cardIdToNavigate?.toString()}`}
                         id={element.attributes.Identifier}
                     >
                         {binding?.toString()}
@@ -61,7 +66,7 @@ export const CardButton = ({
                     {cardIdToNavigate ? (
                         <Link
                             className="flex-1 max-h-12 px-2 py-1 font-semibold text-ad-primary hover:text-ad-primary-hover"
-                            to={`/view/${entity}CardView/${cardIdToNavigate?.toString()}`}
+                            to={`/view/${linkTargetView}/${cardIdToNavigate?.toString()}`}
                             id={element.attributes.Identifier}
                         >
                             {binding?.toString()}
