@@ -309,12 +309,14 @@ export const getUserLanguage = () => {
 };
 
 /**
- * A function for resolving navigation link target view name based on the entity name and command type.
+ * A function for resolving navigation link target view name based on the entity name and/or command type.
  * View name is resolved by iterating the whole metaviewList for a view that includes both
  * the entity name and a specific command target view type.
+ * In some cases the target view can be resolved directly from the commandEntity (NavigateCommand)
  *
  * @param {string} entityName target view entity
  * @param {string} command "NavigateToCardCommand" | "NavigateToRegisterCommand" | "CommandReference"
+ * @param {DynamicObject | undefined} commandEntity object
  * @returns {string} The resolved target view name. If no matching view is found, the original entity name is returned.
  *
  * @example
@@ -324,7 +326,13 @@ export const getUserLanguage = () => {
 export const resolveLinkTargetView = (
     entityName: string,
     command: string,
+    commandEntity?: DynamicObject,
 ): string => {
+    //If command is "navigateCommand", extract the targetView directly from command entity
+    if (command === 'NavigateCommand' && commandEntity) {
+        return commandEntity?.getAttribute('ViewName');
+    }
+
     const xmlMetaViewList = getMetaViews();
     const xmlParser = new DOMParser();
 

@@ -1,13 +1,15 @@
 import React, { ChangeEventHandler, MouseEventHandler, useState } from 'react';
-import { resolveEntityBindings } from '../../utils/utils';
+import {
+    resolveEntityBindings,
+    resolveLinkTargetView,
+} from '../../utils/utils';
 import { DynamicObject } from '../../types/DynamicObject';
 import { Link } from 'react-router-dom';
 import { useContextMenu } from '../../context/ContextMenuProvider';
 
 export type RegisterTableProps = {
-    columns: string[];
+    tableData: DynamicObject[];
     entities: DynamicObject[];
-    bindings: string[][];
     entityType: string | null;
     contextMenu:
         | {
@@ -17,9 +19,8 @@ export type RegisterTableProps = {
 };
 
 export const RegisterTable = ({
-    columns,
+    tableData,
     entities,
-    bindings,
     entityType,
     contextMenu,
 }: RegisterTableProps) => {
@@ -106,13 +107,13 @@ export const RegisterTable = ({
                         disabled={!entities || entities.length === 0}
                     />
                 </th>
-                {columns?.map((c, idx) => {
+                {tableData?.map((c, idx) => {
                     return (
                         <th
                             className="text-left px-2 font-semibold text-slate-600"
                             key={idx}
                         >
-                            {c}
+                            {c?.header}
                         </th>
                     );
                 })}
@@ -120,6 +121,8 @@ export const RegisterTable = ({
             </tr>
         </thead>
     );
+
+    const bindings = tableData.map((item) => item.binding);
 
     const TableRows = entities.map((entity) => {
         const entityBindings = resolveEntityBindings(
@@ -143,32 +146,35 @@ export const RegisterTable = ({
                     />
                 </td>
                 {entityBindings.map((bindingValues, idx) => {
-                    const isLink = idx === 0;
+                    const element = tableData?.[idx];
                     return (
                         <td className="text-left text-sm px-2" key={idx}>
-                            {isLink ? (
-                                <>
-                                    {bindingValues.map((bindingValue, idx) => {
-                                        return (
-                                            <p key={idx}>
-                                                <Link
-                                                    to={`/view/${entityType}CardView/${entity.Id}`}
-                                                    className={`underline font-semibold cursor-pointer`}
-                                                >
-                                                    {bindingValue}
-                                                    <span
-                                                        className={`font-bold`}
-                                                    >{`>`}</span>
-                                                </Link>
-                                            </p>
-                                        );
-                                    })}
-                                </>
-                            ) : (
-                                bindingValues.map((bindingValue, idx) => {
+                            {bindingValues.map((bindingValue, idx) => {
+                                if (element.elemType === 'Button') {
+                                    const command = element?.children;
+
+                                    const linkTarget = resolveLinkTargetView(
+                                        command?.getAttribute('Entity') || '',
+                                        command?.tagName,
+                                        command,
+                                    );
+                                    return (
+                                        <p key={idx}>
+                                            <Link
+                                                to={`/view/${linkTarget}/${entity.Id}`}
+                                                className={`underline font-semibold cursor-pointer`}
+                                            >
+                                                {bindingValue}
+                                                <span
+                                                    className={`font-bold`}
+                                                >{`>`}</span>
+                                            </Link>
+                                        </p>
+                                    );
+                                } else {
                                     return <p key={idx}>{bindingValue}</p>;
-                                })
-                            )}
+                                }
+                            })}
                         </td>
                     );
                 })}
