@@ -103,7 +103,7 @@ export const RegisterView = ({ view }: DataProps) => {
     const orderBy: OrderBy[] = parseOrderOptions(OrderOptionsEl, EntitySchema);
     !selectedOrderOption && setSelectedOrderOption(orderBy[0] || null);
 
-    const { columns, bindings } = parseRegisterMetaView(view);
+    const tableData = parseRegisterMetaView(view);
 
     /**
      * Event handling
@@ -182,9 +182,8 @@ export const RegisterView = ({ view }: DataProps) => {
                         handleSelectOrderBy={handleSelectOrderBy}
                     />
                     <RegisterTable
-                        columns={columns}
+                        tableData={tableData}
                         entities={fetchedEntities}
-                        bindings={bindings}
                         entityType={EntityType}
                         contextMenu={TableRowContextMenuItemsFormatted}
                     />

@@ -64,31 +64,43 @@ const getColumnHeader = (element: Element): string => {
     );
 };
 
-const pushBindingsAndColumns = (
+interface IColumnData {
+    elemType: string;
+    children?: DynamicObject;
+    binding: [string | null];
+    header: string;
+}
+const pushColumnData = (
     element: Element,
-    bindings: Array<Array<string>>,
-    columns: string[],
+    columns: IColumnData[],
     captionOverride: string | null,
     getAttributeBy: string,
+    tagName: string,
 ) => {
     if (
         columns.length === 0 ||
         (captionOverride ?? getColumnHeader(element)) !==
-            columns[columns.length - 1]
+            columns[columns.length]?.header
     ) {
-        bindings.push([element.getAttribute(getAttributeBy)!]);
-        columns.push(captionOverride ?? getColumnHeader(element));
+        const colData: IColumnData = {
+            elemType: tagName,
+            binding: [element?.getAttribute(getAttributeBy)],
+            header: captionOverride ?? getColumnHeader(element),
+        };
+        //Add additional Children attribute to rowData if tagName is button to determine button actions later
+        if (tagName === 'Button') {
+            colData.children = element.children?.[0];
+        }
+        columns.push(colData);
     } else {
-        bindings[bindings.length - 1].push(
-            element.getAttribute(getAttributeBy)!,
+        columns?.[columns.length - 1].binding.push(
+            element?.getAttribute(getAttributeBy),
         );
     }
 };
 
 export const parseRegisterMetaView = (view: Element) => {
-    const columns: string[] = [];
-    const bindings: string[][] = [];
-
+    const columns: IColumnData[] = [];
     const captionOverrides: string[] = [];
 
     const getColumnsRecursively = (element: Element) => {
@@ -106,20 +118,20 @@ export const parseRegisterMetaView = (view: Element) => {
                 : null;
 
         if (element.tagName === 'Button') {
-            pushBindingsAndColumns(
+            pushColumnData(
                 element,
-                bindings,
                 columns,
                 captionOverride,
                 'Text',
+                element.tagName,
             );
         } else if (element.tagName === 'Element') {
-            pushBindingsAndColumns(
+            pushColumnData(
                 element,
-                bindings,
                 columns,
                 captionOverride,
                 'Value',
+                element.tagName,
             );
         }
 
@@ -137,8 +149,7 @@ export const parseRegisterMetaView = (view: Element) => {
                 ?.getElementsByTagName('Content')[0],
         );
     }
-
-    return { columns, bindings };
+    return columns;
 };
 
 // Split OrderName attribute into an array, if the string has commas in it
