@@ -10,6 +10,8 @@ import { PrintSchemaInfo } from './temp/PrintSchemaInfo';
 import { IndexPage } from './components/IndexPage';
 import { PrintEntitySchema } from './temp/PrintEntitySchema';
 import ContextMenuProvider from './context/ContextMenuProvider';
+import { FieldChoice } from './components/FieldChoice';
+import { Login } from './components/Login';
 
 const queryClient = new QueryClient();
 
@@ -38,6 +40,10 @@ const router = createBrowserRouter([
         // For schema debugging purposes
         path: '/print-entity-schema',
         element: <PrintEntitySchema />,
+    },
+    {
+        path: '/login',
+        element: <Login />,
     },
 ]);
 

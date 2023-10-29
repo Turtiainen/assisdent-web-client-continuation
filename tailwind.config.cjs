@@ -37,8 +37,37 @@ module.exports = {
                 'ad-disabled': colors['ad-grey-400'],
                 'ad-caption': colors['ad-grey-800'],
                 'ad-sidebar': '#162f72',
-                'ad-subsidebar': colors['ad-grey-50']
+                'ad-subsidebar': colors['ad-grey-50'],
+                bgSecond: {
+                  light: '#ebe8fb',
+                  DEFAULT: '#ebe8fb',
+                },
+                mainButton: {
+                  DEFAULT: '0074e8',
+                },
+                boldText: {
+                  DEFAULT: '#23408f',
+                },
+                normalText: {
+                  DEFAULT: '#505a64'
+                }
             },
+            screens: {
+                'mobileKeyboard': { 'raw': '(max-height: 540px)' },
+                'mobile': { 'raw': '(max-width: 720px)' },
+                'notMobile': { 'raw': '(min-width: 720px)' },
+            },
+            minHeight: {
+                '0': '0',
+                '1/4': '25%',
+                '1/2': '50%',
+                '3/4': '75%',
+                'full': '100%',
+            },
+            backgroundImage: theme => ({
+                'background-ig': "url('../src/styles/background.jpg')",
+                'background-blue': "url('../src/styles/background_blue.png')"
+            })
         },
     },
     plugins: [],
