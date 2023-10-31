@@ -25,7 +25,7 @@ export const CardElement = ({
     updateChangedTextInputValue: (
         valueString: string,
         key: string,
-        value: string,
+        value: string | number,
     ) => void;
     entityType: string | null;
 }) => {
@@ -103,6 +103,7 @@ export const CardElement = ({
                     element={element}
                     content={cardDetails}
                     inputProperties={{ Values: foundCatalogSchema.Entries }}
+                    updateChangedTextInputValue={updateChangedTextInputValue}
                 />
             );
         }
