@@ -3,12 +3,11 @@ import { resolveCardBindings, resolveEntityBindings } from '../../utils/utils';
 import { ListItemRow } from './ListItemRow';
 import { useState } from 'react';
 import { SectionHeading } from './SectionHeading';
-import { getEntitySchema } from '../../temp/SchemaUtils';
 
 type ListProps = {
     xmlElementTree: DynamicObject;
     listData: DynamicObject;
-    entityType: string | null;
+    entityType: DynamicObject | null;
 };
 
 const PrintActions = ({
@@ -109,6 +108,7 @@ export const List = ({ xmlElementTree, listData, entityType }: ListProps) => {
                                     key={listItem.Id}
                                     listItem={listItem}
                                     rowData={columnsObject.children}
+                                    entityType={entityType}
                                 />
                             );
                         })}

@@ -127,16 +127,29 @@ export const CardViewBuilder = ({
                                 updateChangedValues={updateChangedValues}
                                 changedValues={changedValues}
                             />
-                        );
+                        ); 
                     case 'List':
+                        const sanitizedBinding = sanitizeBinding(
+                            element.attributes.Value,
+                        );
+                        const woEntity = sanitizedBinding.replace(
+                            'Entity.',
+                            '',
+                        );
+                        const elementTypeObject =
+                            findLastTypeObjectFromValuePath(
+                                {} as DtoProperty,
+                                woEntity,
+                                entityPropertySchema,
+                            );
                         return (
                             <CardList
                                 key={element.attributes['__id'] as Key}
                                 element={element}
                                 cardData={cardData}
-                                entityType={entityType}
+                                entityType={elementTypeObject}
                             />
-                        );
+                        ); 
                     case 'Element':
                         return (
                             <CardElement
@@ -149,7 +162,7 @@ export const CardViewBuilder = ({
                                 }
                                 entityType={entityType}
                             />
-                        ); 
+                        );
                     case 'Search': {
                         const sanitizedBinding = sanitizeBinding(
                             element.attributes.Value,
@@ -169,10 +182,12 @@ export const CardViewBuilder = ({
                                 key={element.attributes['__id'] as Key}
                                 element={element}
                                 cardData={cardData}
-                                entityType={elementTypeObject.Name}
+                                entityType={elementTypeObject.Type}
+                                viewName={entityType + "CardView"}
+                                elementIdentifier={element.attributes.Identifier}
                             />
                         );
-                    }
+                    } 
                     case 'Button': {
                         return (
                             <CardButton
@@ -218,7 +233,7 @@ export const CardViewBuilder = ({
                                 cardData={cardData}
                                 entityType={entityType}
                             />
-                        );
+                        ); 
                     default:
                         return (
                             <p key={element.attributes['__id'] as Key}>
