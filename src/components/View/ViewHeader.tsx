@@ -22,7 +22,7 @@ export const ViewHeader = ({
 
     return (
         <header
-            className={`w-full bg-white ${
+            className={`z-10 w-full bg-white ${
                 scrollYPosition ? 'py-2 drop-shadow-md' : 'py-8'
             } px-8 mb-4 sticky top-0 transition-[padding_drop-shadow] duration-300 ease-out ${
                 scrollYPosition && subHeader ? 'flex items-center' : ''

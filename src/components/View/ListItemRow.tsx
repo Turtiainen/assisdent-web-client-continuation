@@ -1,13 +1,16 @@
 import { DynamicObject } from '../../types/DynamicObject';
 import { resolveCardBindings } from '../../utils/utils';
 import { CardButton } from './CardView/CardButton';
+import { getEntitySchema,getCatalogType } from '../../temp/SchemaUtils';
 
 export const ListItemRow = ({
     listItem,
     rowData,
+    entityType,
 }: {
     listItem: DynamicObject;
     rowData: DynamicObject;
+    entityType: DynamicObject | null;
 }) => {
     return (
         <tr
@@ -21,6 +24,45 @@ export const ListItemRow = ({
                 const cellValue = resolveCardBindings(listItem, binding);
                 const nodeType = col?.name;
 
+                if(entityType != null) {
+                    // handle displaying actual names in the list element from catalogs
+                    const indentifier = col.attributes?.Identifier;
+                    const nodeElement = getEntitySchema(entityType.SubType.Type)?.Properties[indentifier];
+                    if(nodeElement?.Type == 'List') {
+                        if(getEntitySchema(nodeElement.SubType.Type) == undefined) {
+                            const catalogList = getCatalogType(nodeElement.SubType.Type);
+                            if(catalogList != undefined) {
+                                const displayNames = catalogList.Entries.map(e => {
+                                    return { key: e.Key.toString(), displayName: e.DisplayName.toString() }
+                                });
+                                const foundCatalogItem = displayNames.find((e) => e.key === cellValue?.toString());
+                                if(foundCatalogItem === undefined) {
+                                    let displayName: string | undefined = "";
+                                    const keysArray = cellValue?.toString().split(',');
+                                    displayName = keysArray?.map(key => displayNames.find((e) => e.key === key)?.displayName).join(', ');
+                                    return (
+                                        <td
+                                            key={colHeader?.toString().concat(binding)}
+                                            className={`p-2`}
+                                        >
+                                            {displayName}
+                                        </td>
+                                    );
+                                } else {
+                                    return (
+                                        <td
+                                            key={colHeader?.toString().concat(binding)}
+                                            className={`p-2`}
+                                        >
+                                            {foundCatalogItem ? foundCatalogItem.displayName : cellValue?.toString()}
+                                        </td>
+                                    );
+                                }
+                            }
+                        }
+                    }
+                }
+                
                 // Render different cell element depending on nodeType (from schema)
                 if (nodeType === 'Button') {
                     return (

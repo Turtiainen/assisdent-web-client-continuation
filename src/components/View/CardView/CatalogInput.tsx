@@ -3,6 +3,7 @@ import { DynamicObject } from '../../../types/DynamicObject';
 import { Select } from '../../Select';
 import { Input } from '../../Input';
 import { InputRow } from '../../InputRow';
+import { Label } from '../../Label';
 
 export const CatalogInput = ({
     element,
@@ -22,6 +23,9 @@ export const CatalogInput = ({
 
     return (
         <InputRow>
+            <Label htmlFor={element.attributes.Identifier} className={value}>
+                {element.attributes.Caption ? element.attributes.Caption : ''}
+            </Label>
             {inputProperties.Values ? (
                 <Select
                     labelText={element.attributes.Caption}

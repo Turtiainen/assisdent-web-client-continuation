@@ -8,7 +8,7 @@ export const CardList = ({
 }: {
     element: DynamicObject;
     cardData: DynamicObject | null;
-    entityType: string | null;
+    entityType: DynamicObject | null;
 }) => {
     if (cardData === null) return null;
     return <List xmlElementTree={element} listData={cardData} entityType={entityType}/>;
