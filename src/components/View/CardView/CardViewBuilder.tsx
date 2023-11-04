@@ -59,7 +59,7 @@ export const CardViewBuilder = ({
     const updateChangedTextInputValue = (
         valueString: string,
         key: string,
-        value: string | number,
+        value: string | number | boolean | null,
     ) => {
         // const newChangedValues = changedValues ? [...changedValues] : [];
         const newChangedValues = [...changedValues];
@@ -128,7 +128,7 @@ export const CardViewBuilder = ({
                                 changedValues={changedValues}
                             />
                         );
-                    case 'List':
+                    case 'List': {
                         const sanitizedBinding = sanitizeBinding(
                             element.attributes.Value,
                         );
@@ -150,6 +150,7 @@ export const CardViewBuilder = ({
                                 entityType={elementTypeObject}
                             />
                         );
+                    }
                     case 'Element':
                         return (
                             <CardElement

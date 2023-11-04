@@ -16,7 +16,7 @@ export const BasicInput = ({
     updateChangedTextInputValue: (
         valueString: string,
         key: string,
-        value: string,
+        value: string | number | boolean | null,
     ) => void;
 }) => {
     const constructValuePrintStyle = (
