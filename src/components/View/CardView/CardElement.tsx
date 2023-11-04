@@ -115,8 +115,9 @@ export const CardElement = ({
                     element={element}
                     cardData={cardData}
                     entityType={foundEntitySchema.Name}
-                    viewName={''}
-                    elementIdentifier={''}
+                    viewName={`${entityType}CardView`}
+                    elementIdentifier={element.attributes?.Identifier}
+                    updateChangedTextInputValue={updateChangedTextInputValue}
                 />
             );
         }

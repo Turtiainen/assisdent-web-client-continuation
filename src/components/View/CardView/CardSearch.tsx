@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, ChangeEvent } from 'react';
 import { getEntitySchema } from '../../../temp/SchemaUtils';
 import { DynamicObject } from '../../../types/DynamicObject';
 import { getUserLanguage, resolveCardBindings } from '../../../utils/utils';
@@ -9,19 +9,27 @@ import { InputRow } from '../../InputRow';
 import { Label } from '../../Label';
 import { searchMenuImage } from '../../../assets/ExportImages';
 
+interface IProps {
+    element: DynamicObject;
+    cardData: DynamicObject | null;
+    entityType: string | null;
+    viewName: string | null;
+    elementIdentifier: string | null;
+    updateChangedTextInputValue: (
+        valueString: string,
+        key: string,
+        value: string | number | boolean | null,
+    ) => void;
+}
+
 export const CardSearch = ({
     element,
     cardData,
     entityType,
     viewName,
     elementIdentifier,
-}: {
-    element: DynamicObject;
-    cardData: DynamicObject | null;
-    entityType: string | null;
-    viewName: string | null;
-    elementIdentifier: string | null;
-}) => {
+    updateChangedTextInputValue,
+}: IProps) => {
     const getPrintStyleFromEntitySchema = (
         entityName: string,
     ): string | null => {
@@ -56,6 +64,7 @@ export const CardSearch = ({
     const valuePrintStyle =
         entityType && getPrintStyleFromEntitySchema(entityType);
     const contentValue = constructValuePrintStyle(content, valuePrintStyle);
+
     const [value, setValue] = useState<string>(contentValue);
     const [options, setOptions] = useState<DynamicObject>([]);
     const [searchTerm, setSearchTerm] = useState('');
@@ -87,8 +96,18 @@ export const CardSearch = ({
             );
         },
         onSuccess: (searchOptions) => {
-            if (searchOptions && searchOptions.Results)
-                setOptions(searchOptions.Results ?? []);
+            if (searchOptions && searchOptions.Results) {
+                if (valuePrintStyle) {
+                    //Include addiitonal attribute 'contentValue' that has the resolved printStyle
+                    searchOptions.Results.forEach((option: DynamicObject) => {
+                        option.contentValue = constructValuePrintStyle(
+                            option,
+                            valuePrintStyle,
+                        );
+                    });
+                }
+                setOptions(searchOptions.Results);
+            }
         },
     });
 
@@ -119,6 +138,26 @@ export const CardSearch = ({
         }
     }, [options, searchTerm, isSearchVisible]);
 
+    const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
+        setValue(e.target.value);
+
+        //Find selected option based on the contentValue (formatted string)
+        const selected = options?.find(
+            (option: DynamicObject) => option?.contentValue === e.target.value,
+        );
+        if (selected) {
+            //delete contentValue attribute so that the object is in its original format for saving
+            const tmpValue = { ...selected };
+            delete tmpValue.contentValue;
+
+            updateChangedTextInputValue(
+                element.attributes?.Value,
+                element.attributes?.Identifier,
+                tmpValue,
+            );
+        }
+    };
+
     return (
         <InputRow>
             <Label htmlFor={element.attributes.Identifier} className={value}>
@@ -131,24 +170,13 @@ export const CardSearch = ({
                     id={element.attributes.Identifier}
                     value={value}
                     onChange={(e) => {
-                        setValue(e.target.value);
+                        handleChange(e);
                     }}
                     placeholder={element.attributes.Caption}
                 >
-                    <p>
-                        {element.attributes.Identifier}{' '}
-                        {element.attributes.Caption}{' '}
-                        {element.attributes.Caption}
-                    </p>
                     {filteredOptions.map((option: DynamicObject) => (
-                        <option
-                            key={option.Id}
-                            value={constructValuePrintStyle(
-                                option,
-                                valuePrintStyle,
-                            )}
-                        >
-                            {constructValuePrintStyle(option, valuePrintStyle)}
+                        <option key={option.Id} value={option?.contentValue}>
+                            {option?.contentValue}
                         </option>
                     ))}
                     <option
