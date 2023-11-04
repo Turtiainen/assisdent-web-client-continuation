@@ -188,6 +188,9 @@ export const CardViewBuilder = ({
                                 elementIdentifier={
                                     element.attributes.Identifier
                                 }
+                                updateChangedTextInputValue={
+                                    updateChangedTextInputValue
+                                }
                             />
                         );
                     }
@@ -235,6 +238,9 @@ export const CardViewBuilder = ({
                                 element={element}
                                 cardData={cardData}
                                 entityType={entityType}
+                                updateChangedTextInputValue={
+                                    updateChangedTextInputValue
+                                }
                             />
                         );
                     default:
