@@ -13,7 +13,7 @@ export const BooleanInput = ({
     updateChangedTextInputValue: (
         valueString: string,
         key: string,
-        value: string | number | boolean,
+        value: string | number | boolean | null,
     ) => void;
 }) => {
     const [checked, setChecked] = useState<boolean>(

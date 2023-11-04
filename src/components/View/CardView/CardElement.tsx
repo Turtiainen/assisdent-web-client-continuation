@@ -25,7 +25,7 @@ export const CardElement = ({
     updateChangedTextInputValue: (
         valueString: string,
         key: string,
-        value: string | number | boolean,
+        value: string | number | boolean | null,
     ) => void;
     entityType: string | null;
 }) => {
@@ -138,6 +138,7 @@ export const CardElement = ({
                 element={element}
                 content={cardDetails}
                 inputProperties={inputProperties}
+                updateChangedTextInputValue={updateChangedTextInputValue}
             />
         );
     }

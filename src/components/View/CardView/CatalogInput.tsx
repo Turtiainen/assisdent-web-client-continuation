@@ -17,7 +17,7 @@ export const CatalogInput = ({
     updateChangedTextInputValue: (
         valueString: string,
         key: string,
-        value: string | number,
+        value: string | number | boolean | null,
     ) => void;
 }) => {
     const [value, setValue] = useState<string>(content?.toString() || '');
