@@ -11,10 +11,12 @@ import {
     warningIconBackground,
 } from '../styles/globalStyles';
 import { ChangeEvent, KeyboardEventHandler, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export const FieldChoice = () => {
     const [field, setField] = useState<string>('');
     const [error, setError] = useState<string>('');
+    const navigate = useNavigate();
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         setField(e.target.value);
@@ -22,8 +24,9 @@ export const FieldChoice = () => {
 
     const chooseField = () => {
         if (field !== '' && field !== null && field !== undefined) {
-            sessionStorage.setItem('domain', field);
-            console.log(sessionStorage.getItem('domain'));
+            localStorage.setItem('domain', field);
+            navigate('/');
+            // console.log(localStorage.getItem('domain'));
         } else {
             setError('Please input domain name.');
         }
