@@ -7,6 +7,7 @@ import {
     ENDPOINT_SCHEMA,
     ENDPOINT_VIEWMODEL_GET,
 } from '../utils/constants';
+import { useNavigate } from 'react-router-dom';
 
 type LoginData = {
     Username: string;
@@ -23,6 +24,8 @@ type DataQueryHeaders = {
     Authorization: string;
 };
 
+// const navigate = useNavigate();
+
 const hasAccessToken = () => {
     const token = sessionStorage.getItem('bt');
     return token !== null;
@@ -37,10 +40,10 @@ const getAccessToken = () => {
     return token;
 };
 
-const doLogin = async () => {
+export const doLogin = async (username: string, password: string) => {
     const loginData: LoginData = {
-        Username: import.meta.env.VITE_ASSISCARE_USER,
-        Password: import.meta.env.VITE_ASSISCARE_PASS,
+        Username: username,
+        Password: password,
         Type: 'Api',
         LoginType: 'Rest',
     };
@@ -58,8 +61,10 @@ const doLogin = async () => {
     } catch (error) {
         if (axios.isAxiosError(error)) {
             console.error(`error at login: ${error.message}`);
+            return 'error: ' + error.message;
         } else {
             console.error(`unknown error at login: ${error}`);
+            return 'error: ' + error;
         }
     }
 
@@ -70,7 +75,8 @@ const login = async () => {
     if (hasAccessToken()) {
         return getAccessToken();
     }
-    return await doLogin().then((data) => data);
+    // return await doLogin().then((data) => data);
+    return null;
 };
 
 export async function getSchema() {
