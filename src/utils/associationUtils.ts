@@ -30,7 +30,7 @@ export const mapAssociationTypeUpdatePatchCommands = (
         } else if (obj.associationType === AssociationType.Aggregation) {
             for (const [key, value] of Object.entries(obj)) {
                 if (key !== 'associationType' && key !== 'Id') {
-                    obj[key] = { _set_ref: [value] };
+                    obj[key] = { _set_ref: [{ Id: value?.Id }] };
                 }
             }
         }
