@@ -104,7 +104,11 @@ export const CardViewBuilder = ({
             const isNewAssociation = newChangedValues.find((item) => {
                 return Object.hasOwn(item, keysArray[0]);
             });
-            if (associationType && isNewAssociation) {
+            if (
+                associationType &&
+                isNewAssociation &&
+                !newChangedValues[newChangedValues.length - 1][keysArray[0]].Id
+            ) {
                 newChangedValues[newChangedValues.length - 1][keysArray[0]].Id =
                     cardData?.Entity[keysArray[0]]?.Id;
             }
