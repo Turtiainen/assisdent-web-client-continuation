@@ -17,6 +17,13 @@ import closeMenuImage from './icon_small_close_1.svg';
 import tinyUpMenuImage from './icon_tiny_up.svg';
 import tinyDownMenuImage from './icon_tiny_down.svg';
 import tinyRightMenuImage from './icon_tiny_right.svg';
+import backImage from './icon_tiny_back.svg';
+import forwardImage from './icon_tiny_next.svg';
+import refreshImage from './icon_tiny_refresh_one_arrow.svg';
+import helpImage from './icon_tiny_help.svg';
+import minimizeImage from './icon_tiny_minus.svg';
+import maximizeImage from './icon_tiny_maxi.svg';
+import closeImage from './icon_tiny_close.svg';
 
 export {
     assisdentMenuImage,
@@ -38,4 +45,11 @@ export {
     tinyUpMenuImage,
     tinyDownMenuImage,
     tinyRightMenuImage,
+    backImage,
+    forwardImage,
+    refreshImage,
+    helpImage,
+    minimizeImage,
+    maximizeImage,
+    closeImage,
 };
