@@ -52,7 +52,7 @@ export const CardViewBuilder = ({
     const entityPropertySchema = getEntityPropertiesSchema(entityType);
 
     /*
-     * This function is called when a basic/catalog input value in the card is changed.
+     * This function is called when any input value in the card is changed (basicInput, dateInput, booleans, etc.).
      * So, it should be passed downwards to such elements
      * Not sure if it should be on this level, but this is the way it at least works for now.
      */
