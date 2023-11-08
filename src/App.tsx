@@ -4,6 +4,7 @@ import { Outlet, useNavigation } from 'react-router-dom';
 import { useEffect } from 'react';
 import { getSchemaToStore } from './utils/storeUtils';
 import { Login } from './components/Login';
+import { BackwardForwardNavigation } from './components/BackwardForwardNavigation';
 
 function App() {
     const navigation = useNavigation();
@@ -23,6 +24,7 @@ function App() {
             <div className="App w-full flex relative">
                 <Sidebar />
                 <MainView>
+                    <BackwardForwardNavigation />
                     {navigation.state === 'loading' && (
                         <p className={`px-8 pt-4 text-2xl`}>Loading page...</p>
                     )}
