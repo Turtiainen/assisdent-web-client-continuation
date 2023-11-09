@@ -12,7 +12,13 @@ import {
     backgroundExtender,
 } from '../styles/globalStyles';
 import { useNavigate } from 'react-router-dom';
-import { ChangeEvent, useEffect, useRef, useState } from 'react';
+import {
+    ChangeEvent,
+    KeyboardEventHandler,
+    useEffect,
+    useRef,
+    useState,
+} from 'react';
 import { doLogin } from '../services/backend';
 
 export const LoginWithCredentials = () => {
@@ -42,7 +48,14 @@ export const LoginWithCredentials = () => {
         const field = localStorage.getItem('domain');
         if (field === undefined || field === '' || field === null)
             emptyFieldSelection();
-    }, [emptyFieldSelection]);
+        // if (process.env.NODE_ENV === 'development') {
+        //     doLogin(
+        //         import.meta.env.VITE_ASSISCARE_USER,
+        //         import.meta.env.VITE_ASSISCARE_PASS,
+        //     );
+        //     navigate('/');
+        // }
+    }, [emptyFieldSelection, doLogin]);
 
     const handleLogin = async () => {
         if (username !== '' && username !== null && username !== undefined)
@@ -62,6 +75,13 @@ export const LoginWithCredentials = () => {
             } else setError('Please input password');
         else setError('Please input username');
     };
+
+    const handleKeyPress = (e: { code: string }) => {
+        if (e.code === 'Enter') {
+            handleLogin();
+        }
+    };
+
     return (
         <div
             className="md:container md:mx-auto flex flex-wrap content-center justify-center bg-background-ig h-3/4"
@@ -110,6 +130,7 @@ export const LoginWithCredentials = () => {
                             placeholder="Käyttäjätunnus"
                             style={inputField}
                             onChange={handleUsernameChange}
+                            onKeyPress={handleKeyPress}
                             autoCorrect="off"
                             autoCapitalize="off"
                             type="text"
@@ -124,6 +145,7 @@ export const LoginWithCredentials = () => {
                             id="password"
                             style={inputField}
                             onChange={handlePasswordChange}
+                            onKeyPress={handleKeyPress}
                             autoCorrect="off"
                             autoCapitalize="off"
                         ></input>
