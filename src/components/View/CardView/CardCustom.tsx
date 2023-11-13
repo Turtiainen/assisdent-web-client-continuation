@@ -39,6 +39,8 @@ export const CardCustom = ({
                     element={element}
                     cardData={cardData}
                     entityType={entityType}
+                    viewName={null}
+                    elementIdentifier={null}
                 />
             );
         }
@@ -50,6 +52,8 @@ export const CardCustom = ({
                     element={element}
                     cardData={cardData}
                     entityType={entityType}
+                    viewName={null}
+                    elementIdentifier={null}
                 />
             );
         }
