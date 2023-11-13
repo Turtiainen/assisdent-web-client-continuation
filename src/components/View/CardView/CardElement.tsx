@@ -114,8 +114,8 @@ export const CardElement = ({
                     element={element}
                     cardData={cardData}
                     entityType={foundEntitySchema.Name}
-                    viewName={""}
-                    elementIdentifier={""}
+                    viewName={''}
+                    elementIdentifier={''}
                 />
             );
         }

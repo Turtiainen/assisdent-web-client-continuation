@@ -14,7 +14,7 @@ export const CardSearch = ({
     cardData,
     entityType,
     viewName,
-    elementIdentifier
+    elementIdentifier,
 }: {
     element: DynamicObject;
     cardData: DynamicObject | null;
@@ -64,16 +64,15 @@ export const CardSearch = ({
     const searchParameters = {
         EntityType: entityType,
         Purpose: 'QuickSearch',
-        PurposeArgs: {
-        },
+        PurposeArgs: {},
         SearchLanguage: getUserLanguage(),
     };
 
-    if(viewName != "" && elementIdentifier != "") {
+    if (viewName != '' && elementIdentifier != '') {
         searchParameters.PurposeArgs = {
-                "ViewName": viewName,
-                "ElementIdentifier": elementIdentifier
-         }
+            ViewName: viewName,
+            ElementIdentifier: elementIdentifier,
+        };
     }
 
     const mutation = useMutation({
@@ -109,23 +108,25 @@ export const CardSearch = ({
     // Handle filtering of the options depending on user input text
     const filteredOptions = useMemo(() => {
         if (isSearchVisible) {
-        const lowercasedSearchTerm = searchTerm.toLowerCase();
-        return options.filter((option: string) =>
-            constructValuePrintStyle(option, valuePrintStyle).toLowerCase().includes(lowercasedSearchTerm)
-        );
+            const lowercasedSearchTerm = searchTerm.toLowerCase();
+            return options.filter((option: string) =>
+                constructValuePrintStyle(option, valuePrintStyle)
+                    .toLowerCase()
+                    .includes(lowercasedSearchTerm),
+            );
         } else {
-        return options;
+            return options;
         }
     }, [options, searchTerm, isSearchVisible]);
 
     console.log(options);
     return (
         <InputRow>
-                <Label htmlFor={element.attributes.Identifier} className={value}>
-                    {element.attributes.Caption ? element.attributes.Caption : ''}
-                </Label>
+            <Label htmlFor={element.attributes.Identifier} className={value}>
+                {element.attributes.Caption ? element.attributes.Caption : ''}
+            </Label>
 
-                <div className="lg:max-w-xs w-full relative">
+            <div className="lg:max-w-xs w-full relative">
                 <Select
                     labelText={element.attributes.Caption}
                     id={element.attributes.Identifier}
@@ -135,7 +136,11 @@ export const CardSearch = ({
                     }}
                     placeholder={element.attributes.Caption}
                 >
-                    <p>{element.attributes.Identifier} {element.attributes.Caption} {element.attributes.Caption}</p>
+                    <p>
+                        {element.attributes.Identifier}{' '}
+                        {element.attributes.Caption}{' '}
+                        {element.attributes.Caption}
+                    </p>
                     {filteredOptions.map((option: DynamicObject) => (
                         <option
                             key={option.Id}
@@ -156,17 +161,25 @@ export const CardSearch = ({
                     </option>
                 </Select>
                 <div className="absolute right-0 top-0 bottom-0">
-                    <button onClick={toggleSearch} className="bg-ad-sidebar h-8"><div className="px-2 py-2 max-h-10 w-7"><img src={searchMenuImage} /></div></button>
+                    <button
+                        onClick={toggleSearch}
+                        className="bg-ad-sidebar h-8"
+                    >
+                        <div className="px-2 py-2 max-h-10 w-7">
+                            <img src={searchMenuImage} />
+                        </div>
+                    </button>
                 </div>
                 {isSearchVisible && (
-                <input className=" max-h-10 w-full border border-ad-grey-300 px-2 py-1 absolute -bottom-8 right-0"
-                    type="text"
-                    placeholder="Search"
-                    value={searchTerm}
-                    onChange={e => setSearchTerm(e.target.value)}
-                />
+                    <input
+                        className=" max-h-10 w-full border border-ad-grey-300 px-2 py-1 absolute -bottom-8 right-0"
+                        type="text"
+                        placeholder="Search"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                    />
                 )}
-                </div>
+            </div>
         </InputRow>
     );
 };
