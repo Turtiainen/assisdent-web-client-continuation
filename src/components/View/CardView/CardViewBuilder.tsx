@@ -23,15 +23,15 @@ type ElementAttributesType = {
 
 type CardElementType = {
     name:
-    | 'Group'
-    | 'List'
-    | 'Element'
-    | 'Search'
-    | 'Button'
-    | 'Editor'
-    | 'TextBlock'
-    | 'Separator'
-    | 'Custom';
+        | 'Group'
+        | 'List'
+        | 'Element'
+        | 'Search'
+        | 'Button'
+        | 'Editor'
+        | 'TextBlock'
+        | 'Separator'
+        | 'Custom';
     attributes: ElementAttributesType;
     [index: string]: unknown;
 };
