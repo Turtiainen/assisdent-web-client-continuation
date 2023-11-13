@@ -45,6 +45,7 @@ export const TranslationList = ({ translations }: TranslationListProps) => {
                             key={'language-'.concat(listItem.Language)}
                             listItem={listItem}
                             rowData={rowData}
+                            entityType={null}
                         />
                     );
                 })}

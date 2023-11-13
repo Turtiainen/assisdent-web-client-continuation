@@ -45,9 +45,14 @@ export const CardCustom = ({
                     element={element}
                     cardData={cardData}
                     entityType={entityType}
+<<<<<<< HEAD
                     viewName={`${entityType}CardView`}
                     elementIdentifier={element.attributes?.Identifier}
                     updateChangedTextInputValue={updateChangedTextInputValue}
+=======
+                    viewName={null}
+                    elementIdentifier={null}
+>>>>>>> cde5374 (Fix npm run build)
                 />
             );
         }
@@ -59,9 +64,14 @@ export const CardCustom = ({
                     element={element}
                     cardData={cardData}
                     entityType={entityType}
+<<<<<<< HEAD
                     viewName={`${entityType}CardView`}
                     elementIdentifier={element.attributes?.Identifier}
                     updateChangedTextInputValue={updateChangedTextInputValue}
+=======
+                    viewName={null}
+                    elementIdentifier={null}
+>>>>>>> cde5374 (Fix npm run build)
                 />
             );
         }
