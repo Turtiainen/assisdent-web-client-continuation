@@ -115,9 +115,14 @@ export const CardElement = ({
                     element={element}
                     cardData={cardData}
                     entityType={foundEntitySchema.Name}
+<<<<<<< HEAD
                     viewName={`${entityType}CardView`}
                     elementIdentifier={element.attributes?.Identifier}
                     updateChangedTextInputValue={updateChangedTextInputValue}
+=======
+                    viewName={''}
+                    elementIdentifier={''}
+>>>>>>> 3cd62d3 (Draft)
                 />
             );
         }

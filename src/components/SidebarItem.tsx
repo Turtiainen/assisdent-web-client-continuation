@@ -17,9 +17,15 @@ export const SidebarItem = ({
             onClick={onClick}
             data-testid="sidebar-item"
         >
-            <button><div className="mx-5 -mt-2.5 h-2 w-6"><img src={icon}/></div></button>
+            <button>
+                <div className="mx-5 -mt-2.5 h-2 w-6">
+                    <img src={icon} />
+                </div>
+            </button>
             {isExpanded ? (
-                <button><div className="my-0 text-sm text-white w-full">{text}</div></button>
+                <button>
+                    <div className="my-0 text-sm text-white w-full">{text}</div>
+                </button>
             ) : (
                 ''
             )}

@@ -23,15 +23,15 @@ type ElementAttributesType = {
 
 type CardElementType = {
     name:
-        | 'Group'
-        | 'List'
-        | 'Element'
-        | 'Search'
-        | 'Button'
-        | 'Editor'
-        | 'TextBlock'
-        | 'Separator'
-        | 'Custom';
+    | 'Group'
+    | 'List'
+    | 'Element'
+    | 'Search'
+    | 'Button'
+    | 'Editor'
+    | 'TextBlock'
+    | 'Separator'
+    | 'Custom';
     attributes: ElementAttributesType;
     [index: string]: unknown;
 };
@@ -192,9 +192,12 @@ export const CardViewBuilder = ({
                                 elementIdentifier={
                                     element.attributes.Identifier
                                 }
+<<<<<<< HEAD
                                 updateChangedTextInputValue={
                                     updateChangedTextInputValue
                                 }
+=======
+>>>>>>> 3cd62d3 (Draft)
                             />
                         );
                     }

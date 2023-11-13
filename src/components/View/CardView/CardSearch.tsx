@@ -9,7 +9,17 @@ import { InputRow } from '../../InputRow';
 import { Label } from '../../Label';
 import { searchMenuImage } from '../../../assets/ExportImages';
 
+<<<<<<< HEAD
 interface IProps {
+=======
+export const CardSearch = ({
+    element,
+    cardData,
+    entityType,
+    viewName,
+    elementIdentifier,
+}: {
+>>>>>>> 3cd62d3 (Draft)
     element: DynamicObject;
     cardData: DynamicObject | null;
     entityType: string | null;
@@ -174,6 +184,14 @@ export const CardSearch = ({
                     }}
                     placeholder={element.attributes.Caption}
                 >
+<<<<<<< HEAD
+=======
+                    <p>
+                        {element.attributes.Identifier}{' '}
+                        {element.attributes.Caption}{' '}
+                        {element.attributes.Caption}
+                    </p>
+>>>>>>> 3cd62d3 (Draft)
                     {filteredOptions.map((option: DynamicObject) => (
                         <option key={option.Id} value={option?.contentValue}>
                             {option?.contentValue}

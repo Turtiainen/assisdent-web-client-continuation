@@ -1,7 +1,7 @@
 import { DynamicObject } from '../../types/DynamicObject';
 import { resolveCardBindings } from '../../utils/utils';
 import { CardButton } from './CardView/CardButton';
-import { getEntitySchema,getCatalogType } from '../../temp/SchemaUtils';
+import { getEntitySchema, getCatalogType } from '../../temp/SchemaUtils';
 
 export const ListItemRow = ({
     listItem,
@@ -24,25 +24,50 @@ export const ListItemRow = ({
                 const cellValue = resolveCardBindings(listItem, binding);
                 const nodeType = col?.name;
 
-                if(entityType != null) {
+                if (entityType != null) {
                     // handle displaying actual names in the list element from catalogs
                     const indentifier = col.attributes?.Identifier;
-                    const nodeElement = getEntitySchema(entityType.SubType.Type)?.Properties[indentifier];
-                    if(nodeElement?.Type == 'List') {
-                        if(getEntitySchema(nodeElement.SubType.Type) == undefined) {
-                            const catalogList = getCatalogType(nodeElement.SubType.Type);
-                            if(catalogList != undefined) {
-                                const displayNames = catalogList.Entries.map(e => {
-                                    return { key: e.Key.toString(), displayName: e.DisplayName.toString() }
-                                });
-                                const foundCatalogItem = displayNames.find((e) => e.key === cellValue?.toString());
-                                if(foundCatalogItem === undefined) {
-                                    let displayName: string | undefined = "";
-                                    const keysArray = cellValue?.toString().split(',');
-                                    displayName = keysArray?.map(key => displayNames.find((e) => e.key === key)?.displayName).join(', ');
+                    const nodeElement = getEntitySchema(entityType.SubType.Type)
+                        ?.Properties[indentifier];
+                    if (nodeElement?.Type == 'List') {
+                        if (
+                            getEntitySchema(nodeElement.SubType.Type) ==
+                            undefined
+                        ) {
+                            const catalogList = getCatalogType(
+                                nodeElement.SubType.Type,
+                            );
+                            if (catalogList != undefined) {
+                                const displayNames = catalogList.Entries.map(
+                                    (e) => {
+                                        return {
+                                            key: e.Key.toString(),
+                                            displayName:
+                                                e.DisplayName.toString(),
+                                        };
+                                    },
+                                );
+                                const foundCatalogItem = displayNames.find(
+                                    (e) => e.key === cellValue?.toString(),
+                                );
+                                if (foundCatalogItem === undefined) {
+                                    let displayName: string | undefined = '';
+                                    const keysArray = cellValue
+                                        ?.toString()
+                                        .split(',');
+                                    displayName = keysArray
+                                        ?.map(
+                                            (key) =>
+                                                displayNames.find(
+                                                    (e) => e.key === key,
+                                                )?.displayName,
+                                        )
+                                        .join(', ');
                                     return (
                                         <td
-                                            key={colHeader?.toString().concat(binding)}
+                                            key={colHeader
+                                                ?.toString()
+                                                .concat(binding)}
                                             className={`p-2`}
                                         >
                                             {displayName}
@@ -51,10 +76,14 @@ export const ListItemRow = ({
                                 } else {
                                     return (
                                         <td
-                                            key={colHeader?.toString().concat(binding)}
+                                            key={colHeader
+                                                ?.toString()
+                                                .concat(binding)}
                                             className={`p-2`}
                                         >
-                                            {foundCatalogItem ? foundCatalogItem.displayName : cellValue?.toString()}
+                                            {foundCatalogItem
+                                                ? foundCatalogItem.displayName
+                                                : cellValue?.toString()}
                                         </td>
                                     );
                                 }
@@ -62,7 +91,7 @@ export const ListItemRow = ({
                         }
                     }
                 }
-                
+
                 // Render different cell element depending on nodeType (from schema)
                 if (nodeType === 'Button') {
                     return (
