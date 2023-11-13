@@ -1,5 +1,5 @@
+import { Link } from 'react-router-dom';
 import { MenuSection } from './MenuSection';
-
 import { closeMenuImage } from '../assets/ExportImages';
 
 type MenuProps = {
@@ -50,12 +50,11 @@ export const Menu = ({ onClick }: MenuProps) => {
                         ]}
                         onClick={() => console.log('POTILAAT')}
                         button={
-                            <button
-                                className="bg-blue-500 hover:bg-blue-800 text-white text-sm w-full py-1 my-2 rounded"
-                                onClick={() => console.log('Luo uusi potilas')}
-                            >
-                                Luo uusi potilas
-                            </button>
+                            <Link to="/view/PatientCardView/new">
+                                <button className="bg-blue-500 hover:bg-blue-800 text-white text-sm w-full py-1 my-2 rounded">
+                                    Luo uusi potilas
+                                </button>
+                            </Link>
                         }
                     />
 

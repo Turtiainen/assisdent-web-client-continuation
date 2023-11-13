@@ -25,7 +25,7 @@ export const CardElement = ({
     updateChangedTextInputValue: (
         valueString: string,
         key: string,
-        value: string,
+        value: string | number | boolean | null,
     ) => void;
     entityType: string | null;
 }) => {
@@ -103,6 +103,7 @@ export const CardElement = ({
                     element={element}
                     content={cardDetails}
                     inputProperties={{ Values: foundCatalogSchema.Entries }}
+                    updateChangedTextInputValue={updateChangedTextInputValue}
                 />
             );
         }
@@ -114,18 +115,22 @@ export const CardElement = ({
                     element={element}
                     cardData={cardData}
                     entityType={foundEntitySchema.Name}
-                    viewName={''}
-                    elementIdentifier={''}
+                    viewName={`${entityType}CardView`}
+                    elementIdentifier={element.attributes?.Identifier}
+                    updateChangedTextInputValue={updateChangedTextInputValue}
                 />
             );
         }
     }
 
-    if (
-        inputProperties.Type === 'Boolean' ||
-        inputProperties.Type === 'boolean'
-    ) {
-        return <BooleanInput element={element} content={cardDetails} />;
+    if (inputProperties.Type?.toLowerCase() === 'boolean') {
+        return (
+            <BooleanInput
+                element={element}
+                content={cardDetails}
+                updateChangedTextInputValue={updateChangedTextInputValue}
+            />
+        );
     }
 
     if (cardDetails && inputProperties.Type === 'Date') {
@@ -134,6 +139,7 @@ export const CardElement = ({
                 element={element}
                 content={cardDetails}
                 inputProperties={inputProperties}
+                updateChangedTextInputValue={updateChangedTextInputValue}
             />
         );
     }

@@ -6,10 +6,16 @@ export const CardCustom = ({
     element,
     cardData,
     entityType,
+    updateChangedTextInputValue,
 }: {
     element: DynamicObject;
     cardData: DynamicObject | null;
     entityType: string | null;
+    updateChangedTextInputValue: (
+        valueString: string,
+        key: string,
+        value: string | number | boolean | null,
+    ) => void;
 }) => {
     switch (element.attributes.Type) {
         case 'CardContactMethods': {
@@ -39,8 +45,9 @@ export const CardCustom = ({
                     element={element}
                     cardData={cardData}
                     entityType={entityType}
-                    viewName={null}
-                    elementIdentifier={null}
+                    viewName={`${entityType}CardView`}
+                    elementIdentifier={element.attributes?.Identifier}
+                    updateChangedTextInputValue={updateChangedTextInputValue}
                 />
             );
         }
@@ -52,8 +59,9 @@ export const CardCustom = ({
                     element={element}
                     cardData={cardData}
                     entityType={entityType}
-                    viewName={null}
-                    elementIdentifier={null}
+                    viewName={`${entityType}CardView`}
+                    elementIdentifier={element.attributes?.Identifier}
+                    updateChangedTextInputValue={updateChangedTextInputValue}
                 />
             );
         }

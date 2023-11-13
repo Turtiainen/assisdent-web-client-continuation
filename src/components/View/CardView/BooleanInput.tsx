@@ -2,14 +2,19 @@ import { ChangeEvent, useState } from 'react';
 import { DynamicObject } from '../../../types/DynamicObject';
 import { InputRow } from '../../InputRow';
 import { CheckboxLabeled } from '../../CheckboxLabeled';
-import { Input } from '../../Input';
 
 export const BooleanInput = ({
     element,
     content,
+    updateChangedTextInputValue,
 }: {
     element: DynamicObject;
     content: string | DynamicObject | null | undefined;
+    updateChangedTextInputValue: (
+        valueString: string,
+        key: string,
+        value: string | number | boolean | null,
+    ) => void;
 }) => {
     const [checked, setChecked] = useState<boolean>(
         content?.toString() === 'true',
@@ -17,7 +22,12 @@ export const BooleanInput = ({
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         e.persist();
-        setChecked(!checked);
+        setChecked(e.target.checked);
+        updateChangedTextInputValue(
+            element.attributes?.Value,
+            element.attributes?.Identifier,
+            e.target.checked,
+        );
     };
     return (
         <InputRow>
