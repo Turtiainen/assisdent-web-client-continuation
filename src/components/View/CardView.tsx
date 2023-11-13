@@ -29,7 +29,7 @@ export type DataProps = {
 type saveViewModelOptionsType = {
     ViewName: string | null;
     ViewModelData: DynamicObject;
-    ArgumentType: string;
+    CardViewType: string;
 };
 
 type saveNewEntityOptionsType = {
@@ -148,7 +148,7 @@ export const CardView = ({ view }: DataProps) => {
 
         const saveViewModelOptions: saveViewModelOptionsType = {
             ViewName: viewName,
-            ArgumentType: `Edit${viewName}Argument`,
+            CardViewType: 'Edit',
             ViewModelData: {
                 Entity: {
                     ...reducedChangedValues,

@@ -52,14 +52,14 @@ export const CardViewBuilder = ({
     const entityPropertySchema = getEntityPropertiesSchema(entityType);
 
     /*
-     * This function is called when a basic input value in the card is changed.
+     * This function is called when any input value in the card is changed (basicInput, dateInput, booleans, etc.).
      * So, it should be passed downwards to such elements
      * Not sure if it should be on this level, but this is the way it at least works for now.
      */
     const updateChangedTextInputValue = (
         valueString: string,
         key: string,
-        value: string,
+        value: string | number | boolean | null,
     ) => {
         // const newChangedValues = changedValues ? [...changedValues] : [];
         const newChangedValues = [...changedValues];
@@ -104,7 +104,11 @@ export const CardViewBuilder = ({
             const isNewAssociation = newChangedValues.find((item) => {
                 return Object.hasOwn(item, keysArray[0]);
             });
-            if (associationType && isNewAssociation) {
+            if (
+                associationType &&
+                isNewAssociation &&
+                !newChangedValues[newChangedValues.length - 1][keysArray[0]].Id
+            ) {
                 newChangedValues[newChangedValues.length - 1][keysArray[0]].Id =
                     cardData?.Entity[keysArray[0]]?.Id;
             }
@@ -127,8 +131,8 @@ export const CardViewBuilder = ({
                                 updateChangedValues={updateChangedValues}
                                 changedValues={changedValues}
                             />
-                        ); 
-                    case 'List':
+                        );
+                    case 'List': {
                         const sanitizedBinding = sanitizeBinding(
                             element.attributes.Value,
                         );
@@ -149,7 +153,8 @@ export const CardViewBuilder = ({
                                 cardData={cardData}
                                 entityType={elementTypeObject}
                             />
-                        ); 
+                        );
+                    }
                     case 'Element':
                         return (
                             <CardElement
@@ -183,11 +188,16 @@ export const CardViewBuilder = ({
                                 element={element}
                                 cardData={cardData}
                                 entityType={elementTypeObject.Type}
-                                viewName={entityType + "CardView"}
-                                elementIdentifier={element.attributes.Identifier}
+                                viewName={entityType + 'CardView'}
+                                elementIdentifier={
+                                    element.attributes.Identifier
+                                }
+                                updateChangedTextInputValue={
+                                    updateChangedTextInputValue
+                                }
                             />
                         );
-                    } 
+                    }
                     case 'Button': {
                         return (
                             <CardButton
@@ -232,8 +242,11 @@ export const CardViewBuilder = ({
                                 element={element}
                                 cardData={cardData}
                                 entityType={entityType}
+                                updateChangedTextInputValue={
+                                    updateChangedTextInputValue
+                                }
                             />
-                        ); 
+                        );
                     default:
                         return (
                             <p key={element.attributes['__id'] as Key}>
