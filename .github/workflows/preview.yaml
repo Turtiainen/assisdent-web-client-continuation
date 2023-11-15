@@ -15,7 +15,6 @@ jobs:
       matrix:
         node-version: [ 18.x ]
     steps:
-      - uses: coverallsapp/github-action@v2.2.3
       - uses: actions/checkout@v3
       - uses: actions/cache@v3
         with:
@@ -86,6 +85,15 @@ jobs:
           path: node_modules
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
       - run: npm run test:ci
+      - run: npm run test:coverage
+        if: ${{ always() }}
+      - run: npm run test:coveralls
+        if: ${{ always() }}
+      - name: Coveralls
+        uses: coverallsapp/github-action@master
+        if: ${{ always() }}
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
   #Deploy-Preview:
   #  needs: Test
