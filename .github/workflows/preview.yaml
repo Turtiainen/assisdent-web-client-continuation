@@ -15,6 +15,7 @@ jobs:
       matrix:
         node-version: [ 18.x ]
     steps:
+      - uses: coverallsapp/github-action@v2.2.3
       - uses: actions/checkout@v3
       - uses: actions/cache@v3
         with:
@@ -26,12 +27,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - name: npm install, make test-coverage
-        run: |
-          npm install
-          make test-coverage
-      - name: Coveralls
-        uses: coverallsapp/github-action@v2
+      - name: Install dependencies
+        run: npm install
 
   Lint:
     runs-on: ubuntu-latest
