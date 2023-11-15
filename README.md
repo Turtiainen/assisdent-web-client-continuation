@@ -101,7 +101,7 @@ VITE_ASSISCARE_BASE         base URL of the AssisCare REST API
 VITE_ASSISCARE_ROUTE        URI path to project course endpoint
 ```
 
-[ci-image]: https://github.com/Turtiainen/assisdent-web-client-continuation/workflows/Test/badge.svg
+[ci-image]: https://github.com/Turtiainen/assisdent-web-client-continuation/actions/workflows/preview.yaml/badge.svg
 [ci-url]: https://github.com/Turtiainen/assisdent-web-client-continuation/actions?workflow=Test
 
 [coveralls-image]: https://coveralls.io/repos/Turtiainen/assisdent-web-client-continuation/badge.svg?branch=master&service=github
