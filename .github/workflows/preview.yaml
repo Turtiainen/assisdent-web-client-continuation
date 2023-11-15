@@ -86,12 +86,9 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
       - run: npm run test:ci
       - run: npm run test:coverage
-        if: ${{ always() }}
       - run: npm run test:coveralls
-        if: ${{ always() }}
       - name: Coveralls
         uses: coverallsapp/github-action@master
-        if: ${{ always() }}
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
