@@ -1,4 +1,4 @@
-name: Build, test, deploy preview and coveralls  
+name: Build, test, deploy preview and coveralls
 #env:
 #  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
 #  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
