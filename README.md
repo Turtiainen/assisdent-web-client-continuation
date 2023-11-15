@@ -1,5 +1,8 @@
 # AssisDent web client
 
+[![Build Status][ci-image]][ci-url]
+[![Coverage Status](https://coveralls.io/repos/github/Turtiainen/assisdent-web-client-continuation/badge.svg?branch=coveralls)](https://coveralls.io/github/Turtiainen/assisdent-web-client-continuation?branch=coveralls)
+
 ### Tampere University COMP.SE.610/620 spring 2023 Group G project work
 
 ## Installing
@@ -97,3 +100,6 @@ VITE_ASSISCARE_PASS         password for AssisCare authentication
 VITE_ASSISCARE_BASE         base URL of the AssisCare REST API
 VITE_ASSISCARE_ROUTE        URI path to project course endpoint
 ```
+
+[ci-image]: https://github.com/Turtiainen/assisdent-web-client-continuation/actions/workflows/preview.yaml/badge.svg
+[ci-url]: https://github.com/Turtiainen/assisdent-web-client-continuation/actions?workflow=Test

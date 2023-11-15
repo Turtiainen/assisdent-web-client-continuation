@@ -1,4 +1,4 @@
-name: Build, test and deploy preview
+name: Build, test, deploy preview and coveralls
 #env:
 #  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
 #  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
@@ -85,6 +85,12 @@ jobs:
           path: node_modules
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
       - run: npm run test:ci
+      - run: npm run test:coverage
+      - run: npm run test:coveralls
+      - name: Coveralls
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
   #Deploy-Preview:
   #  needs: Test
