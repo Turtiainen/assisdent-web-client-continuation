@@ -1,6 +1,6 @@
 # AssisDent web client
 
-[![Build Status][ci-image]][ci-url] [![Coverage Status][coveralls-image]][coveralls-url]
+[![Build Status][ci-image]][ci-url]
 [![Coverage Status](https://coveralls.io/repos/github/Turtiainen/assisdent-web-client-continuation/badge.svg?branch=coveralls)](https://coveralls.io/github/Turtiainen/assisdent-web-client-continuation?branch=coveralls)
 
 ### Tampere University COMP.SE.610/620 spring 2023 Group G project work
@@ -103,6 +103,3 @@ VITE_ASSISCARE_ROUTE        URI path to project course endpoint
 
 [ci-image]: https://github.com/Turtiainen/assisdent-web-client-continuation/actions/workflows/preview.yaml/badge.svg
 [ci-url]: https://github.com/Turtiainen/assisdent-web-client-continuation/actions?workflow=Test
-
-[coveralls-image]: https://coveralls.io/repos/Turtiainen/assisdent-web-client-continuation/badge.svg?branch=master&service=github
-[coveralls-url]: https://coveralls.io/github/Turtiainen/assisdent-web-client-continuation?branch=master
