@@ -1,4 +1,4 @@
-name: Build, test and deploy preview
+name: Build, test, deploy preview and coveralls
 #env:
 #  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
 #  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
@@ -26,8 +26,12 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Install dependencies
-        run: npm install
+      - name: npm install, make test-coverage
+        run: |
+          npm install
+          make test-coverage
+      - name: Coveralls
+        uses: coverallsapp/github-action@v2
 
   Lint:
     runs-on: ubuntu-latest
