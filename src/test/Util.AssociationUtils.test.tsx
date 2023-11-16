@@ -83,10 +83,19 @@ describe('Call mapAssociationTypeUpdatePatchCommands', () => {
         const returnValue = mapAssociationTypeUpdatePatchCommands([
             {
                 associationType: AssociationType.Aggregation,
-                test: 'test',
+                OwnBranch: {
+                    Id: 'bca54030-48e6-4041-3a80-78bb300b6ecb',
+                    Name: 'Teuva',
+                },
             },
         ]);
-        expect(returnValue).toEqual([{ test: { _set_ref: ['test'] } }]);
+        expect(returnValue).toEqual([
+            {
+                OwnBranch: {
+                    _set_ref: [{ Id: 'bca54030-48e6-4041-3a80-78bb300b6ecb' }],
+                },
+            },
+        ]);
     });
 
     it('should work similarly for Compositions but by adding _update level', () => {
