@@ -2,15 +2,5 @@
     "testEnvironment": "jsdom",
     "moduleNameMapper": {
         "\\.svg$": "<rootDir>/__mocks__/svg.js"
-    },
-    "reporters": [
-        "default",
-        "./node_modules/jest-html-reporter",
-        {
-            "pageTitle": "Your test suite",
-            "outputPath": "reports/jest-html.html",
-            "includeFailureMsg": false,
-            "styleOverridePath": "src/teststyle.css"
-        }
-    ]
+    }
 }
