@@ -30,6 +30,11 @@ describe('Call mapObjectPaths', () => {
         Test3: 'value3',
     };
 
+    const coverContinueBranch = {
+        Id: 'Id',
+        _Test: '_Test',
+    };
+
     const nestedObject1 = {
         Test1: 'value1',
         Test2: {
@@ -51,6 +56,11 @@ describe('Call mapObjectPaths', () => {
 
     it('should return empty array if called with empty object', () => {
         const returnValue = mapObjectPaths({});
+        expect(returnValue).toEqual([]);
+    });
+
+    it('should return empty array since Id and key that starts with _ are ignored', () => {
+        const returnValue = mapObjectPaths(coverContinueBranch);
         expect(returnValue).toEqual([]);
     });
 
