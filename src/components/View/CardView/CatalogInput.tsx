@@ -33,7 +33,7 @@ export const CatalogInput = ({
         updateChangedTextInputValue(
             element.attributes?.Value,
             element.attributes?.Identifier,
-            keyInt || e.target.value,
+            isNaN(keyInt) ? e.target.value : keyInt,
         );
     };
     return (
