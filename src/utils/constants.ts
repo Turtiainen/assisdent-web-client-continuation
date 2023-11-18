@@ -1,6 +1,6 @@
 export const getDomain = () => localStorage.getItem('domain');
 export const BASE_ROUTE = () =>
-    `${import.meta.env.VITE_ASSISCARE_BASE}` + getDomain() + '/';
+    'https://appointment-beta.assiscare.com:28090/api/' + getDomain() + '/';
 
 export enum Endpoint {
     Login = 'login',

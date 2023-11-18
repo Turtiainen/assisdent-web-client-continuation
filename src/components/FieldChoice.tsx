@@ -81,6 +81,7 @@ export const FieldChoice = () => {
 
                         <div className="text-center pt-8">
                             <input
+                                id="field"
                                 placeholder="Toimialue"
                                 style={inputField}
                                 onChange={handleInputChange}
