@@ -85,8 +85,7 @@ jobs:
           path: node_modules
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
       - run: npm run test:ci
-      - run: npm run test:coverage
-      - run: npm run test:coveralls
+      - run: npm run test:jest:coverage
       - name: Coveralls
         uses: coverallsapp/github-action@master
         with:
