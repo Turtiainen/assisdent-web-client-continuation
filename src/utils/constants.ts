@@ -1,10 +1,29 @@
-export const BASE_ROUTE = `${import.meta.env.VITE_ASSISCARE_BASE}${
-    import.meta.env.VITE_ASSISCARE_ROUTE
-}`;
-export const ENDPOINT_LOGIN = `${BASE_ROUTE}login`;
-export const ENDPOINT_SCHEMA = `${BASE_ROUTE}dack/schema`;
-export const ENDPOINT_VIEWMODEL_GET = `${BASE_ROUTE}dack/viewmodel/get`;
-export const ENDPOINT_ENTITY_SEARCH = `${BASE_ROUTE}dack/entity/search`;
+export const getDomain = () => localStorage.getItem('domain');
+export const BASE_ROUTE = () =>
+    `${import.meta.env.VITE_ASSISCARE_BASE}` + getDomain() + '/';
+
+export enum Endpoint {
+    Login = 'login',
+    Schema = 'dack/schema',
+    ViewModelGet = 'dack/viewmodel/get',
+    ViewModelSave = 'dack/viewmodel/save',
+    EntitySearch = 'dack/entity/search',
+    Entity = 'dack/entity',
+}
+
+export const getEndpoint = (endpoint: Endpoint) => `${BASE_ROUTE()}${endpoint}`;
+
+// This feature is introduced for dynamic calling when localStorage's value change
+export const getUrls = () => {
+    return {
+        loginUrl: getEndpoint(Endpoint.Login),
+        schemaUrl: getEndpoint(Endpoint.Schema),
+        viewModelGetUrl: getEndpoint(Endpoint.ViewModelGet),
+        viewModelSaveUrl: getEndpoint(Endpoint.ViewModelSave),
+        entitySearchUrl: getEndpoint(Endpoint.EntitySearch),
+        entityUrl: getEndpoint(Endpoint.Entity),
+    };
+};
 
 export const SUPPORTED_LANGUAGES = ['fi', 'en', 'sv'] as const;
 export type SupportedLanguages = typeof SUPPORTED_LANGUAGES;

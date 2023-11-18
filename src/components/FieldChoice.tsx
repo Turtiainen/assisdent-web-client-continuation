@@ -10,7 +10,7 @@ import {
     warningIcon,
     warningIconBackground,
 } from '../styles/globalStyles';
-import { ChangeEvent, KeyboardEventHandler, useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export const FieldChoice = () => {
@@ -32,11 +32,10 @@ export const FieldChoice = () => {
         }
     };
 
-    const handleKeyPress = (e: KeyboardEventHandler<HTMLInputElement>) => {
-        console.log(e);
-        // if (e.key === 'Enter' && field !== '') {
-        //     chooseField();
-        // }
+    const handleKeyPress = (e: { code: string }) => {
+        if (e.code === 'Enter' && field !== '') {
+            chooseField();
+        }
     };
 
     return (
@@ -85,6 +84,7 @@ export const FieldChoice = () => {
                                 placeholder="Toimialue"
                                 style={inputField}
                                 onChange={handleInputChange}
+                                onKeyPress={handleKeyPress}
                                 type="text"
                                 autoCorrect="off"
                                 autoCapitalize="off"

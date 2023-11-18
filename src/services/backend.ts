@@ -1,13 +1,7 @@
 import axios, { isAxiosError } from 'axios';
 import { DtoSchema } from '../types/DtoSchema';
 import { DynamicObject } from '../types/DynamicObject';
-import {
-    ENDPOINT_ENTITY_SEARCH,
-    ENDPOINT_LOGIN,
-    ENDPOINT_SCHEMA,
-    ENDPOINT_VIEWMODEL_GET,
-} from '../utils/constants';
-import { useNavigate } from 'react-router-dom';
+import { getUrls } from '../utils/constants';
 
 type LoginData = {
     Username: string;
@@ -48,9 +42,10 @@ export const doLogin = async (username: string, password: string) => {
         LoginType: 'Rest',
     };
 
+    console.log(localStorage.getItem('domain'));
     try {
         const { data } = await axios.post<LoginResponse>(
-            ENDPOINT_LOGIN,
+            getUrls().loginUrl,
             loginData,
         );
 
@@ -91,7 +86,7 @@ export async function getSchema() {
                 Authorization: `Bearer ${accessToken}`,
             };
 
-            const { data } = await axios.get(ENDPOINT_SCHEMA, { headers });
+            const { data } = await axios.get(getUrls().schemaUrl, { headers });
             return data as DtoSchema;
         } catch (error) {
             if (axios.isAxiosError(error)) {
@@ -118,7 +113,7 @@ export const getEntitiesForRegisterView = async (options: DynamicObject) => {
     };
 
     try {
-        const { data } = await axios.post(ENDPOINT_ENTITY_SEARCH, body, {
+        const { data } = await axios.post(getUrls().entitySearchUrl, body, {
             headers: { Authorization: `Bearer ${token}` },
         });
         return data;
@@ -143,7 +138,7 @@ export const getEntityData = async (searchOptions: DynamicObject) => {
         const body = {
             ...searchOptions,
         };
-        const { data } = await axios.post(ENDPOINT_ENTITY_SEARCH, body, {
+        const { data } = await axios.post(getUrls().entitySearchUrl, body, {
             headers: { Authorization: `Bearer ${token}` },
         });
         return data;
@@ -168,7 +163,7 @@ export const getViewModelData = async (searchOptions: DynamicObject) => {
         const body = {
             ...searchOptions,
         };
-        const { data } = await axios.post(ENDPOINT_VIEWMODEL_GET, body, {
+        const { data } = await axios.post(getUrls().viewModelGetUrl, body, {
             headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -197,13 +192,9 @@ export const putEntityData = async (entityData: DynamicObject) => {
         const body = {
             ...entityData,
         };
-        const { data } = await axios.put(
-            `${import.meta.env.VITE_ASSISCARE_BASE}${
-                import.meta.env.VITE_ASSISCARE_ROUTE
-            }dack/entity`,
-            body,
-            { headers: { Authorization: `Bearer ${token}` } },
-        );
+        const { data } = await axios.put(getUrls().entityUrl, body, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
         return data;
     } catch (error) {
         if (axios.isAxiosError(error)) {
@@ -224,13 +215,9 @@ export const postEntityData = async (entityData: DynamicObject) => {
         const body = {
             ...entityData,
         };
-        const { data } = await axios.post(
-            `${import.meta.env.VITE_ASSISCARE_BASE}${
-                import.meta.env.VITE_ASSISCARE_ROUTE
-            }dack/entity`,
-            body,
-            { headers: { Authorization: `Bearer ${token}` } },
-        );
+        const { data } = await axios.post(getUrls().entityUrl, body, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
         return data;
     } catch (error) {
         if (axios.isAxiosError(error)) {
@@ -251,13 +238,9 @@ export const saveViewModelData = async (viewModelData: DynamicObject) => {
         const body = {
             ...viewModelData,
         };
-        const { data } = await axios.post(
-            `${import.meta.env.VITE_ASSISCARE_BASE}${
-                import.meta.env.VITE_ASSISCARE_ROUTE
-            }dack/viewmodel/save`,
-            body,
-            { headers: { Authorization: `Bearer ${token}` } },
-        );
+        const { data } = await axios.post(getUrls().viewModelSaveUrl, body, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
         return data;
     } catch (error) {
         if (axios.isAxiosError(error)) {
