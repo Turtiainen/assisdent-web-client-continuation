@@ -1,7 +1,7 @@
 # AssisDent web client
 
 [![Build Status][ci-image]][ci-url]
-[![Coverage Status](https://coveralls.io/repos/github/Turtiainen/assisdent-web-client-continuation/badge.svg?branch=Pipeline_test)](https://coveralls.io/github/Turtiainen/assisdent-web-client-continuation?branch=Pipeline_test)
+[![Coverage Status](https://coveralls.io/repos/github/Turtiainen/assisdent-web-client-continuation/badge.svg?branch=Pipeline_test)](https://coveralls.io/github/Turtiainen/assisdent-web-client-continuation?branch=main)
 
 ### Tampere University COMP.SE.610/620 spring 2023 Group G project work
 
