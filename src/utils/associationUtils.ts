@@ -24,7 +24,13 @@ export const mapAssociationTypeUpdatePatchCommands = (
         if (obj.associationType === AssociationType.Composition) {
             for (const [key, value] of Object.entries(obj)) {
                 if (key !== 'associationType' && key !== 'Id') {
-                    obj[key] = { _update: [value] };
+                    //Exception: PatientInvoicingAddress can not be updated due to some backend logic:
+                    //     -> use _create patch command to create new entity instead of update existing.
+                    const mappedValue =
+                        key === 'PatientInvoicingAddress'
+                            ? { _create: [value] }
+                            : { _update: [value] };
+                    obj[key] = mappedValue;
                 }
             }
         } else if (obj.associationType === AssociationType.Aggregation) {
