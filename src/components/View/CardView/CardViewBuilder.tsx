@@ -71,11 +71,6 @@ export const CardViewBuilder = ({
         const valueObj: DynamicObject = {};
         let currentObj = valueObj;
 
-        // FIXME Special case: PatientInvoicingAddress can not be updated currently
-        if (keysArray[0] === 'PatientInvoicingAddress') {
-            return;
-        }
-
         // Get the association type from the schema
         const propertySchemaObj = entityPropertySchema?.[keysArray[0]];
         const associationType = getAssociationType(propertySchemaObj);
@@ -105,7 +100,8 @@ export const CardViewBuilder = ({
                 return Object.hasOwn(item, keysArray[0]);
             });
             if (
-                associationType &&
+                keysArray[0] !== 'PatientInvoicingAddress' &&
+                !associationType !== null &&
                 isNewAssociation &&
                 !newChangedValues[newChangedValues.length - 1][keysArray[0]].Id
             ) {
