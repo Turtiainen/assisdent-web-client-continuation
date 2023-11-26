@@ -9,12 +9,14 @@ import { CardList } from './CardList';
 import { CardSearch } from './CardSearch';
 import { Editor } from './Editor';
 import { CardCustom } from './CardCustom';
+import { useState, useEffect } from 'react';
 import {
     findLastTypeObjectFromValuePath,
     getEntityPropertiesSchema,
 } from '../../../temp/SchemaUtils';
 import { getAssociationType } from '../../../utils/associationUtils';
 import { checkIfObjectHasNestedProperty } from '../../../utils/objectUtils';
+import * as regexPatterns from '../../../utils/regexPatterns';
 
 type ElementAttributesType = {
     __id: string;
@@ -41,15 +43,29 @@ export const CardViewBuilder = ({
     cardData,
     entityType,
     updateChangedValues,
+    updateErrors,
     changedValues,
+    errors,
 }: {
     elements: Array<CardElementType>;
     cardData: DynamicObject | null;
     entityType: string | null;
     updateChangedValues: (changedValues: Array<DynamicObject>) => void;
+    updateErrors: (errors: string[]) => void;
     changedValues: Array<DynamicObject>;
+    errors: string[];
 }) => {
     const entityPropertySchema = getEntityPropertiesSchema(entityType);
+
+    /*
+    useEffect(() => {
+        // if(updateErrors != undefined) updateErrors(currentErrors);
+        console.log("Errorit päivittyi: " + [...currentErrors]);
+        if(updateErrors) {
+            console.log(elements);
+            console.log(updateErrors);
+        }
+    }, [currentErrors]); `/`
 
     /*
      * This function is called when any input value in the card is changed (basicInput, dateInput, booleans, etc.).
@@ -61,8 +77,10 @@ export const CardViewBuilder = ({
         key: string,
         value: string | number | boolean | null,
     ) => {
+        let isValid = true;
         // const newChangedValues = changedValues ? [...changedValues] : [];
         const newChangedValues = [...changedValues];
+        let currentErrors = [...errors];
 
         // From the binding string (valueString) we get the path to the property
         const keysArray = sanitizeBinding(valueString)
@@ -110,7 +128,66 @@ export const CardViewBuilder = ({
             }
         }
 
-        updateChangedValues(newChangedValues);
+        // Input handling of changed values to make sure we are not doing api calls when data is invalid
+        if(currentObj.FirstName !== undefined) {
+            if(!regexPatterns.LETTERS_ONLY_REGEX.test(currentObj.FirstName) ) {
+                isValid = false;
+                if(!currentErrors.includes('FirstName')) currentErrors = [...currentErrors, 'FirstName'];
+            } else {
+                if(errors.length > 0) {
+                    currentErrors = currentErrors.filter((error) => error !== 'FirstName');
+                }
+            }   
+        }
+        if(currentObj.CallingName !== undefined) {
+            if(!regexPatterns.LETTERS_ONLY_REGEX.test(currentObj.CallingName) ) {
+                isValid = false;
+                if(!currentErrors.includes('CallingName')) currentErrors = [...currentErrors, 'CallingName'];
+            } else {
+                if(errors.length > 0) {
+                    currentErrors = currentErrors.filter((error) => error !== 'CallingName');
+                }
+            }
+        }
+        if(currentObj.LastName !== undefined) {
+            if(!regexPatterns.LETTERS_ONLY_REGEX.test(currentObj.LastName) ) {
+                isValid = false;
+                if(!currentErrors.includes('LastName')) currentErrors = [...currentErrors, 'LastName'];
+            } else {
+                if(errors.length > 0) {
+                    currentErrors = currentErrors.filter((error) => error !== 'LastName');
+                }
+            }
+        }
+
+        if(isValid) {
+             // Existing objects will be just updated, new objects will be added
+            const existingObject = newChangedValues.findIndex((obj) => {
+                return checkIfObjectHasNestedProperty(obj, keysArray);
+            });
+
+            if (existingObject > -1) {
+                newChangedValues[existingObject] = valueObj;
+            } else {
+                newChangedValues.push(valueObj);
+                const isNewAssociation = newChangedValues.find((item) => {
+                    return Object.hasOwn(item, keysArray[0]);
+                });
+                if (
+                    associationType &&
+                    isNewAssociation &&
+                    !newChangedValues[newChangedValues.length - 1][keysArray[0]].Id
+                ) {
+                    newChangedValues[newChangedValues.length - 1][keysArray[0]].Id =
+                        cardData?.Entity[keysArray[0]]?.Id;
+                }
+            }
+
+            updateErrors(currentErrors);
+            updateChangedValues(newChangedValues);
+        } else {
+            updateErrors(currentErrors);
+        }
     };
 
     return (
@@ -125,9 +202,11 @@ export const CardViewBuilder = ({
                                 cardData={cardData}
                                 entityType={entityType}
                                 updateChangedValues={updateChangedValues}
+                                updateErrors={updateErrors}
                                 changedValues={changedValues}
+                                errors={errors}
                             />
-                        );
+                        ); 
                     case 'List': {
                         const sanitizedBinding = sanitizeBinding(
                             element.attributes.Value,
@@ -150,7 +229,7 @@ export const CardViewBuilder = ({
                                 entityType={elementTypeObject}
                             />
                         );
-                    }
+                    } 
                     case 'Element':
                         return (
                             <CardElement
@@ -163,7 +242,7 @@ export const CardViewBuilder = ({
                                 }
                                 entityType={entityType}
                             />
-                        );
+                        ); 
                     case 'Search': {
                         const sanitizedBinding = sanitizeBinding(
                             element.attributes.Value,
@@ -242,7 +321,7 @@ export const CardViewBuilder = ({
                                     updateChangedTextInputValue
                                 }
                             />
-                        );
+                        ); 
                     default:
                         return (
                             <p key={element.attributes['__id'] as Key}>

@@ -8,13 +8,17 @@ export const CardGroup = ({
     cardData,
     entityType,
     updateChangedValues,
+    updateErrors,
     changedValues,
+    errors,
 }: {
     group: DynamicObject;
     cardData: DynamicObject | null;
     entityType: string | null;
     updateChangedValues: (changedValues: Array<DynamicObject>) => void;
+    updateErrors: (errors: string[]) => void;
     changedValues: Array<DynamicObject>;
+    errors: string[];
 }) => {
     const [isContentHidden, setIsContentHidden] = useState(false);
 
@@ -37,7 +41,9 @@ export const CardGroup = ({
                         updateChangedValues={(newValues) =>
                             updateChangedValues(newValues)
                         }
+                        updateErrors={(errors) => updateErrors(errors)}
                         changedValues={changedValues}
+                        errors={errors}
                     />
                 )}
             </>

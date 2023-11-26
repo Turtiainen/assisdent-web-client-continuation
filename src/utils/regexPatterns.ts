@@ -1,0 +1,1 @@
+export const LETTERS_ONLY_REGEX = /^[A-Za-z\-'\s]+$/;

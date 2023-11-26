@@ -71,7 +71,7 @@ export const BasicInput = ({
                 className={`max-w-xs max-h-10 w-full border border-ad-grey-300 rounded-sm px-2 py-1 hover:border-ad-primary focus:border-ad-primary active:border-ad-primary focus:outline-none`}
                 onBlur={(e) => {
                     e.preventDefault();
-                    if (value && value !== defaultValue) {
+                    if (value !== defaultValue) {
                         updateChangedTextInputValue(
                             element.attributes.Value,
                             element.attributes.Identifier,

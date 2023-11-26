@@ -43,6 +43,10 @@ export const CardView = ({ view }: DataProps) => {
     const [changedValues, setChangedValues] = useState<Array<DynamicObject>>(
         [],
     );
+    const [inputErrors, setInputErrors] = useState<string[]>(
+        [],
+    );
+
     const navigate = useNavigate();
 
     const { Id } = useParams();
@@ -146,19 +150,24 @@ export const CardView = ({ view }: DataProps) => {
             {},
         );
 
-        const saveViewModelOptions: saveViewModelOptionsType = {
-            ViewName: viewName,
-            CardViewType: 'Edit',
-            ViewModelData: {
-                Entity: {
-                    ...reducedChangedValues,
-                    Id: Id,
+        if(inputErrors.length < 1) {
+            const saveViewModelOptions: saveViewModelOptionsType = {
+                ViewName: viewName,
+                CardViewType: 'Edit',
+                ViewModelData: {
+                    Entity: {
+                        ...reducedChangedValues,
+                        Id: Id,
+                    },
                 },
-            },
-        };
-
-        saveData.mutate(saveViewModelOptions);
-        setChangedValues([]);
+            };
+        
+            saveData.mutate(saveViewModelOptions);
+            setInputErrors([]);
+            setChangedValues([]);    
+        } else {
+            alert("You cannot save your changes because there are errors in the following fields: " + inputErrors);
+        }
     };
 
     const addNew = async () => {
@@ -195,6 +204,12 @@ export const CardView = ({ view }: DataProps) => {
             setChangedValues(newChangedValues);
         };
         const newChangedValues = [...changedValues];
+        
+        const updateErrors = (errors: string[]) => {
+            setInputErrors(errors);
+        };
+        const newErrors = [...inputErrors];
+
         return (
             <>
                 {resolvedHeader && (
@@ -211,7 +226,9 @@ export const CardView = ({ view }: DataProps) => {
                             cardData={cardData}
                             entityType={entityType}
                             updateChangedValues={updateChangedValues}
+                            updateErrors={updateErrors}
                             changedValues={newChangedValues}
+                            errors={newErrors}
                         />
                     </div>
                 )}
