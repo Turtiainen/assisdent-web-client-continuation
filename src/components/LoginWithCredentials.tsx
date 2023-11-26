@@ -27,6 +27,8 @@ export const LoginWithCredentials = () => {
     const [password, setPassword] = useState<string>('');
     const [error, setError] = useState<string>('');
     const passwordInput = useRef<HTMLInputElement>(null);
+    const errorText =
+        'Kirjautuminen epäonnistui. \n Tarkista käyttäjätunnus ja salasana.';
     const fieldText = () => {
         return localStorage.getItem('domain');
     };
@@ -68,12 +70,12 @@ export const LoginWithCredentials = () => {
                 const result = await doLogin(username, password);
                 if (typeof result === 'string')
                     if (result.startsWith('error')) {
-                        setError(result);
+                        setError(errorText);
                         return false;
                     }
                 navigate('/');
-            } else setError('Please input password');
-        else setError('Please input username');
+            } else setError(errorText);
+        else setError(errorText);
     };
 
     const handleKeyPress = (e: { code: string }) => {
