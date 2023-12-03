@@ -120,4 +120,16 @@ describe('Field Choice', () => {
         //     'feature_sweproject',
         // );
     });
+
+    it('toggles password visibility', () => {
+        const passwordInput = screen.getByPlaceholderText('Salasana');
+        const togglePasswordVisibilityButton = screen.getByAltText(/password/i);
+        expect(passwordInput).toHaveAttribute('type', 'password');
+
+        // Simulate a click on the show/hide password button
+        fireEvent.click(togglePasswordVisibilityButton);
+        expect(passwordInput).toHaveAttribute('type', 'text');
+        fireEvent.click(togglePasswordVisibilityButton);
+        expect(passwordInput).toHaveAttribute('type', 'password');
+    });
 });
