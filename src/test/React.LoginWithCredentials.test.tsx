@@ -1,8 +1,23 @@
-import { render, fireEvent, screen, act } from '@testing-library/react';
+import {
+    render,
+    fireEvent,
+    screen,
+    act,
+    waitFor,
+} from '@testing-library/react';
 import { LoginWithCredentials } from '../components/LoginWithCredentials';
 import { Login } from '../components/Login';
 import '@testing-library/jest-dom';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { BrowserRouter as Router, useNavigate } from 'react-router-dom';
+
+jest.mock('react-router-dom', () => ({
+    ...jest.requireActual('react-router-dom'),
+    useNavigate: () => jest.fn(),
+}));
+
+function sleep(ms: number) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
 const localStorageMock = (function () {
     let store: { [key: string]: string } = {};
@@ -31,6 +46,7 @@ const localStorageMock = (function () {
 })();
 
 Object.defineProperty(window, 'localStorage', { value: localStorageMock });
+Object.defineProperty(window, 'sessionStorage', { value: localStorageMock });
 describe('Field Choice', () => {
     beforeEach(() => {
         window.localStorage.clear();
@@ -61,7 +77,7 @@ describe('Field Choice', () => {
         expect(passwordInput.value).toBe('pora');
     });
 
-    it('should display error when domain name is empty', async () => {
+    it('should display error when input is empty', async () => {
         const enterButton = screen.getByText('Jatka');
         const regex = /Kirjautuminen\s*epäonnistui\./;
 
@@ -72,23 +88,36 @@ describe('Field Choice', () => {
         });
     });
 
-    // it('should record after input domain name', async () => {
-    //     const fieldInput = screen.getByPlaceholderText(
-    //         'Toimialue',
-    //     ) as HTMLInputElement;
-    //     const enterButton = screen.getByText('Jatka');
-    //     const mockSetItem = jest.spyOn(Storage.prototype, 'setItem');
-    //
-    //     fireEvent.change(fieldInput, {
-    //         target: { value: 'feature_sweproject' },
-    //     });
-    //
-    //     fireEvent.click(enterButton);
-    //
-    //     expect(mockSetItem).toHaveBeenCalledTimes(1);
-    //     expect(mockSetItem).toHaveBeenCalledWith(
-    //         'domain',
-    //         'feature_sweproject',
-    //     );
-    // });
+    it('should doing login after correct input', async () => {
+        const mockNavigate = useNavigate();
+
+        const usernameInput = screen.getByPlaceholderText(
+            'Käyttäjätunnus',
+        ) as HTMLInputElement;
+        const passwordInput = screen.getByPlaceholderText(
+            'Salasana',
+        ) as HTMLInputElement;
+
+        fireEvent.change(usernameInput, {
+            target: { value: 'seppomö' },
+        });
+        fireEvent.change(passwordInput, {
+            target: { value: 'pora' },
+        });
+
+        const enterButton = screen.getByText('Jatka');
+        const mockSetItem = jest.spyOn(window.sessionStorage, 'setItem');
+
+        fireEvent.click(enterButton);
+        await sleep(3000);
+
+        // const homepageText = screen.getByText('OMAT TIEDOT');
+
+        // expect(mockNavigate).toHaveBeenCalledWith('/');
+        expect(mockSetItem).toHaveBeenCalledTimes(1);
+        // expect(mockSetItem).toHaveBeenCalledWith(
+        //     'domain',
+        //     'feature_sweproject',
+        // );
+    });
 });
