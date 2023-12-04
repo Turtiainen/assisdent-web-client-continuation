@@ -24,6 +24,8 @@ import helpImage from './icon_tiny_help.svg';
 import minimizeImage from './icon_tiny_minus.svg';
 import maximizeImage from './icon_tiny_maxi.svg';
 import closeImage from './icon_tiny_close.svg';
+import showing from './eye-line.svg';
+import hiding from './eye-off-line.svg';
 
 export {
     assisdentMenuImage,
@@ -52,4 +54,6 @@ export {
     minimizeImage,
     maximizeImage,
     closeImage,
+    showing,
+    hiding,
 };

@@ -119,7 +119,7 @@ export const CardViewBuilder = ({
             });
             if (
                 keysArray[0] !== 'PatientInvoicingAddress' &&
-                !associationType !== null &&
+                associationType !== null &&
                 isNewAssociation &&
                 !newChangedValues[newChangedValues.length - 1][keysArray[0]].Id
             ) {
