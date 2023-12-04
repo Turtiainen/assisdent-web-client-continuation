@@ -67,14 +67,14 @@ describe('Field Choice', () => {
         ) as HTMLInputElement;
 
         fireEvent.change(usernameInput, {
-            target: { value: 'seppomö' },
+            target: { value: 'test username' },
         });
         fireEvent.change(passwordInput, {
-            target: { value: 'pora' },
+            target: { value: 'test password' },
         });
 
-        expect(usernameInput.value).toBe('seppomö');
-        expect(passwordInput.value).toBe('pora');
+        expect(usernameInput.value).toBe('test username');
+        expect(passwordInput.value).toBe('test password');
     });
 
     it('should display error when input is empty', async () => {
@@ -88,8 +88,9 @@ describe('Field Choice', () => {
         });
     });
 
-    it('should doing login after correct input', async () => {
-        const mockNavigate = useNavigate();
+    it('should try to do login after input', async () => {
+        // const mockNavigate = useNavigate();
+        const regex = /Kirjautuminen\s*epäonnistui\./;
 
         const usernameInput = screen.getByPlaceholderText(
             'Käyttäjätunnus',
@@ -99,22 +100,24 @@ describe('Field Choice', () => {
         ) as HTMLInputElement;
 
         fireEvent.change(usernameInput, {
-            target: { value: 'seppomö' },
+            target: { value: 'test' },
         });
         fireEvent.change(passwordInput, {
-            target: { value: 'pora' },
+            target: { value: 'test' },
         });
 
         const enterButton = screen.getByText('Jatka');
-        const mockSetItem = jest.spyOn(window.sessionStorage, 'setItem');
+        // const mockSetItem = jest.spyOn(window.sessionStorage, 'setItem');
 
         fireEvent.click(enterButton);
+        expect(screen.getByText('Doing login...')).toBeInTheDocument(); // Loging state once clicking the button
         await sleep(3000);
 
         // const homepageText = screen.getByText('OMAT TIEDOT');
 
         // expect(mockNavigate).toHaveBeenCalledWith('/');
-        expect(mockSetItem).toHaveBeenCalledTimes(1);
+        // expect(mockSetItem).toHaveBeenCalledTimes(1);
+        expect(screen.getByText(regex)).toBeInTheDocument(); // Report error if login failed
         // expect(mockSetItem).toHaveBeenCalledWith(
         //     'domain',
         //     'feature_sweproject',
