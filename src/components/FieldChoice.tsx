@@ -28,7 +28,7 @@ export const FieldChoice = () => {
             navigate('/');
             // console.log(localStorage.getItem('domain'));
         } else {
-            setError('Please input domain name.');
+            setError('Kirjautuminen epäonnistui. \n Tarkista toimialue.');
         }
     };
 

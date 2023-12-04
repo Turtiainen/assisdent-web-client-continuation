@@ -20,13 +20,17 @@ import {
     useState,
 } from 'react';
 import { doLogin } from '../services/backend';
+import { showing, hiding, backImage } from '../assets/ExportImages';
 
 export const LoginWithCredentials = () => {
     const navigate = useNavigate();
     const [username, setUsername] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [error, setError] = useState<string>('');
+    const [showPassword, setShowPassword] = useState(false);
     const passwordInput = useRef<HTMLInputElement>(null);
+    const errorText =
+        'Kirjautuminen epäonnistui. \n Tarkista käyttäjätunnus ja salasana.';
     const fieldText = () => {
         return localStorage.getItem('domain');
     };
@@ -68,12 +72,12 @@ export const LoginWithCredentials = () => {
                 const result = await doLogin(username, password);
                 if (typeof result === 'string')
                     if (result.startsWith('error')) {
-                        setError(result);
+                        setError(errorText);
                         return false;
                     }
                 navigate('/');
-            } else setError('Please input password');
-        else setError('Please input username');
+            } else setError(errorText);
+        else setError(errorText);
     };
 
     const handleKeyPress = (e: { code: string }) => {
@@ -137,18 +141,27 @@ export const LoginWithCredentials = () => {
                             autoFocus
                         ></input>
                     </div>
-                    <div className="text-center pt-2">
+                    <div className="text-center pt-2 relative flex">
                         <input
                             ref={passwordInput}
                             placeholder="Salasana"
-                            type="password"
+                            type={showPassword ? 'text' : 'password'}
                             id="password"
                             style={inputField}
                             onChange={handlePasswordChange}
                             onKeyPress={handleKeyPress}
                             autoCorrect="off"
                             autoCapitalize="off"
+                            className="pr-40 m-auto"
                         ></input>
+                        <img
+                            src={showPassword ? showing : hiding}
+                            onClick={() => setShowPassword(!showPassword)}
+                            alt={
+                                showPassword ? 'Hide password' : 'Show password'
+                            }
+                            className="absolute w-6 right-12 cursor-pointer mt-1"
+                        />
                     </div>
                     <div style={backgroundExtender}>
                         <div className="text-center pt-8 pb-2">
