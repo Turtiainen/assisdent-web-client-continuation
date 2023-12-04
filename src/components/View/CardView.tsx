@@ -43,9 +43,7 @@ export const CardView = ({ view }: DataProps) => {
     const [changedValues, setChangedValues] = useState<Array<DynamicObject>>(
         [],
     );
-    const [inputErrors, setInputErrors] = useState<string[]>(
-        [],
-    );
+    const [inputErrors, setInputErrors] = useState<string[]>([]);
 
     const navigate = useNavigate();
 
@@ -150,7 +148,7 @@ export const CardView = ({ view }: DataProps) => {
             {},
         );
 
-        if(inputErrors.length < 1) {
+        if (inputErrors.length < 1) {
             const saveViewModelOptions: saveViewModelOptionsType = {
                 ViewName: viewName,
                 CardViewType: 'Edit',
@@ -161,12 +159,15 @@ export const CardView = ({ view }: DataProps) => {
                     },
                 },
             };
-        
+
             saveData.mutate(saveViewModelOptions);
             setInputErrors([]);
-            setChangedValues([]);    
+            setChangedValues([]);
         } else {
-            alert("You cannot save your changes because there are errors in the following fields: " + inputErrors);
+            alert(
+                'You cannot save your changes because there are errors in the following fields: ' +
+                    inputErrors,
+            );
         }
     };
 
@@ -204,7 +205,7 @@ export const CardView = ({ view }: DataProps) => {
             setChangedValues(newChangedValues);
         };
         const newChangedValues = [...changedValues];
-        
+
         const updateErrors = (errors: string[]) => {
             setInputErrors(errors);
         };

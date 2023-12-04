@@ -9,6 +9,7 @@ export const BasicInput = ({
     content,
     inputProperties,
     updateChangedTextInputValue,
+    updateInputErrors,
 }: {
     element: DynamicObject;
     content: string | DynamicObject;
@@ -16,6 +17,11 @@ export const BasicInput = ({
     updateChangedTextInputValue: (
         valueString: string,
         key: string,
+        value: string | number | boolean | null,
+    ) => void;
+    updateInputErrors: (
+        valueString: string,
+        identifier: string,
         value: string | number | boolean | null,
     ) => void;
 }) => {
@@ -73,6 +79,12 @@ export const BasicInput = ({
                     e.preventDefault();
                     if (value !== defaultValue) {
                         updateChangedTextInputValue(
+                            element.attributes.Value,
+                            element.attributes.Identifier,
+                            value,
+                        );
+                    } else {
+                        updateInputErrors(
                             element.attributes.Value,
                             element.attributes.Identifier,
                             value,

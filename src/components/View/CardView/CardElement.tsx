@@ -18,6 +18,7 @@ export const CardElement = ({
     element,
     cardData,
     updateChangedTextInputValue,
+    updateInputErrors,
     entityType,
 }: {
     element: DynamicObject;
@@ -25,6 +26,11 @@ export const CardElement = ({
     updateChangedTextInputValue: (
         valueString: string,
         key: string,
+        value: string | number | boolean | null,
+    ) => void;
+    updateInputErrors: (
+        valueString: string,
+        identifier: string,
         value: string | number | boolean | null,
     ) => void;
     entityType: string | null;
@@ -158,6 +164,7 @@ export const CardElement = ({
             content={cardDetails || ''}
             inputProperties={inputProperties}
             updateChangedTextInputValue={updateChangedTextInputValue}
+            updateInputErrors={updateInputErrors}
         />
     );
 };

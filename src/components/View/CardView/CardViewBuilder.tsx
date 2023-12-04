@@ -55,17 +55,108 @@ export const CardViewBuilder = ({
     changedValues: Array<DynamicObject>;
     errors: string[];
 }) => {
+    const [handleFieldReset, setHandleFieldReset] = useState(false);
     const entityPropertySchema = getEntityPropertiesSchema(entityType);
 
-    /*
-    useEffect(() => {
-        // if(updateErrors != undefined) updateErrors(currentErrors);
-        console.log("Errorit päivittyi: " + [...currentErrors]);
-        if(updateErrors) {
-            console.log(elements);
-            console.log(updateErrors);
+    const updateInputErrors = (
+        valueString: string,
+        indentifier: string,
+        value: string | number | boolean | null,
+    ) => {
+        let currentErrors = [...errors];
+        setHandleFieldReset(true);
+
+        // From the binding string (valueString) we get the path to the property
+        const keysArray = sanitizeBinding(valueString)
+            .split('Entity.')[1]
+            .split('.');
+        const valueObj: DynamicObject = {};
+        let currentObj = valueObj;
+
+        // Get the association type from the schema
+        const propertySchemaObj = entityPropertySchema?.[keysArray[0]];
+        const associationType = getAssociationType(propertySchemaObj);
+
+        // We carry the association type in the object to be able to use correct patch commands later
+        keysArray.forEach((key, index) => {
+            if (index === 0) {
+                currentObj.associationType = associationType;
+            }
+            if (index === keysArray.length - 1) {
+                currentObj[key] = value;
+            } else {
+                currentObj[key] = {};
+                currentObj = currentObj[key];
+            }
+        });
+
+        if (currentObj.FirstName !== undefined) {
+            if (!regexPatterns.LETTERS_ONLY_REGEX.test(currentObj.FirstName)) {
+                if (!currentErrors.includes('FirstName'))
+                    currentErrors = [...currentErrors, 'FirstName'];
+            } else {
+                if (errors.length > 0) {
+                    currentErrors = currentErrors.filter(
+                        (error) => error !== 'FirstName',
+                    );
+                }
+            }
         }
-    }, [currentErrors]); `/`
+        if (currentObj.CallingName !== undefined) {
+            if (
+                !regexPatterns.LETTERS_ONLY_REGEX.test(currentObj.CallingName)
+            ) {
+                if (!currentErrors.includes('CallingName'))
+                    currentErrors = [...currentErrors, 'CallingName'];
+            } else {
+                if (errors.length > 0) {
+                    currentErrors = currentErrors.filter(
+                        (error) => error !== 'CallingName',
+                    );
+                }
+            }
+        }
+        if (currentObj.LastName !== undefined) {
+            if (!regexPatterns.LETTERS_ONLY_REGEX.test(currentObj.LastName)) {
+                if (!currentErrors.includes('LastName'))
+                    currentErrors = [...currentErrors, 'LastName'];
+            } else {
+                if (errors.length > 0) {
+                    currentErrors = currentErrors.filter(
+                        (error) => error !== 'LastName',
+                    );
+                }
+            }
+        }
+
+        if (currentObj.PostalCode !== undefined) {
+            if (!regexPatterns.NUMBERS_ONLY_REGEX.test(currentObj.LastName)) {
+                if (!currentErrors.includes('PostalCode'))
+                    currentErrors = [...currentErrors, 'PostalCode'];
+            } else {
+                if (errors.length > 0) {
+                    currentErrors = currentErrors.filter(
+                        (error) => error !== 'PostalCode',
+                    );
+                }
+            }
+        }
+
+        if (currentObj.Email !== undefined) {
+            if (!regexPatterns.EMAIL_REGEX.test(currentObj.Email)) {
+                if (!currentErrors.includes('Email'))
+                    currentErrors = [...currentErrors, 'Email'];
+            } else {
+                if (errors.length > 0) {
+                    currentErrors = currentErrors.filter(
+                        (error) => error !== 'Email',
+                    );
+                }
+            }
+        }
+
+        updateErrors(currentErrors);
+    };
 
     /*
      * This function is called when any input value in the card is changed (basicInput, dateInput, booleans, etc.).
@@ -106,66 +197,80 @@ export const CardViewBuilder = ({
             }
         });
 
-        // Existing objects will be just updated, new objects will be added
-        const existingObject = newChangedValues.findIndex((obj) => {
-            return checkIfObjectHasNestedProperty(obj, keysArray);
-        });
-        if (existingObject > -1) {
-            newChangedValues[existingObject] = valueObj;
-        } else {
-            newChangedValues.push(valueObj);
-            const isNewAssociation = newChangedValues.find((item) => {
-                return Object.hasOwn(item, keysArray[0]);
-            });
-            if (
-                keysArray[0] !== 'PatientInvoicingAddress' &&
-                associationType !== null &&
-                isNewAssociation &&
-                !newChangedValues[newChangedValues.length - 1][keysArray[0]].Id
-            ) {
-                newChangedValues[newChangedValues.length - 1][keysArray[0]].Id =
-                    cardData?.Entity[keysArray[0]]?.Id;
-            }
-        }
-
         // Input handling of changed values to make sure we are not doing api calls when data is invalid
-        if(currentObj.FirstName !== undefined) {
-            if(!regexPatterns.LETTERS_ONLY_REGEX.test(currentObj.FirstName) ) {
+        if (currentObj.FirstName !== undefined) {
+            if (!regexPatterns.LETTERS_ONLY_REGEX.test(currentObj.FirstName)) {
                 isValid = false;
-                if(!currentErrors.includes('FirstName')) currentErrors = [...currentErrors, 'FirstName'];
+                if (!currentErrors.includes('FirstName'))
+                    currentErrors = [...currentErrors, 'FirstName'];
             } else {
-                if(errors.length > 0) {
-                    currentErrors = currentErrors.filter((error) => error !== 'FirstName');
-                }
-            }   
-        }
-        if(currentObj.CallingName !== undefined) {
-            if(!regexPatterns.LETTERS_ONLY_REGEX.test(currentObj.CallingName) ) {
-                isValid = false;
-                if(!currentErrors.includes('CallingName')) currentErrors = [...currentErrors, 'CallingName'];
-            } else {
-                if(errors.length > 0) {
-                    currentErrors = currentErrors.filter((error) => error !== 'CallingName');
+                if (errors.length > 0) {
+                    currentErrors = currentErrors.filter(
+                        (error) => error !== 'FirstName',
+                    );
                 }
             }
         }
-        if(currentObj.LastName !== undefined) {
-            if(!regexPatterns.LETTERS_ONLY_REGEX.test(currentObj.LastName) ) {
+        if (currentObj.CallingName !== undefined) {
+            if (
+                !regexPatterns.LETTERS_ONLY_REGEX.test(currentObj.CallingName)
+            ) {
                 isValid = false;
-                if(!currentErrors.includes('LastName')) currentErrors = [...currentErrors, 'LastName'];
+                if (!currentErrors.includes('CallingName'))
+                    currentErrors = [...currentErrors, 'CallingName'];
             } else {
-                if(errors.length > 0) {
-                    currentErrors = currentErrors.filter((error) => error !== 'LastName');
+                if (errors.length > 0) {
+                    currentErrors = currentErrors.filter(
+                        (error) => error !== 'CallingName',
+                    );
+                }
+            }
+        }
+        if (currentObj.LastName !== undefined) {
+            if (!regexPatterns.LETTERS_ONLY_REGEX.test(currentObj.LastName)) {
+                isValid = false;
+                if (!currentErrors.includes('LastName'))
+                    currentErrors = [...currentErrors, 'LastName'];
+            } else {
+                if (errors.length > 0) {
+                    currentErrors = currentErrors.filter(
+                        (error) => error !== 'LastName',
+                    );
                 }
             }
         }
 
-        if(isValid) {
-             // Existing objects will be just updated, new objects will be added
+        if (currentObj.PostalCode !== undefined) {
+            if (!regexPatterns.NUMBERS_ONLY_REGEX.test(currentObj.LastName)) {
+                if (!currentErrors.includes('PostalCode'))
+                    currentErrors = [...currentErrors, 'PostalCode'];
+            } else {
+                if (errors.length > 0) {
+                    currentErrors = currentErrors.filter(
+                        (error) => error !== 'PostalCode',
+                    );
+                }
+            }
+        }
+
+        if (currentObj.Email !== undefined) {
+            if (!regexPatterns.EMAIL_REGEX.test(currentObj.Email)) {
+                if (!currentErrors.includes('Email'))
+                    currentErrors = [...currentErrors, 'Email'];
+            } else {
+                if (errors.length > 0) {
+                    currentErrors = currentErrors.filter(
+                        (error) => error !== 'Email',
+                    );
+                }
+            }
+        }
+
+        if (isValid) {
+            // Existing objects will be just updated, new objects will be added
             const existingObject = newChangedValues.findIndex((obj) => {
                 return checkIfObjectHasNestedProperty(obj, keysArray);
             });
-
             if (existingObject > -1) {
                 newChangedValues[existingObject] = valueObj;
             } else {
@@ -174,7 +279,8 @@ export const CardViewBuilder = ({
                     return Object.hasOwn(item, keysArray[0]);
                 });
                 if (
-                    associationType &&
+                    keysArray[0] !== 'PatientInvoicingAddress' &&
+                    associationType !== null &&
                     isNewAssociation &&
                     !newChangedValues[newChangedValues.length - 1][keysArray[0]].Id
                 ) {
@@ -206,7 +312,7 @@ export const CardViewBuilder = ({
                                 changedValues={changedValues}
                                 errors={errors}
                             />
-                        ); 
+                        );
                     case 'List': {
                         const sanitizedBinding = sanitizeBinding(
                             element.attributes.Value,
@@ -229,7 +335,7 @@ export const CardViewBuilder = ({
                                 entityType={elementTypeObject}
                             />
                         );
-                    } 
+                    }
                     case 'Element':
                         return (
                             <CardElement
@@ -240,9 +346,10 @@ export const CardViewBuilder = ({
                                 updateChangedTextInputValue={
                                     updateChangedTextInputValue
                                 }
+                                updateInputErrors={updateInputErrors}
                                 entityType={entityType}
                             />
-                        ); 
+                        );
                     case 'Search': {
                         const sanitizedBinding = sanitizeBinding(
                             element.attributes.Value,
@@ -321,7 +428,7 @@ export const CardViewBuilder = ({
                                     updateChangedTextInputValue
                                 }
                             />
-                        ); 
+                        );
                     default:
                         return (
                             <p key={element.attributes['__id'] as Key}>
