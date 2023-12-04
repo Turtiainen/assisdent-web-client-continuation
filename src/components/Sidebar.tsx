@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 import { SidebarItems } from './SidebarItems';
 import { SidebarFooter } from './SidebarFooter';
@@ -27,19 +27,18 @@ const date = today.getDate();
 const weekday = ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'];
 
 export const Sidebar = () => {
-    const [isExpanded, setIsExpanded] = useState<boolean>(false);
+    const [isExpanded, setIsExpanded] = useState<boolean>(true);
     const [subSidebar, setSubSidebar] = useState<null | JSX.Element>(null);
-
-    useEffect(() => {
-        setIsExpanded(!isExpanded);
-    }, [subSidebar]);
 
     const exampleSidebarItems = [
         {
             text: 'Valikko',
             icon: menuMenuImage,
             onClick: () =>
-                setSubSidebar(<Menu onClick={() => setSubSidebar(null)} />),
+                setSubSidebar(
+                    subSidebar ? null : (
+                        <Menu onClick={() => setSubSidebar(null)} />)
+                ),
             isExpanded: isExpanded,
         },
         {
@@ -105,9 +104,8 @@ export const Sidebar = () => {
     return (
         <>
             <aside
-                className={`min-h-[100vh] max-h-screen bg-ad-sidebar overflow-x-hidden overflow-y-auto transition-[width] sticky relative left-0 bottom-0 top-0 ${
-                    isExpanded ? 'w-64' : 'w-14'
-                }`}
+                className={`min-h-[100vh] max-h-screen bg-ad-sidebar overflow-x-hidden overflow-y-auto transition-[width] sticky relative left-0 bottom-0 top-0 ${isExpanded ? 'w-64' : 'w-14'
+                    }`}
             >
                 <div className="flex">
                     {isExpanded ? (
