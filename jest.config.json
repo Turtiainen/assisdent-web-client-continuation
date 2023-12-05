@@ -5,8 +5,6 @@
     },
     "coveragePathIgnorePatterns": [
         "<rootDir>/src/components/LoadingSpinner.tsx",
-        "<rootDir>/src/components/Menu.tsx",
-        "<rootDir>/src/components/MenuSection.tsx",
         "<rootDir>/src/types/*",
         "<rootDir>/src/components/View/CardView/Editor.tsx",
         "<rootDir>/src/components/View/CardView/Exception.tsx",
