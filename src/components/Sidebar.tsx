@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 import { SidebarItems } from './SidebarItems';
 import { SidebarFooter } from './SidebarFooter';
@@ -27,19 +27,19 @@ const date = today.getDate();
 const weekday = ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'];
 
 export const Sidebar = () => {
-    const [isExpanded, setIsExpanded] = useState<boolean>(false);
+    const [isExpanded, setIsExpanded] = useState<boolean>(true);
     const [subSidebar, setSubSidebar] = useState<null | JSX.Element>(null);
-
-    useEffect(() => {
-        setIsExpanded(!isExpanded);
-    }, [subSidebar]);
 
     const exampleSidebarItems = [
         {
             text: 'Valikko',
             icon: menuMenuImage,
             onClick: () =>
-                setSubSidebar(<Menu onClick={() => setSubSidebar(null)} />),
+                setSubSidebar(
+                    subSidebar ? null : (
+                        <Menu onClick={() => setSubSidebar(null)} />
+                    ),
+                ),
             isExpanded: isExpanded,
         },
         {

@@ -27,13 +27,12 @@ describe('Field Choice', () => {
 
     it('should display error when domain name is empty', async () => {
         const enterButton = screen.getByText('Jatka');
+        const regex = /Kirjautuminen\s*epäonnistui\./;
 
         fireEvent.click(enterButton);
 
         await act(async () => {
-            expect(
-                screen.getByText('Please input domain name.'),
-            ).toBeInTheDocument();
+            expect(screen.getByText(regex)).toBeInTheDocument();
         });
     });
 
