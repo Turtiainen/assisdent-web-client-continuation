@@ -11,7 +11,7 @@
     "test:ci": "jest --ci --reporters=default --reporters=jest-junit --reporters=jest-html-reporter",
     "test:coverage": "c8 --reporter=text --reporter=lcov --reporter=html --reporter=json npm test",
     "test:coveralls": "c8 npm test && c8 report --reporter=text-lcov | coveralls",
-    "test:jest:coverage": "jest --coverage",
+    "test:jest:coverage": "jest --coverage --no-cache",
     "lint": "eslint src --ext .tsx",
     "lint:fix": "eslint src --ext .tsx --fix"
   },
