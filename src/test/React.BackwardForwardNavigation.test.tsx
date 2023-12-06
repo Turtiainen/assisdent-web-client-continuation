@@ -18,7 +18,7 @@ const MockBackwardForwardNavigation = () => {
 };
 
 describe('BackwardForwardNavigation Component', () => {
-    let navigateMock;
+    let navigateMock: jest.Mock;
 
     beforeEach(() => {
         // Reset the mock function before each test
