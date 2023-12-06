@@ -23,7 +23,7 @@ describe('BackwardForwardNavigation Component', () => {
     beforeEach(() => {
         // Reset the mock function before each test
         navigateMock = jest.fn();
-        useNavigate.mockReturnValue(navigateMock);
+        (useNavigate as jest.Mock).mockReturnValue(navigateMock); // Cast useNavigate to jest.Mock
     });
 
     it('should render the component', () => {
