@@ -2,5 +2,13 @@
     "testEnvironment": "jsdom",
     "moduleNameMapper": {
         "\\.svg$": "<rootDir>/__mocks__/svg.js"
-    }
+    },
+    "coveragePathIgnorePatterns": [
+        "<rootDir>/src/components/LoadingSpinner.tsx",
+        "<rootDir>/src/types/*",
+        "<rootDir>/src/components/View/CardView/Editor.tsx",
+        "<rootDir>/src/components/View/CardView/Exception.tsx",
+        "<rootDir>/src/components/View/CardView/TranslationList.tsx",
+        "<rootDir>/src/services/backend.ts"
+    ]
 }
