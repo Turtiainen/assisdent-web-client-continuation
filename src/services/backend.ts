@@ -1,3 +1,7 @@
+/**
+ * Excluded from testing (for now) because needs API access
+ */
+
 import axios, { isAxiosError } from 'axios';
 import { DtoSchema } from '../types/DtoSchema';
 import { DynamicObject } from '../types/DynamicObject';
