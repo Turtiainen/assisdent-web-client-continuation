@@ -1,0 +1,187 @@
+<mxfile host="app.diagrams.net" modified="2023-12-06T09:13:42.397Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0" etag="2BQUyAaw-FUzMbTrBIuD" version="22.1.5" type="device">
+  <diagram name="Sivu-1" id="gc87L3aXSVkMgbbU5RJE">
+    <mxGraphModel dx="932" dy="1309" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="nVDtq7ZjvKtwQWMATTxQ-77" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="190" y="950" width="950" height="420" as="geometry" />
+        </mxCell>
+        <mxCell id="nVDtq7ZjvKtwQWMATTxQ-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="nVDtq7ZjvKtwQWMATTxQ-1" target="nVDtq7ZjvKtwQWMATTxQ-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="nVDtq7ZjvKtwQWMATTxQ-15" value="&lt;div&gt;Uses&lt;/div&gt;&lt;div&gt;[HTTPS]&lt;br&gt;&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="nVDtq7ZjvKtwQWMATTxQ-14">
+          <mxGeometry x="-0.0444" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="nVDtq7ZjvKtwQWMATTxQ-1" value="" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;strokeColor=#232F3E;fillColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.user;" vertex="1" parent="1">
+          <mxGeometry x="260" y="220" width="120" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="nVDtq7ZjvKtwQWMATTxQ-2" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="200" y="440" width="600" height="290" as="geometry" />
+        </mxCell>
+        <mxCell id="nVDtq7ZjvKtwQWMATTxQ-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="nVDtq7ZjvKtwQWMATTxQ-3" target="nVDtq7ZjvKtwQWMATTxQ-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="nVDtq7ZjvKtwQWMATTxQ-6" value="&lt;div&gt;Makes API calls&lt;/div&gt;&lt;div&gt;[JSON/HTTPS]&lt;br&gt;&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="nVDtq7ZjvKtwQWMATTxQ-5">
+          <mxGeometry x="-0.1481" y="2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="nVDtq7ZjvKtwQWMATTxQ-3" value="" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/general/Browser.svg;" vertex="1" parent="1">
+          <mxGeometry x="220" y="505" width="200" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="nVDtq7ZjvKtwQWMATTxQ-4" value="" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="570" y="522" width="210" height="125" as="geometry" />
+        </mxCell>
+        <mxCell id="nVDtq7ZjvKtwQWMATTxQ-7" value="&lt;div&gt;&lt;b&gt;Singe-Page App&lt;/b&gt;&lt;/div&gt;&lt;div&gt;[Container: TYpeScript, React]&lt;br&gt;&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="235" y="545" width="170" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="nVDtq7ZjvKtwQWMATTxQ-8" value="&lt;div align=&quot;justify&quot;&gt;Provides partially usable patient management functionality to&amp;nbsp; the user via web browser&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="220" y="585" width="200" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="nVDtq7ZjvKtwQWMATTxQ-9" value="AssisDent Patient Management System" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="235" y="680" width="235" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="nVDtq7ZjvKtwQWMATTxQ-11" value="&lt;b&gt;External AssisDet API&lt;/b&gt; [.NET, C#]" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="600" y="540" width="150" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="nVDtq7ZjvKtwQWMATTxQ-16" value="End user" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="290" y="290" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="nVDtq7ZjvKtwQWMATTxQ-24" value="Provides all functionality for the patient management" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="580" y="570" width="190" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="nVDtq7ZjvKtwQWMATTxQ-26" value="" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="224" y="750" width="210" height="125" as="geometry" />
+        </mxCell>
+        <mxCell id="nVDtq7ZjvKtwQWMATTxQ-12" value="Provides all functionality for the patient management" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="228" y="790" width="190" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="nVDtq7ZjvKtwQWMATTxQ-25" value="&lt;b&gt;External AssisDet API&lt;/b&gt; [.NET, C#]" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="258" y="770" width="150" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="nVDtq7ZjvKtwQWMATTxQ-70" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="nVDtq7ZjvKtwQWMATTxQ-46" target="nVDtq7ZjvKtwQWMATTxQ-26">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="nVDtq7ZjvKtwQWMATTxQ-71" value="Makes API calls" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="nVDtq7ZjvKtwQWMATTxQ-70">
+          <mxGeometry x="0.0145" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="nVDtq7ZjvKtwQWMATTxQ-46" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="224" y="960" width="210" height="125" as="geometry" />
+        </mxCell>
+        <mxCell id="nVDtq7ZjvKtwQWMATTxQ-47" value="Handles API transactions" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="228" y="1000" width="190" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="nVDtq7ZjvKtwQWMATTxQ-48" value="&lt;div&gt;&lt;b&gt;Backend Service&lt;/b&gt;&amp;nbsp;&lt;/div&gt;&lt;div&gt;[TypeScript]&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="258" y="980" width="150" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="nVDtq7ZjvKtwQWMATTxQ-68" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="nVDtq7ZjvKtwQWMATTxQ-49" target="nVDtq7ZjvKtwQWMATTxQ-46">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="nVDtq7ZjvKtwQWMATTxQ-72" value="Uses" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="nVDtq7ZjvKtwQWMATTxQ-68">
+          <mxGeometry x="0.0121" y="-3" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="nVDtq7ZjvKtwQWMATTxQ-49" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="560" y="960" width="210" height="125" as="geometry" />
+        </mxCell>
+        <mxCell id="nVDtq7ZjvKtwQWMATTxQ-50" value="Stores metadata recived from the API" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="564" y="1000" width="190" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="nVDtq7ZjvKtwQWMATTxQ-51" value="&lt;div&gt;&lt;b&gt;Store&lt;/b&gt;&lt;/div&gt;&lt;div&gt;[TypeScript]&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="594" y="980" width="150" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="nVDtq7ZjvKtwQWMATTxQ-66" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="nVDtq7ZjvKtwQWMATTxQ-52" target="nVDtq7ZjvKtwQWMATTxQ-58">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="985" y="1140" />
+              <mxPoint x="665" y="1140" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="nVDtq7ZjvKtwQWMATTxQ-74" value="Uses" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="nVDtq7ZjvKtwQWMATTxQ-66">
+          <mxGeometry x="0.0185" y="2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="nVDtq7ZjvKtwQWMATTxQ-67" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="nVDtq7ZjvKtwQWMATTxQ-52" target="nVDtq7ZjvKtwQWMATTxQ-49">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="nVDtq7ZjvKtwQWMATTxQ-75" value="Uses" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="nVDtq7ZjvKtwQWMATTxQ-67">
+          <mxGeometry x="-0.1401" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="nVDtq7ZjvKtwQWMATTxQ-52" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="880" y="960" width="210" height="125" as="geometry" />
+        </mxCell>
+        <mxCell id="nVDtq7ZjvKtwQWMATTxQ-53" value="Decides which type of view should be displayed to the user" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="884" y="1000" width="190" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="nVDtq7ZjvKtwQWMATTxQ-54" value="&lt;div&gt;&lt;b&gt;Show View&lt;/b&gt;&lt;/div&gt;&lt;div&gt;[TypeScript, React]&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="914" y="980" width="150" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="nVDtq7ZjvKtwQWMATTxQ-55" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="224" y="1200" width="210" height="125" as="geometry" />
+        </mxCell>
+        <mxCell id="nVDtq7ZjvKtwQWMATTxQ-56" value="UI components are used to build UI visible to the user" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="228" y="1240" width="190" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="nVDtq7ZjvKtwQWMATTxQ-57" value="&lt;div&gt;&lt;b&gt;UI Components&lt;/b&gt;&lt;/div&gt;&lt;div&gt; [TypeScript, React]&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="258" y="1220" width="150" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="nVDtq7ZjvKtwQWMATTxQ-64" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="nVDtq7ZjvKtwQWMATTxQ-58" target="nVDtq7ZjvKtwQWMATTxQ-55">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="nVDtq7ZjvKtwQWMATTxQ-65" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="nVDtq7ZjvKtwQWMATTxQ-58" target="nVDtq7ZjvKtwQWMATTxQ-61">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="nVDtq7ZjvKtwQWMATTxQ-76" value="Uses" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="nVDtq7ZjvKtwQWMATTxQ-65">
+          <mxGeometry x="-0.0524" y="3" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="nVDtq7ZjvKtwQWMATTxQ-69" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="nVDtq7ZjvKtwQWMATTxQ-58">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="320" y="1090" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="665" y="1140" />
+              <mxPoint x="320" y="1140" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="nVDtq7ZjvKtwQWMATTxQ-73" value="Uses" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="nVDtq7ZjvKtwQWMATTxQ-69">
+          <mxGeometry x="0.052" y="-1" relative="1" as="geometry">
+            <mxPoint x="-1" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="nVDtq7ZjvKtwQWMATTxQ-58" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="560" y="1200" width="210" height="125" as="geometry" />
+        </mxCell>
+        <mxCell id="nVDtq7ZjvKtwQWMATTxQ-59" value="Contains logic to resolve data into appropriate UI elements" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="564" y="1240" width="190" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="nVDtq7ZjvKtwQWMATTxQ-60" value="&lt;div&gt;&lt;b&gt;Component Builder&lt;/b&gt;&lt;/div&gt;&lt;div&gt;&lt;b&gt;[TypeScript, React]&lt;br&gt;&lt;/b&gt;&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="594" y="1220" width="150" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="nVDtq7ZjvKtwQWMATTxQ-61" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="880" y="1200" width="210" height="125" as="geometry" />
+        </mxCell>
+        <mxCell id="nVDtq7ZjvKtwQWMATTxQ-62" value="Contains functionality for parsing data from XML to views." style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="884" y="1240" width="190" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="nVDtq7ZjvKtwQWMATTxQ-63" value="&lt;div&gt;&lt;b&gt;Parser&lt;/b&gt;&lt;/div&gt;&lt;div&gt;&lt;b&gt;[TypeScript]&lt;br&gt;&lt;/b&gt;&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="914" y="1220" width="150" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="nVDtq7ZjvKtwQWMATTxQ-78" value="Single page application" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="230" y="1340" width="150" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
